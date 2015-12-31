@@ -11,6 +11,10 @@ import com.infrastructure.activity.BaseActivity;
  */
 public abstract class AppBaseActivity extends BaseActivity {
 
+    public void setActionBarTitle(String title) {
+        mActionBar.setTitle(title == null ? "" : title);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_base, menu);
