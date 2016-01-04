@@ -32,11 +32,11 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected abstract void loadData();
 
-    public <T extends View> T $(int id){
+    public <T extends View> T $(int id) {
         return (T) super.findViewById(id);
     }
 
-    public <T extends View> T $(View view, int id){
+    public <T extends View> T $(View view, int id) {
         return (T) view.findViewById(id);
     }
 

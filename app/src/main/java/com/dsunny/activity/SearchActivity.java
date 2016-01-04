@@ -37,7 +37,7 @@ public class SearchActivity extends AppBaseActivity {
 
     @Override
     protected void loadData() {
-        String url = "http://www.weather.com.cn/adat/sk/101010100.html";
+        String url = "http://www.weather.com.cn/data/sk/101010100.html";
 
         RequestAsyncTask task = new RequestAsyncTask() {
             @Override
