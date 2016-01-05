@@ -57,11 +57,11 @@ public abstract class RequestAsyncTask extends AsyncTask<String, Void, Response>
             }
 
             if (strResponse == null) {
-                response.setErrorType(-1);
+                response.setErrorType(HttpRequest.RESPONSE_ERROR_NETWORK_ANOMALIES);
                 response.setError(true);
                 response.setErrorMessage("网络异常，返回空值");
             } else {
-                response.setErrorType(0);
+                response.setErrorType(HttpRequest.RESPONSE_SUCCESS);
                 response.setError(false);
                 response.setResult(strResponse);
             }

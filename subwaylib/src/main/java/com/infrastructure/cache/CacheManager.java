@@ -11,11 +11,11 @@ import java.io.File;
  */
 public class CacheManager {
     // 缓存文件路径
-    public static final String APP_CACHE_PATH = Environment.getExternalStorageDirectory().getPath() + "/Subway/appdata/";
+    public static final String APP_CACHE_PATH = Environment.getExternalStorageDirectory().getPath() + "/subway/appdata/";
     // sdcard 最小空间，如果小于10M，不会再向sdcard里面写入任何数据
     public static final long SDCARD_MIN_SPACE = 1024 * 1024 * 10;
 
-    public static CacheManager mCacheManager;
+    public static CacheManager instance;
 
     private CacheManager() {
     }
@@ -24,10 +24,10 @@ public class CacheManager {
      * 获取CacheManager实例
      */
     public static synchronized CacheManager getInstance() {
-        if (mCacheManager == null) {
-            mCacheManager = new CacheManager();
+        if (instance == null) {
+            instance = new CacheManager();
         }
-        return mCacheManager;
+        return instance;
     }
 
     /**

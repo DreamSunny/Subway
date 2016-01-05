@@ -49,4 +49,15 @@ public class URLData {
     public void setMockClass(String mockClass) {
         this.mockClass = mockClass;
     }
+
+    @Override
+    public String toString() {
+        return "URLData{" +
+                "key='" + key + '\'' +
+                ", expires=" + expires +
+                ", netType='" + netType + '\'' +
+                ", url='" + url + '\'' +
+                ", mockClass='" + mockClass + '\'' +
+                '}';
+    }
 }

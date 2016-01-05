@@ -3,7 +3,7 @@ package com.dsunny.entity;
 /**
  * Created by user on 2015/12/31.
  */
-public class WeatherEntity {
+public class WeatherInfoEntity {
     private WeatherInfo weatherInfo;
 
     public WeatherInfo getWeatherInfo() {

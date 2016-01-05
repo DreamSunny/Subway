@@ -40,4 +40,14 @@ public class Response {
     public void setResult(String result) {
         this.result = result;
     }
+
+    @Override
+    public String toString() {
+        return "Response{" +
+                "error=" + error +
+                ", errorType=" + errorType +
+                ", errorMessage='" + errorMessage + '\'' +
+                ", result='" + result + '\'' +
+                '}';
+    }
 }

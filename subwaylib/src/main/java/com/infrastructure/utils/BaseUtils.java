@@ -196,7 +196,7 @@ public class BaseUtils {
     /**
      * 获取服务器时间
      */
-    public static final Date getServerTime() {
+    public static Date getServerTime() {
         return HttpRequest.getServerTime();
     }
 }

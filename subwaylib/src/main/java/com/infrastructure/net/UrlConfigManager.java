@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.res.XmlResourceParser;
 
 import com.dsunny.subwaylib.R;
+import com.infrastructure.utils.UtilsLog;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -71,6 +72,7 @@ public class UrlConfigManager {
 
         for (URLData data : urlList) {
             if (findKey.equals(data.getKey())) {
+                UtilsLog.d("url", data);
                 return data;
             }
         }

@@ -1,10 +1,13 @@
 package com.infrastructure.net;
 
 import android.os.Handler;
+import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.infrastructure.cache.CacheManager;
+import com.infrastructure.utils.BaseConstants;
 import com.infrastructure.utils.BaseUtils;
+import com.infrastructure.utils.UtilsLog;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -40,15 +43,16 @@ import java.util.zip.GZIPInputStream;
  * Created by user on 2016/1/4.
  */
 public class HttpRequest implements Runnable {
-    public static final int TIME_OUT = 30000;
+    public static final int TIME_OUT_MILLISECOND = 30000;
 
-    public static final int COOKIE_EXPIRED = 1;
+    public static final int RESPONSE_SUCCESS = 0;
+    public static final int RESPONSE_ERROR_COOKIE_EXPIRED = 1;
+    public static final int RESPONSE_ERROR_NETWORK_ANOMALIES = -1;
 
     public static final String ACCEPT_CHARSET = "Accept-Charset";
     public static final String USER_AGENT = "User-Agent";
     public static final String ACCEPT_ENCODING = "Accept-Encoding";
 
-    private static final String COOKIE_PATH = "/data/data/com.dsunny.subway/cache/cookie";
     // 区分get还是post的枚举
     public static final String REQUEST_GET = "get";
     public static final String REQUEST_POST = "post";
@@ -101,7 +105,9 @@ public class HttpRequest implements Runnable {
             if (mUrlData.getNetType().equals(REQUEST_GET)) {
                 final StringBuffer paramBuffer = new StringBuffer();
                 if ((mParameters != null) && (mParameters.size() > 0)) {
-                    sortKeys();// 对key进行排序
+                    // 对key进行排序
+                    sortKeys();
+
                     for (final RequestParameter p : mParameters) {
                         if (paramBuffer.length() == 0) {
                             paramBuffer.append(p.getName() + "=" + BaseUtils.UrlEncodeUnicode(p.getValue()));
@@ -114,7 +120,7 @@ public class HttpRequest implements Runnable {
                 } else {
                     mNewUrl = mOriginalUrl;
                 }
-
+                UtilsLog.d("url", mNewUrl);
                 // 如果这个get的API有缓存时间
                 if (mUrlData.getExpires() > 0) {
                     final String content = CacheManager.getInstance().getFileCache(mNewUrl);
@@ -145,8 +151,8 @@ public class HttpRequest implements Runnable {
                 return;
             }
 
-            mRequest.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, TIME_OUT);
-            mRequest.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, TIME_OUT);
+            mRequest.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, TIME_OUT_MILLISECOND);
+            mRequest.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, TIME_OUT_MILLISECOND);
 
             // 添加必要的头信息
             setHttpHeaders(mRequest);
@@ -159,7 +165,6 @@ public class HttpRequest implements Runnable {
 
             // 获取状态
             final int statusCode = mResponse.getStatusLine().getStatusCode();
-
             // 设置回调函数，但如果requestCallback，说明不需要回调，不需要知道返回结果
             if (mRequestCallback != null) {
                 if (statusCode == HttpStatus.SC_OK) {
@@ -184,13 +189,22 @@ public class HttpRequest implements Runnable {
                         strResponse = new String(content.toByteArray()).trim();
                     }
 
+                    UtilsLog.d("url", "Response = " + strResponse);
                     final Response responseInJson = JSON.parseObject(strResponse, Response.class);
+                    UtilsLog.d("url", responseInJson);
                     if (responseInJson.isError()) {
-                        if (responseInJson.getErrorType() == COOKIE_EXPIRED) {
+                        if (responseInJson.getErrorType() == RESPONSE_ERROR_COOKIE_EXPIRED) {
                             mHandler.post(new Runnable() {
                                 @Override
                                 public void run() {
                                     mRequestCallback.onCookieExpired();
+                                }
+                            });
+                        } else {
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mRequestCallback.onFail(responseInJson.getErrorMessage());
                                 }
                             });
                         }
@@ -290,7 +304,7 @@ public class HttpRequest implements Runnable {
             }
         }
 
-        BaseUtils.SaveObject(COOKIE_PATH, serializableCookies);
+        BaseUtils.SaveObject(BaseConstants.COOKIE_CACHE_PATH, serializableCookies);
     }
 
     /**
@@ -298,7 +312,7 @@ public class HttpRequest implements Runnable {
      */
     void addCookie() {
         List<SerializableCookie> cookieList = null;
-        Object cookieObj = BaseUtils.restoreObject(COOKIE_PATH);
+        Object cookieObj = BaseUtils.restoreObject(BaseConstants.COOKIE_CACHE_PATH);
         if (cookieObj != null) {
             cookieList = (ArrayList<SerializableCookie>) cookieObj;
         }
@@ -339,12 +353,10 @@ public class HttpRequest implements Runnable {
             if (header != null) {
                 final String strServerDate = header.getValue();
                 try {
-                    if ((strServerDate != null) && !"".equals(strServerDate)) {
+                    if (!TextUtils.isEmpty(strServerDate)) {
                         final SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.ENGLISH);
                         TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));
-
                         Date serverDateUAT = sdf.parse(strServerDate);
-
                         mDeltaBetweenServerAndClientTime = serverDateUAT.getTime() + 8 * 60 * 60 * 1000 - System.currentTimeMillis();
                     }
                 } catch (ParseException e) {
