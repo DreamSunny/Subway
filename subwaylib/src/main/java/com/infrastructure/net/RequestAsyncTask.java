@@ -19,7 +19,7 @@ public abstract class RequestAsyncTask extends AsyncTask<String, Void, Response>
 
     public abstract void onSuccess(String content);
 
-    public abstract void onFail(String errorMessage);
+    public abstract void onFail(String errorMsg);
 
     @Override
     protected void onPreExecute() {
@@ -57,11 +57,11 @@ public abstract class RequestAsyncTask extends AsyncTask<String, Void, Response>
             }
 
             if (strResponse == null) {
-                response.setErrorType(HttpRequest.RESPONSE_ERROR_NETWORK_ANOMALIES);
+                response.setErrorType(Request.RESPONSE_ERROR_NETWORK_ANOMALIES);
                 response.setError(true);
                 response.setErrorMessage("网络异常，返回空值");
             } else {
-                response.setErrorType(HttpRequest.RESPONSE_SUCCESS);
+                response.setErrorType(Request.RESPONSE_SUCCESS);
                 response.setError(false);
                 response.setResult(strResponse);
             }

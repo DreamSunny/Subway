@@ -3,7 +3,7 @@ package com.infrastructure.utils;
 import android.os.Environment;
 import android.os.StatFs;
 
-import com.infrastructure.net.HttpRequest;
+import com.infrastructure.net.Request;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -116,6 +116,7 @@ public class BaseUtils {
      */
     public static boolean IsSdcardMounted() {
         final String state = Environment.getExternalStorageState();
+        UtilsLog.d(UtilsLog.TAG_SDCARD, "state = " + state);
         return state.equals(Environment.MEDIA_MOUNTED) && !state.equals(Environment.MEDIA_MOUNTED_READ_ONLY);
     }
 
@@ -124,7 +125,9 @@ public class BaseUtils {
      */
     public static long GetAvailableSdcardSize() {
         final StatFs localStatFs = new StatFs(Environment.getExternalStorageDirectory().getPath());
-        return localStatFs.getAvailableBlocks() * localStatFs.getBlockSize();
+        UtilsLog.d(UtilsLog.TAG_SDCARD, "AvailableBlocks = " + localStatFs.getAvailableBlocks());
+        UtilsLog.d(UtilsLog.TAG_SDCARD, "BlockSize = " + localStatFs.getBlockSize());
+        return (long) localStatFs.getAvailableBlocks() * localStatFs.getBlockSize();
     }
 
     /**
@@ -135,6 +138,9 @@ public class BaseUtils {
         ObjectOutputStream objectOutputStream = null;
         File file = new File(path);
         try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
             fileOutputStream = new FileOutputStream(file);
             objectOutputStream = new ObjectOutputStream(fileOutputStream);
             objectOutputStream.writeObject(saveObject);
@@ -197,6 +203,6 @@ public class BaseUtils {
      * 获取服务器时间
      */
     public static Date getServerTime() {
-        return HttpRequest.getServerTime();
+        return new Date(System.currentTimeMillis() + Request.DELTA_BETWEEN_SERVER_AND_CLIENT_TIME);
     }
 }

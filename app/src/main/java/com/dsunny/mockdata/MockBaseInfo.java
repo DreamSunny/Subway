@@ -1,6 +1,6 @@
 package com.dsunny.mockdata;
 
-import com.infrastructure.net.HttpRequest;
+import com.infrastructure.net.Request;
 import com.infrastructure.net.Response;
 
 /**
@@ -12,7 +12,7 @@ public abstract class MockBaseInfo {
     public Response getSuccessResponse() {
         Response response = new Response();
         response.setError(false);
-        response.setErrorType(HttpRequest.RESPONSE_SUCCESS);
+        response.setErrorType(Request.RESPONSE_SUCCESS);
         response.setErrorMessage("");
         return response;
     }

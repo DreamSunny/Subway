@@ -7,26 +7,28 @@ import android.util.Log;
  * Created by user on 2016/1/5.
  */
 public class UtilsLog {
-    public static final String TAG = "subway";
-    public static final boolean isTest = true;
+    public static final boolean DEBUG = true;
 
+    public static final String TAG_APP = "subway";
+    public static final String TAG_URL = "url";
+    public static final String TAG_SDCARD = "sdcard";
 
     public static void d(String msg) {
-        d(TAG, msg);
+        d(TAG_APP, msg);
     }
 
     public static void d(Object o) {
-        d(TAG, o);
+        d(TAG_APP, o);
     }
 
     public static void d(String tag, String msg) {
-        if (isTest) {
+        if (DEBUG) {
             Log.d(tag, TextUtils.isEmpty(msg) ? "" : msg);
         }
     }
 
     public static void d(String tag, Object o) {
-        if (isTest) {
+        if (DEBUG) {
             Log.d(tag, o == null ? "null" : o.toString());
         }
     }

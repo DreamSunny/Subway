@@ -7,7 +7,7 @@ import java.util.List;
  * Created by user on 2016/1/4.
  */
 public class RequestManager {
-    ArrayList<HttpRequest> mRequestList = null;
+    ArrayList<Request> mRequestList = null;
 
     public RequestManager() {
         // 异步请求列表
@@ -17,7 +17,7 @@ public class RequestManager {
     /**
      * 添加Request到列表
      */
-    public void addRequest(final HttpRequest request) {
+    public void addRequest(final Request request) {
         mRequestList.add(request);
     }
 
@@ -26,14 +26,8 @@ public class RequestManager {
      */
     public void cancelRequest() {
         if (mRequestList != null && mRequestList.size() > 0) {
-            for (final HttpRequest request : mRequestList) {
-                if (request.getRequest() != null) {
-                    try {
-                        request.getRequest().abort();
-                    } catch (final UnsupportedOperationException e) {
-                        e.printStackTrace();
-                    }
-                }
+            for (final Request request : mRequestList) {
+                request.abort();
             }
             mRequestList.clear();
         }
@@ -42,8 +36,8 @@ public class RequestManager {
     /**
      * 无参数调用
      */
-    public HttpRequest createRequest(final URLData urlData, final RequestCallback requestCallback) {
-        final HttpRequest request = new HttpRequest(urlData, null, requestCallback);
+    public Request createRequest(final URLData urlData, final RequestCallback requestCallback) {
+        final Request request = new HttpClientRequest(urlData, null, requestCallback);
         addRequest(request);
         return request;
     }
@@ -51,8 +45,8 @@ public class RequestManager {
     /**
      * 有参数调用
      */
-    public HttpRequest createRequest(final URLData urlData, final List<RequestParameter> parameters, final RequestCallback requestCallback) {
-        final HttpRequest request = new HttpRequest(urlData, parameters, requestCallback);
+    public Request createRequest(final URLData urlData, final List<RequestParameter> parameters, final RequestCallback requestCallback) {
+        final Request request = new HttpClientRequest(urlData, parameters, requestCallback);
         addRequest(request);
         return request;
     }

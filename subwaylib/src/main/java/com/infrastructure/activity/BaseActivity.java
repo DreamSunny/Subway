@@ -39,6 +39,16 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onPause();
     }
 
+    @Override
+    protected void onDestroy() {
+        // 在activity停止的时候同时设置停止请求，停止线程请求回调
+        // TODO
+        if (mRequestManager != null) {
+            mRequestManager.cancelRequest();
+        }
+        super.onDestroy();
+    }
+
     protected abstract void initVariables();
 
     protected abstract void initViews(Bundle savedInstanceState);

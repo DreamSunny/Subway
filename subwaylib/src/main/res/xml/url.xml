@@ -2,7 +2,7 @@
 <url>
     <Node
         Key="getWeatherInfo"
-        Expires="300"
+        Expires="600"
         NetType="get"
         MockClass = ""
         Url="http://www.weather.com.cn/data/sk/101010100.html"/>

@@ -1,7 +1,6 @@
 package com.infrastructure.cache;
 
-import android.os.Environment;
-
+import com.infrastructure.utils.BaseConstants;
 import com.infrastructure.utils.BaseUtils;
 
 import java.io.File;
@@ -10,8 +9,6 @@ import java.io.File;
  * Created by user on 2016/1/4.
  */
 public class CacheManager {
-    // 缓存文件路径
-    public static final String APP_CACHE_PATH = Environment.getExternalStorageDirectory().getPath() + "/subway/appdata/";
     // sdcard 最小空间，如果小于10M，不会再向sdcard里面写入任何数据
     public static final long SDCARD_MIN_SPACE = 1024 * 1024 * 10;
 
@@ -39,7 +36,7 @@ public class CacheManager {
             if (BaseUtils.GetAvailableSdcardSize() < SDCARD_MIN_SPACE) {
                 clearAllData();
             } else {
-                final File dir = new File(APP_CACHE_PATH);
+                final File dir = new File(BaseConstants.APP_CACHE_PATH);
                 if (!dir.exists()) {
                     dir.mkdirs();
                 }
@@ -61,7 +58,7 @@ public class CacheManager {
      */
     public String getFileCache(final String key) {
         String md5Key = BaseUtils.GetMd5(key);
-        final File file = new File(APP_CACHE_PATH + key);
+        final File file = new File(BaseConstants.APP_CACHE_PATH + md5Key);
         if (file.exists()) {
             final CacheItem item = getFromCache(md5Key);
             if (item != null) {
@@ -76,7 +73,7 @@ public class CacheManager {
      */
     synchronized boolean putIntoCache(final CacheItem item) {
         if (BaseUtils.GetAvailableSdcardSize() > SDCARD_MIN_SPACE) {
-            BaseUtils.SaveObject(APP_CACHE_PATH + item.getKey(), item);
+            BaseUtils.SaveObject(BaseConstants.APP_CACHE_PATH + item.getKey(), item);
             return true;
         }
         return false;
@@ -87,7 +84,7 @@ public class CacheManager {
      */
     synchronized CacheItem getFromCache(final String key) {
         CacheItem cacheItem = null;
-        Object findItem = BaseUtils.restoreObject(APP_CACHE_PATH + key);
+        Object findItem = BaseUtils.restoreObject(BaseConstants.APP_CACHE_PATH + key);
         if (findItem == null) {
             // 缓存不存在
             return null;
@@ -103,11 +100,11 @@ public class CacheManager {
     /**
      * 清除缓存文件
      */
-    void clearAllData() {
+    public void clearAllData() {
         File file = null;
         File[] files = null;
         if (BaseUtils.IsSdcardMounted()) {
-            file = new File(APP_CACHE_PATH);
+            file = new File(BaseConstants.APP_CACHE_PATH);
             files = file.listFiles();
             if (files != null) {
                 for (final File f : files) {

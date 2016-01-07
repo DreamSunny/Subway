@@ -72,7 +72,7 @@ public class UrlConfigManager {
 
         for (URLData data : urlList) {
             if (findKey.equals(data.getKey())) {
-                UtilsLog.d("url", data);
+                UtilsLog.d(UtilsLog.TAG_URL, data);
                 return data;
             }
         }

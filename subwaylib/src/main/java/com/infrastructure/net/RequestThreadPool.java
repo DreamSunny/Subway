@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by user on 2016/1/4.
  */
-public class DefaultThreadPool {
+public class RequestThreadPool {
     // 阻塞队列最大任务数量
     static final int BLOCKING_QUEUE_SIZE = 20;
 
@@ -18,16 +18,16 @@ public class DefaultThreadPool {
     // 缓冲BaseRequest任务队列
     static ArrayBlockingQueue<Runnable> blockingQueue = new ArrayBlockingQueue<>(BLOCKING_QUEUE_SIZE);
 
-    private static DefaultThreadPool instance = null;
+    private static RequestThreadPool instance = null;
 
     // 线程池，目前是十个线程
     static AbstractExecutorService pool = new ThreadPoolExecutor(
             THREAD_POOL_CORE_SIZE, THREAD_POOL_MAX_SIZE, 15L, TimeUnit.SECONDS, blockingQueue, new ThreadPoolExecutor.DiscardOldestPolicy()
     );
 
-    public static synchronized DefaultThreadPool getInstance() {
+    public static synchronized RequestThreadPool getInstance() {
         if (instance == null) {
-            instance = new DefaultThreadPool();
+            instance = new RequestThreadPool();
         }
         return instance;
     }

@@ -2,7 +2,7 @@ package com.dsunny.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -20,8 +20,8 @@ import java.util.List;
 
 public class SearchActivity extends AppBaseActivity {
 
-    TextView tvHelloWorld;
-    RequestCallback mRequestCallback;
+    private TextView tvHelloWorld;
+    private RequestCallback mRequestCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +55,9 @@ public class SearchActivity extends AppBaseActivity {
 //            }
 //
 //            @Override
-//            public void onFail(String errorMessage) {
-//                Log.d("mzy", "errorMessage = " + errorMessage);
-//                new AlertDialog.Builder(mContext).setTitle("出错啦").setMessage(errorMessage).setPositiveButton("确定", null).show();
+//            public void onFail(String errorMsg) {
+//                Log.d("mzy", "errorMsg = " + errorMsg);
+//                new AlertDialog.Builder(mContext).setTitle("出错啦").setMessage(errorMsg).setPositiveButton("确定", null).show();
 //            }
 //        };
 //        task.execute(url);
@@ -69,7 +69,6 @@ public class SearchActivity extends AppBaseActivity {
         mRequestCallback = new RequestCallback() {
             @Override
             public void onSuccess(String content) {
-                UtilsLog.d("WeatherInfo = " + content);
                 WeatherInfo weatherInfo = JSON.parseObject(content, WeatherInfo.class);
                 UtilsLog.d(weatherInfo);
                 if (weatherInfo != null) {
@@ -88,14 +87,19 @@ public class SearchActivity extends AppBaseActivity {
             }
         };
 
-        AppHttpRequest.getInstance().invoke(this, "getWeatherInfo", params, mRequestCallback);
+        AppHttpRequest.getInstance().performRequest(this, "getWeatherInfo", params, mRequestCallback);
 
         setActionBarTitle("北京地铁");
     }
 
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.menu_search, menu);
+//        return true;
+//    }
+
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_search, menu);
-        return true;
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 }
