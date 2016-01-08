@@ -3,7 +3,6 @@ package com.infrastructure.net;
 import android.os.Handler;
 import android.text.TextUtils;
 
-import com.infrastructure.cache.CacheManager;
 import com.infrastructure.utils.BaseUtils;
 import com.infrastructure.utils.UtilsLog;
 
@@ -19,19 +18,22 @@ import java.util.TimeZone;
  */
 public abstract class Request implements Runnable {
     public static final int TIME_OUT_MILLISECOND = 30 * 1000;
+    public static long DELTA_BETWEEN_SERVER_AND_CLIENT_TIME = 0;// 服务器时间和客户端时间的差值
 
     public static final int RESPONSE_SUCCESS = 0;
     public static final int RESPONSE_ERROR_COOKIE_EXPIRED = 1;
     public static final int RESPONSE_ERROR_NETWORK_ANOMALIES = -1;
 
-    public static final String ACCEPT_CHARSET = "Accept-Charset";
-    public static final String USER_AGENT = "User-Agent";
-    public static final String ACCEPT_ENCODING = "Accept-Encoding";
+    protected static final String ACCEPT_CHARSET = "Accept-Charset";
+    protected static final String USER_AGENT = "User-Agent";
+    protected static final String ACCEPT_ENCODING = "Accept-Encoding";
 
-    public static final String REQUEST_GET = "get";
-    public static final String REQUEST_POST = "post";
+    protected static final String REQUEST_GET = "GET";
+    protected static final String REQUEST_POST = "POST";
 
-    public static long DELTA_BETWEEN_SERVER_AND_CLIENT_TIME = 0;// 服务器时间和客户端时间的差值
+    protected static final char NAME_VALUE_SEPARATOR = '=';
+    protected static final char FIELD_SEPARATOR = '&';
+    protected static final char HOST_PARAMS_SEPARATOR = '?';
 
     protected Handler mHandler;
     protected String mUrl;
@@ -39,14 +41,6 @@ public abstract class Request implements Runnable {
     protected long mExpires;
     protected List<RequestParameter> mParameters = null;
     protected RequestCallback mCallback = null;
-
-    public Request(final URLData urlData) {
-        this(urlData, null, null);
-    }
-
-    public Request(final URLData urlData, final List<RequestParameter> params) {
-        this(urlData, params, null);
-    }
 
     public Request(final URLData urlData, final List<RequestParameter> params, final RequestCallback callback) {
         mUrl = urlData.getUrl();
@@ -59,32 +53,25 @@ public abstract class Request implements Runnable {
 
     @Override
     public void run() {
-        if (REQUEST_GET.equals(mNetType)) {
-            if ((mParameters != null) && (mParameters.size() > 0)) {
-                addUrlParams();
+        if (REQUEST_GET.equals(mNetType.toUpperCase())) {
+            try {
+                doGet();
+            } catch (Exception e) {
+                e.printStackTrace();
+                handleFail("网络异常");
             }
-            String strCacheContent = null;
-            if (mExpires > 0) {
-                strCacheContent = CacheManager.getInstance().getFileCache(mUrl);
-            }
-            if (!TextUtils.isEmpty(strCacheContent)) {
-                handleSuccess(strCacheContent);
-            } else {
-                try {
-                    doGet();
-                } catch (Exception e) {
-                    handleFail("网络异常");
-                }
-            }
-        } else if (REQUEST_POST.equals(mNetType)) {
+
+        } else if (REQUEST_POST.equals(mNetType.toUpperCase())) {
             try {
                 doPost();
             } catch (Exception e) {
+                e.printStackTrace();
                 handleFail("网络异常");
             }
         } else {
-            throw new IllegalArgumentException("mNetType = " + mNetType);
+            throw new IllegalArgumentException("NetType is " + mNetType);
         }
+        UtilsLog.d(UtilsLog.TAG_URL, mUrl);
     }
 
     protected abstract void doGet() throws Exception;
@@ -96,23 +83,21 @@ public abstract class Request implements Runnable {
     /**
      * Get请求添加Url参数
      */
-    private void addUrlParams() {
+    protected String formatRequestParams() {
         StringBuilder param = new StringBuilder();
         for (final RequestParameter p : mParameters) {
             if (param.length() == 0) {
-                param.append("?");
                 param.append(p.getName());
-                param.append("=");
+                param.append(NAME_VALUE_SEPARATOR);
                 param.append(BaseUtils.UrlEncodeUnicode(p.getValue()));
             } else {
-                param.append("&");
+                param.append(FIELD_SEPARATOR);
                 param.append(p.getName());
-                param.append("=");
+                param.append(NAME_VALUE_SEPARATOR);
                 param.append(BaseUtils.UrlEncodeUnicode(p.getValue()));
             }
         }
-        mUrl = mUrl + param.toString();
-        UtilsLog.d(UtilsLog.TAG_URL, mUrl);
+        return param.toString();
     }
 
     /**

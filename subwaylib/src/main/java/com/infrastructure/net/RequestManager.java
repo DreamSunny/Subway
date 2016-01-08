@@ -37,7 +37,7 @@ public class RequestManager {
      * 无参数调用
      */
     public Request createRequest(final URLData urlData, final RequestCallback requestCallback) {
-        final Request request = new HttpClientRequest(urlData, null, requestCallback);
+        final Request request = new HurlRequest(urlData, null, requestCallback);
         addRequest(request);
         return request;
     }
@@ -46,7 +46,7 @@ public class RequestManager {
      * 有参数调用
      */
     public Request createRequest(final URLData urlData, final List<RequestParameter> parameters, final RequestCallback requestCallback) {
-        final Request request = new HttpClientRequest(urlData, parameters, requestCallback);
+        final Request request = new HurlRequest(urlData, parameters, requestCallback);
         addRequest(request);
         return request;
     }

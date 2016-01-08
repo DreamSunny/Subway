@@ -5,11 +5,13 @@ import android.os.StatFs;
 
 import com.infrastructure.net.Request;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.security.MessageDigest;
@@ -197,6 +199,24 @@ public class BaseUtils {
             }
         }
         return object;
+    }
+
+    /**
+     * InputStream转换为String
+     */
+    public static String InputStream2String(final InputStream is){
+        try {
+            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int length = 0;
+            while ((length = is.read(buffer)) != -1) {
+                baos.write(buffer, 0, length);
+            }
+            return baos.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**

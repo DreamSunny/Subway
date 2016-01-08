@@ -7,9 +7,7 @@ import com.dsunny.subwaylib.R;
 import com.infrastructure.utils.UtilsLog;
 
 import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -55,9 +53,7 @@ public class UrlConfigManager {
                 }
                 eventCode = xmlParser.next();
             }
-        } catch (final XmlPullParserException e) {
-            e.printStackTrace();
-        } catch (final IOException e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         } finally {
             xmlParser.close();

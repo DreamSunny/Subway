@@ -1,5 +1,7 @@
 package com.infrastructure.net;
 
+import android.text.TextUtils;
+
 import com.alibaba.fastjson.JSON;
 import com.infrastructure.cache.CacheManager;
 import com.infrastructure.utils.BaseConstants;
@@ -20,7 +22,6 @@ import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -43,26 +44,37 @@ public class HttpClientRequest extends Request {
 
     @Override
     protected void doGet() throws Exception {
-        mRequest = new HttpGet(mUrl);
-        // 添加Http参数
-        setHttpParams();
-        // 添加头信息
-        addHeaders();
-        // 添加Cookie到请求头中
-        addCookie();
-        // 发送请求
-        mResponse = mHttpClient.execute(mRequest);
-        if (mResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-            // 保存Cookie
-            saveCookie();
-            // 更新服务器时间和本地时间的差值
-            updateDeltaBetweenServerAndClientTime(mResponse.getLastHeader("Date").getValue());
-            // 处理返回内容
-            if (mCallback != null) {
-                dealResponse();
-            }
+        if ((mParameters != null) && (mParameters.size() > 0)) {
+            mUrl = mUrl + HOST_PARAMS_SEPARATOR + formatRequestParams();
+        }
+        String strCacheContent = null;
+        if (mExpires > 0) {
+            strCacheContent = CacheManager.getInstance().getFileCache(mUrl);
+        }
+        if (!TextUtils.isEmpty(strCacheContent)) {
+            handleSuccess(strCacheContent);
         } else {
-            handleFail("网络异常");
+            mRequest = new HttpGet(mUrl);
+            // 添加Http参数
+            setHttpParams();
+            // 添加头信息
+            addHttpHeaders();
+            // 添加Cookie到请求头中
+            addCookie();
+            // 发送请求
+            mResponse = mHttpClient.execute(mRequest);
+            if (mResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                // 保存Cookie
+                saveCookie();
+                // 更新服务器时间和本地时间的差值
+                updateDeltaBetweenServerAndClientTime(mResponse.getLastHeader("Date").getValue());
+                // 处理返回内容
+                if (mCallback != null) {
+                    dealResponse();
+                }
+            } else {
+                handleFail("网络异常");
+            }
         }
     }
 
@@ -80,7 +92,7 @@ public class HttpClientRequest extends Request {
         // 添加Http参数
         setHttpParams();
         // 添加头信息
-        addHeaders();
+        addHttpHeaders();
         // 添加Cookie到请求头中
         addCookie();
         // 发送请求
@@ -121,7 +133,7 @@ public class HttpClientRequest extends Request {
     /**
      * 添加头信息
      */
-    private void addHeaders() {
+    private void addHttpHeaders() {
         mRequest.addHeader(ACCEPT_CHARSET, "UTF-8,*");
         mRequest.addHeader(USER_AGENT, "Subway Android App");
         mRequest.addHeader(ACCEPT_ENCODING, "gzip");
@@ -135,15 +147,16 @@ public class HttpClientRequest extends Request {
         if (mResponse.getEntity().getContentEncoding() != null
                 && mResponse.getEntity().getContentEncoding().getValue() != null
                 && mResponse.getEntity().getContentEncoding().getValue().contains("gzip")) {
-            final InputStream in = mResponse.getEntity()
-                    .getContent();
-            final InputStream is = new GZIPInputStream(in);
-            strResponse = InputStream2String(is);
+            final InputStream is = mResponse.getEntity().getContent();
+            final InputStream gzip = new GZIPInputStream(is);
+            strResponse = BaseUtils.InputStream2String(gzip);
+            gzip.close();
             is.close();
         } else {
             strResponse = EntityUtils.toString(mResponse.getEntity(), "UTF-8");
         }
 
+        UtilsLog.d(UtilsLog.TAG_URL, "Entity{" + strResponse + "}");
         final Response responseInJson = JSON.parseObject(strResponse, Response.class);
         UtilsLog.d(UtilsLog.TAG_URL, responseInJson);
         if (responseInJson.isError()) {
@@ -161,23 +174,11 @@ public class HttpClientRequest extends Request {
         }
     }
 
-    /**
-     * InputStream转换为String
-     */
-    static String InputStream2String(final InputStream is) throws IOException {
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        int i;
-        while ((i = is.read()) != -1) {
-            baos.write(i);
-        }
-        return baos.toString();
-    }
-
 
     /**
      * 将cookie列表保存到本地
      */
-    synchronized void saveCookie() {
+    private synchronized void saveCookie() {
         // 获取本次访问的cookie
         final List<Cookie> cookies = mHttpClient.getCookieStore().getCookies();
         // 将普通cookie转换为可序列化的cookie
@@ -194,9 +195,9 @@ public class HttpClientRequest extends Request {
     }
 
     /**
-     * 从本地获取cookie列表，添加到到请求头中
+     *
      */
-    void addCookie() {
+    private void addCookie() {
         List<SerializableCookie> cookieList = null;
         Object cookieObj = BaseUtils.restoreObject(BaseConstants.COOKIE_CACHE_PATH);
         if (cookieObj != null) {
