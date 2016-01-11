@@ -1,7 +1,7 @@
 package com.infrastructure.net;
 
 /**
- * Created by user on 2016/1/4.
+ * 网络请求回调
  */
 public interface RequestCallback {
     void onSuccess(String content);

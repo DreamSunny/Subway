@@ -10,7 +10,7 @@ import java.io.ObjectOutput;
 import java.util.Date;
 
 /**
- * Created by user on 2016/1/4.
+ * 序列化Cookie，用于HttpClient请求
  */
 public class SerializableCookie implements Cookie, Externalizable {
 

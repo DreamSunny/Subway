@@ -6,7 +6,7 @@ import com.dsunny.utils.Utils;
 import java.io.File;
 
 /**
- * Created by user on 2016/1/4.
+ * 本地用户信息管理类
  */
 public class AppUserManager {
     private static final long serialVersionUID = 1L;
@@ -17,7 +17,9 @@ public class AppUserManager {
     }
 
     /**
-     * 获取实例
+     * 获取本地用户信息管理类实例
+     *
+     * @return 本地用户信息管理类的实例
      */
     public static AppUserManager getInstance() {
         if (instance == null) {
@@ -28,6 +30,8 @@ public class AppUserManager {
 
     /**
      * 将用户信息保存到本地Cache
+     *
+     * @param userInfo 用户信息
      */
     public void saveUserInfo(final UserInfo userInfo) {
         Utils.SaveObject(AppConstants.USER_CACHE_PATH, userInfo);
@@ -35,6 +39,8 @@ public class AppUserManager {
 
     /**
      * 从本地Cache中获取用户信息
+     *
+     * @return 用户信息
      */
     public UserInfo restoreUserInfo() {
         Object object = Utils.restoreObject(AppConstants.USER_CACHE_PATH);
@@ -43,6 +49,8 @@ public class AppUserManager {
 
     /**
      * 重置用户信息
+     *
+     * @param userInfo 用户信息
      */
     public void resetUserInfo(final UserInfo userInfo) {
         userInfo.setLoginName(null);

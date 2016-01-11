@@ -11,7 +11,7 @@ import org.xmlpull.v1.XmlPullParser;
 import java.util.ArrayList;
 
 /**
- * Created by user on 2016/1/4.
+ * 请求Url管理类
  */
 public class UrlConfigManager {
     private static final String TAG_NODE = "Node";
@@ -23,6 +23,11 @@ public class UrlConfigManager {
 
     private static ArrayList<URLData> urlList;
 
+    /**
+     * 从配置文件中获取url信息
+     *
+     * @param activity 当前Activity
+     */
     private static void fetchUrlDataFromXml(final Activity activity) {
         urlList = new ArrayList<>();
 
@@ -60,6 +65,13 @@ public class UrlConfigManager {
         }
     }
 
+    /**
+     * 从配置文件中获取指定的url信息
+     *
+     * @param activity 当前Activity
+     * @param findKey  指定的key值
+     * @return url信息
+     */
     public static URLData findURL(final Activity activity, final String findKey) {
         // 如果urlList还没有数据（第一次），或者被回收了，那么（重新）加载xml
         if (urlList == null || urlList.isEmpty()) {

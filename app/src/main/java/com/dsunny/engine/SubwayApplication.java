@@ -5,7 +5,7 @@ import android.app.Application;
 import com.infrastructure.cache.CacheManager;
 
 /**
- * Created by user on 2016/1/4.
+ * 本地Application
  */
 public class SubwayApplication extends Application {
     @Override

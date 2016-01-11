@@ -14,10 +14,10 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 /**
- * Created by user on 2016/1/6.
+ * 网络请求基类
  */
 public abstract class Request implements Runnable {
-    public static final int TIME_OUT_MILLISECOND = 30 * 1000;
+    public static final int TIME_OUT_MILLISECOND = 30 * 1000;// 连接超时时间
     public static long DELTA_BETWEEN_SERVER_AND_CLIENT_TIME = 0;// 服务器时间和客户端时间的差值
 
     public static final int RESPONSE_SUCCESS = 0;
@@ -74,14 +74,29 @@ public abstract class Request implements Runnable {
         UtilsLog.d(UtilsLog.TAG_URL, mUrl);
     }
 
+    /**
+     * Get方式请求
+     *
+     * @throws Exception
+     */
     protected abstract void doGet() throws Exception;
 
+    /**
+     * Post方式请求
+     *
+     * @throws Exception
+     */
     protected abstract void doPost() throws Exception;
 
+    /**
+     * 终止请求
+     */
     protected abstract void abort();
 
     /**
      * Get请求添加Url参数
+     *
+     * @return 拼接的参数
      */
     protected String formatRequestParams() {
         StringBuilder param = new StringBuilder();
@@ -102,6 +117,8 @@ public abstract class Request implements Runnable {
 
     /**
      * Request 成功回调
+     *
+     * @param content 返回的内容
      */
     protected void handleSuccess(final String content) {
         mHandler.post(new Runnable() {
@@ -115,6 +132,8 @@ public abstract class Request implements Runnable {
 
     /**
      * Request 失败回调
+     *
+     * @param msg 错误提示
      */
     protected void handleFail(final String msg) {
         mHandler.post(new Runnable() {
@@ -141,6 +160,8 @@ public abstract class Request implements Runnable {
 
     /**
      * 更新服务器时间和本地时间的差值
+     *
+     * @param serverDate 服务器时间
      */
     protected void updateDeltaBetweenServerAndClientTime(String serverDate) {
         try {

@@ -1,7 +1,7 @@
 package com.infrastructure.net;
 
 /**
- * Created by user on 2016/1/4.
+ * 请求url信息
  */
 public class URLData {
     private String key;

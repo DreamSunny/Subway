@@ -12,12 +12,15 @@ import com.infrastructure.activity.BaseActivity;
 import com.infrastructure.net.RequestCallback;
 
 /**
- * Created by user on 2015/12/30.
+ * 封装业务相关的公用逻辑
  */
 public abstract class AppBaseActivity extends BaseActivity {
 
     protected ProgressDialog mProgressDialog;
 
+    /**
+     * 抽象回调类
+     */
     public abstract class AbstractRequestCallback implements RequestCallback {
         @Override
         public void onSuccess(String content) {
@@ -37,6 +40,11 @@ public abstract class AppBaseActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 设置ActionBar标题
+     *
+     * @param title 标题名称
+     */
     public void setActionBarTitle(String title) {
         mActionBar.setTitle(title == null ? "" : title);
     }
@@ -65,14 +73,31 @@ public abstract class AppBaseActivity extends BaseActivity {
         return true;
     }
 
+    /**
+     * 启动Activity
+     *
+     * @param activity 当前Activity
+     */
     protected void startAppActivity(String activity) {
         startAppActivity(activity, null);
     }
 
+    /**
+     * 启动Activity
+     *
+     * @param activity    当前Activity
+     * @param requestCode 请求Code
+     */
     protected void startAppActivityForResult(String activity, int requestCode) {
         startAppActivityForResult(activity, requestCode, null);
     }
 
+    /**
+     * 启动Activity
+     *
+     * @param activity 当前Activity
+     * @param intent   请求Intent
+     */
     protected void startAppActivity(String activity, Intent intent) {
         try {
             Class activityClass = Class.forName(activity);
@@ -87,6 +112,13 @@ public abstract class AppBaseActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 启动Activity
+     *
+     * @param activity    当前Activity
+     * @param requestCode 请求Code
+     * @param intent      请求Intent
+     */
     protected void startAppActivityForResult(String activity, int requestCode, Intent intent) {
         try {
             Class activityClass = Class.forName(activity);

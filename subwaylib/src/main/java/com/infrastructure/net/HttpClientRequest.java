@@ -22,7 +22,6 @@ import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +29,7 @@ import java.util.zip.GZIPInputStream;
 
 
 /**
- * Created by user on 2016/1/4.
+ * 封装HttpClient网络请求
  */
 public class HttpClientRequest extends Request {
     private HttpUriRequest mRequest = null;
@@ -70,7 +69,20 @@ public class HttpClientRequest extends Request {
                 updateDeltaBetweenServerAndClientTime(mResponse.getLastHeader("Date").getValue());
                 // 处理返回内容
                 if (mCallback != null) {
-                    dealResponse();
+                    String strResponse;
+                    if (mResponse.getEntity().getContentEncoding() != null
+                            && mResponse.getEntity().getContentEncoding().getValue() != null
+                            && mResponse.getEntity().getContentEncoding().getValue().contains("gzip")) {
+                        final InputStream is = mResponse.getEntity().getContent();
+                        final InputStream gzip = new GZIPInputStream(is);
+                        strResponse = BaseUtils.InputStream2String(gzip);
+                        gzip.close();
+                        is.close();
+                    } else {
+                        strResponse = EntityUtils.toString(mResponse.getEntity(), "UTF-8");
+                    }
+                    // 处理返回信息
+                    doResponse(strResponse);
                 }
             } else {
                 handleFail("网络异常");
@@ -104,7 +116,20 @@ public class HttpClientRequest extends Request {
             updateDeltaBetweenServerAndClientTime(mResponse.getLastHeader("Date").getValue());
             // 处理返回内容
             if (mCallback != null) {
-                dealResponse();
+                String strResponse;
+                if (mResponse.getEntity().getContentEncoding() != null
+                        && mResponse.getEntity().getContentEncoding().getValue() != null
+                        && mResponse.getEntity().getContentEncoding().getValue().contains("gzip")) {
+                    final InputStream is = mResponse.getEntity().getContent();
+                    final InputStream gzip = new GZIPInputStream(is);
+                    strResponse = BaseUtils.InputStream2String(gzip);
+                    gzip.close();
+                    is.close();
+                } else {
+                    strResponse = EntityUtils.toString(mResponse.getEntity(), "UTF-8");
+                }
+                // 处理返回信息
+                doResponse(strResponse);
             }
         } else {
             handleFail("网络异常");
@@ -118,6 +143,30 @@ public class HttpClientRequest extends Request {
                 mRequest.abort();
             } catch (final UnsupportedOperationException e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 处理返回信息
+     *
+     * @param content 请求返回的内容
+     */
+    protected void doResponse(String content) {
+        UtilsLog.d(UtilsLog.TAG_URL, "Entity{" + content + "}");
+        final Response responseInJson = JSON.parseObject(content, Response.class);
+        UtilsLog.d(UtilsLog.TAG_URL, responseInJson);
+        if (responseInJson.isError()) {
+            if (responseInJson.getErrorType() == RESPONSE_ERROR_COOKIE_EXPIRED) {
+                handleCookieExpired();
+            } else {
+                handleFail(responseInJson.getErrorMessage());
+            }
+        } else {
+            handleSuccess(responseInJson.getResult());
+            // 把成功获取到的数据记录到缓存
+            if (REQUEST_GET.equals(mNetType) && mExpires > 0) {
+                CacheManager.getInstance().putFileCache(mUrl, responseInJson.getResult(), mExpires);
             }
         }
     }
@@ -140,42 +189,6 @@ public class HttpClientRequest extends Request {
     }
 
     /**
-     * 处理返回
-     */
-    private void dealResponse() throws IOException {
-        String strResponse;
-        if (mResponse.getEntity().getContentEncoding() != null
-                && mResponse.getEntity().getContentEncoding().getValue() != null
-                && mResponse.getEntity().getContentEncoding().getValue().contains("gzip")) {
-            final InputStream is = mResponse.getEntity().getContent();
-            final InputStream gzip = new GZIPInputStream(is);
-            strResponse = BaseUtils.InputStream2String(gzip);
-            gzip.close();
-            is.close();
-        } else {
-            strResponse = EntityUtils.toString(mResponse.getEntity(), "UTF-8");
-        }
-
-        UtilsLog.d(UtilsLog.TAG_URL, "Entity{" + strResponse + "}");
-        final Response responseInJson = JSON.parseObject(strResponse, Response.class);
-        UtilsLog.d(UtilsLog.TAG_URL, responseInJson);
-        if (responseInJson.isError()) {
-            if (responseInJson.getErrorType() == RESPONSE_ERROR_COOKIE_EXPIRED) {
-                handleCookieExpired();
-            } else {
-                handleFail(responseInJson.getErrorMessage());
-            }
-        } else {
-            handleSuccess(responseInJson.getResult());
-            // 把成功获取到的数据记录到缓存
-            if (REQUEST_GET.equals(mNetType) && mExpires > 0) {
-                CacheManager.getInstance().putFileCache(mUrl, responseInJson.getResult(), mExpires);
-            }
-        }
-    }
-
-
-    /**
      * 将cookie列表保存到本地
      */
     private synchronized void saveCookie() {
@@ -195,7 +208,7 @@ public class HttpClientRequest extends Request {
     }
 
     /**
-     *
+     * 向请求中添加cookie
      */
     private void addCookie() {
         List<SerializableCookie> cookieList = null;

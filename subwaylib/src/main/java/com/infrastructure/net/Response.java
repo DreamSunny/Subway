@@ -1,7 +1,7 @@
 package com.infrastructure.net;
 
 /**
- * Created by user on 2015/12/31.
+ * 请求结果
  */
 public class Response {
     private boolean error;

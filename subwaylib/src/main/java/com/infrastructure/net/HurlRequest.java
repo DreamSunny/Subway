@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by user on 2016/1/6.
+ * 封装HttpURLConnection网络请求
  */
 public class HurlRequest extends Request {
     private static final String COOKIE = "Cookie";
@@ -65,7 +65,8 @@ public class HurlRequest extends Request {
                 if (mExpires > 0) {
                     CacheManager.getInstance().putFileCache(mUrl, response, mExpires);
                 }
-                handleSuccess(response);
+                // 处理返回信息
+                doResponse(response);
             } else {
                 handleFail("网络异常");
             }
@@ -101,7 +102,8 @@ public class HurlRequest extends Request {
             InputStream is = urlConn.getInputStream();
             String response = BaseUtils.InputStream2String(is);
             is.close();
-            handleSuccess(response);
+            // 处理返回信息
+            doResponse(response);
         } else {
             handleFail("网络异常");
         }
@@ -113,6 +115,15 @@ public class HurlRequest extends Request {
         if (urlConn != null) {
             urlConn.disconnect();
         }
+    }
+
+    /**
+     * 处理返回信息
+     *
+     * @param content 请求返回的内容
+     */
+    protected void doResponse(String content) {
+        handleSuccess(content);
     }
 
     /**
@@ -128,7 +139,7 @@ public class HurlRequest extends Request {
     }
 
     /**
-     *
+     * 添加头部信息
      */
     private void addRequestProperties() {
         urlConn.addRequestProperty(ACCEPT_CHARSET, "UTF-8,*");
@@ -137,7 +148,7 @@ public class HurlRequest extends Request {
     }
 
     /**
-     *
+     * 添加连接参数
      */
     private void setConnectionParametersForRequest(String type) throws Exception {
         if (REQUEST_GET.equals(type)) {

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by user on 2016/1/4.
+ * 管理网络请求
  */
 public class RequestManager {
     ArrayList<Request> mRequestList = null;
@@ -16,6 +16,8 @@ public class RequestManager {
 
     /**
      * 添加Request到列表
+     *
+     * @param request 网络请求
      */
     public void addRequest(final Request request) {
         mRequestList.add(request);
@@ -34,7 +36,11 @@ public class RequestManager {
     }
 
     /**
-     * 无参数调用
+     * 创建网络请求
+     *
+     * @param urlData         请求url信息
+     * @param requestCallback 回调方法
+     * @return 创建的请求
      */
     public Request createRequest(final URLData urlData, final RequestCallback requestCallback) {
         final Request request = new HurlRequest(urlData, null, requestCallback);
@@ -43,7 +49,12 @@ public class RequestManager {
     }
 
     /**
-     * 有参数调用
+     * 创建网络请求
+     *
+     * @param urlData         请求url信息
+     * @param parameters      请求参数
+     * @param requestCallback 回调方法
+     * @return 创建的请求
      */
     public Request createRequest(final URLData urlData, final List<RequestParameter> parameters, final RequestCallback requestCallback) {
         final Request request = new HurlRequest(urlData, parameters, requestCallback);

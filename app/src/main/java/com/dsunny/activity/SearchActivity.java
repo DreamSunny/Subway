@@ -37,32 +37,11 @@ public class SearchActivity extends AppBaseActivity {
     @Override
     protected void initViews(Bundle savedInstanceState) {
         setContentView(R.layout.activity_search);
-        tvHelloWorld = findView(R.id.tv_helloworld);
+        tvHelloWorld = findAppViewById(R.id.tv_helloworld);
     }
 
     @Override
     protected void loadData() {
-//        String url = "http://www.weather.com.cn/data/sk/101010100.html";
-//
-//        RequestAsyncTask task = new RequestAsyncTask() {
-//            @Override
-//            public void onSuccess(String content) {
-//                Log.d("mzy", "content = " + content);
-//                WeatherInfoEntity weatherEntity = JSON.parseObject(content, WeatherInfoEntity.class);
-//                WeatherInfo weatherInfo = weatherEntity.getWeatherInfo();
-//                if (weatherInfo != null) {
-//                    tvHelloWorld.setText(weatherInfo.getCity() + "-" + weatherInfo.getCityid());
-//                }
-//            }
-//
-//            @Override
-//            public void onFail(String errorMsg) {
-//                Log.d("mzy", "errorMsg = " + errorMsg);
-//                new AlertDialog.Builder(mContext).setTitle("出错啦").setMessage(errorMsg).setPositiveButton("确定", null).show();
-//            }
-//        };
-//        task.execute(url);
-
         List<RequestParameter> params = new ArrayList<>();
         params.add(new RequestParameter("cityId", "101010100"));
         params.add(new RequestParameter("cityName", "Beijing"));

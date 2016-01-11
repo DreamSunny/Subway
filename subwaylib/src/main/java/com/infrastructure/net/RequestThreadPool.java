@@ -6,7 +6,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by user on 2016/1/4.
+ * 请求线程池
  */
 public class RequestThreadPool {
     // 阻塞队列最大任务数量
@@ -25,6 +25,11 @@ public class RequestThreadPool {
             THREAD_POOL_CORE_SIZE, THREAD_POOL_MAX_SIZE, 15L, TimeUnit.SECONDS, blockingQueue, new ThreadPoolExecutor.DiscardOldestPolicy()
     );
 
+    /**
+     * 获取请求线程池的实例
+     *
+     * @return 请求线程池的实例
+     */
     public static synchronized RequestThreadPool getInstance() {
         if (instance == null) {
             instance = new RequestThreadPool();
@@ -32,10 +37,18 @@ public class RequestThreadPool {
         return instance;
     }
 
+    /**
+     * 清空线程池
+     */
     public static void removeAllTask() {
         blockingQueue.clear();
     }
 
+    /**
+     * 删除指定线程
+     *
+     * @param obj
+     */
     public static void removeTaskFromQueue(final Object obj) {
         blockingQueue.remove(obj);
     }
@@ -65,7 +78,9 @@ public class RequestThreadPool {
     }
 
     /**
-     * 执行任务
+     * 执行请求
+     *
+     * @param r 请求
      */
     public void execute(final Runnable r) {
         if (r != null) {

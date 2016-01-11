@@ -19,7 +19,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 /**
- * Created by user on 2016/1/4.
+ * 工具类
  */
 public class BaseUtils {
 
@@ -30,6 +30,9 @@ public class BaseUtils {
 
     /**
      * 编码
+     *
+     * @param s 字符串
+     * @return Unicode编码
      */
     public static String UrlEncodeUnicode(final String s) {
         if (s == null) {
@@ -61,7 +64,9 @@ public class BaseUtils {
     }
 
     /**
-     * @param n < 16
+     * 将0-15转换为16进制
+     *
+     * @param n 整数
      * @return 十六进制字符
      */
     static char Int2Hex(final int n) {
@@ -73,6 +78,9 @@ public class BaseUtils {
 
     /**
      * 检查是否为安全字符
+     *
+     * @param ch 字符
+     * @return true，安全字符；false，非安全字符
      */
     static boolean IsSafe(final char ch) {
         if ((((ch >= 'a') && (ch <= 'z')) || ((ch >= 'A') && (ch <= 'Z'))) || ((ch >= '0') && (ch <= '9'))) {
@@ -88,6 +96,9 @@ public class BaseUtils {
 
     /**
      * MD5运算
+     *
+     * @param s 字符串
+     * @return MD5值
      */
     public static String GetMd5(final String s) {
         try {
@@ -103,6 +114,9 @@ public class BaseUtils {
 
     /**
      * 字节数组转换为十六进制字符串
+     *
+     * @param bytes 字节数组
+     * @return 十六进制字符串
      */
     public static String Bytes2Hex(final byte[] bytes) {
         final StringBuilder sb = new StringBuilder(bytes.length * 2);
@@ -115,6 +129,8 @@ public class BaseUtils {
 
     /**
      * 检查是否安装了sd卡
+     *
+     * @return true，安装；false，未安装
      */
     public static boolean IsSdcardMounted() {
         final String state = Environment.getExternalStorageState();
@@ -124,6 +140,8 @@ public class BaseUtils {
 
     /**
      * 获取SD卡剩余空间的大小(byte)
+     *
+     * @return SD卡剩余空间的大小(byte)
      */
     public static long GetAvailableSdcardSize() {
         final StatFs localStatFs = new StatFs(Environment.getExternalStorageDirectory().getPath());
@@ -134,6 +152,9 @@ public class BaseUtils {
 
     /**
      * 将序列化对象保存到本地
+     *
+     * @param path       存储路径
+     * @param saveObject 存储对象
      */
     public static final void SaveObject(String path, Object saveObject) {
         FileOutputStream fileOutputStream = null;
@@ -166,6 +187,9 @@ public class BaseUtils {
 
     /**
      * 从本地读取序列化对象
+     *
+     * @param path 存储路径
+     * @return 存储对象
      */
     public static final Object restoreObject(String path) {
         FileInputStream fileInputStream = null;
@@ -203,8 +227,11 @@ public class BaseUtils {
 
     /**
      * InputStream转换为String
+     *
+     * @param is 输入流
+     * @return 字符串
      */
-    public static String InputStream2String(final InputStream is){
+    public static String InputStream2String(final InputStream is) {
         try {
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             byte[] buffer = new byte[1024];
@@ -221,6 +248,8 @@ public class BaseUtils {
 
     /**
      * 获取服务器时间
+     *
+     * @return 服务器时间
      */
     public static Date getServerTime() {
         return new Date(System.currentTimeMillis() + Request.DELTA_BETWEEN_SERVER_AND_CLIENT_TIME);

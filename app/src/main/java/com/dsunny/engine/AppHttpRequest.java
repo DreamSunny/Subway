@@ -17,7 +17,7 @@ import com.infrastructure.utils.UtilsLog;
 import java.util.List;
 
 /**
- * Created by user on 2016/1/4.
+ * 本地请求管理
  */
 public class AppHttpRequest {
     private static AppHttpRequest instance = null;
@@ -26,7 +26,9 @@ public class AppHttpRequest {
     }
 
     /**
-     * 获取实例
+     * 获取请求管理实例
+     *
+     * @return 请求管理实例
      */
     public static synchronized AppHttpRequest getInstance() {
         if (instance == null) {
@@ -37,6 +39,11 @@ public class AppHttpRequest {
 
     /**
      * 发起request请求，默认不强制更新
+     *
+     * @param activity 当前Activity
+     * @param apiKey   请求url标识
+     * @param params   请求参数
+     * @param callback 请求回调
      */
     public void performRequest(final BaseActivity activity, final String apiKey, final List<RequestParameter> params, final RequestCallback callback) {
         performRequest(activity, apiKey, params, callback, false);
@@ -44,6 +51,12 @@ public class AppHttpRequest {
 
     /**
      * 发起request请求，可强制更新
+     *
+     * @param activity    当前Activity
+     * @param apiKey      请求url标识
+     * @param params      请求参数
+     * @param callback    请求回调
+     * @param forceUpdate 是否强制更新
      */
     public void performRequest(final BaseActivity activity, final String apiKey, final List<RequestParameter> params, final RequestCallback callback, boolean forceUpdate) {
         final URLData urlData = UrlConfigManager.findURL(activity, apiKey);

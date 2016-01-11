@@ -3,7 +3,7 @@ package com.infrastructure.cache;
 import java.io.Serializable;
 
 /**
- * Created by user on 2016/1/4.
+ * 缓存项
  */
 public class CacheItem implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -28,5 +28,14 @@ public class CacheItem implements Serializable {
 
     public long getTimeStamp() {
         return timeStamp;
+    }
+
+    @Override
+    public String toString() {
+        return "CacheItem{" +
+                "key='" + key + '\'' +
+                ", data='" + data + '\'' +
+                ", timeStamp=" + timeStamp +
+                '}';
     }
 }

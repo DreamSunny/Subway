@@ -4,7 +4,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 /**
- * Created by user on 2016/1/5.
+ * Log工具类
  */
 public class UtilsLog {
     public static final boolean DEBUG = true;
@@ -13,20 +13,40 @@ public class UtilsLog {
     public static final String TAG_URL = "url";
     public static final String TAG_SDCARD = "sdcard";
 
+    /**
+     * 打印log
+     *
+     * @param msg log信息
+     */
     public static void d(String msg) {
         d(TAG_APP, msg);
     }
 
+    /**
+     * @param o log信息
+     */
     public static void d(Object o) {
         d(TAG_APP, o);
     }
 
+    /**
+     * 打印log
+     *
+     * @param tag log标签
+     * @param msg log信息
+     */
     public static void d(String tag, String msg) {
         if (DEBUG) {
             Log.d(tag, TextUtils.isEmpty(msg) ? "" : msg);
         }
     }
 
+    /**
+     * 打印log
+     *
+     * @param tag log标签
+     * @param o   log信息
+     */
     public static void d(String tag, Object o) {
         if (DEBUG) {
             Log.d(tag, o == null ? "null" : o.toString());

@@ -3,7 +3,7 @@ package com.infrastructure.utils;
 import android.os.Environment;
 
 /**
- * Created by user on 2016/1/4.
+ * 常量类
  */
 public class BaseConstants {
     public static final String APP_CACHE_PATH = Environment.getExternalStorageDirectory().getPath() + "/subway/appdata/";

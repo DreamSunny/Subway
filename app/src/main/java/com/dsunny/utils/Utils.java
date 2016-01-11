@@ -15,12 +15,15 @@ import android.widget.Toast;
 import com.infrastructure.utils.BaseUtils;
 
 /**
- * Created by user on 2016/1/5.
+ * 本地工具类
  */
 public class Utils extends BaseUtils {
 
     /**
      * dp转px
+     *
+     * @param dpValue dp值
+     * @return px值
      */
     public static int dp2px(float dpValue) {
         final float density = Resources.getSystem().getDisplayMetrics().density;
@@ -29,6 +32,9 @@ public class Utils extends BaseUtils {
 
     /**
      * px转dp
+     *
+     * @param pxValue px值
+     * @return dp值
      */
     public static int px2dip(float pxValue) {
         final float density = Resources.getSystem().getDisplayMetrics().density;
@@ -36,21 +42,29 @@ public class Utils extends BaseUtils {
     }
 
     /**
+     * Toast信息
      *
+     * @param context 当前Activity
+     * @param msg     信息
      */
-    public static void toast(Context c, String msg) {
-        Toast.makeText(c, msg, Toast.LENGTH_SHORT).show();
+    public static void toast(Context context, String msg) {
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
     }
 
     /**
+     * Toast信息
      *
+     * @param context 当前Activity
+     * @param msg     信息
      */
-    public static void toast2(Context c, String msg) {
-        Toast.makeText(c, msg, Toast.LENGTH_LONG).show();
+    public static void toast2(Context context, String msg) {
+        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
 
     /**
      * 取屏幕宽度
+     *
+     * @return 屏幕宽度
      */
     public static int getScreenWidth() {
         return Resources.getSystem().getDisplayMetrics().widthPixels;
@@ -58,6 +72,8 @@ public class Utils extends BaseUtils {
 
     /**
      * 取屏幕高度
+     *
+     * @return 屏幕高度
      */
     public static int getScreenHeight() {
         return Resources.getSystem().getDisplayMetrics().heightPixels;
@@ -65,6 +81,8 @@ public class Utils extends BaseUtils {
 
     /**
      * 关闭输入法
+     *
+     * @param activity 当前Activity
      */
     public static void closeInputMethod(Activity activity) {
         final View view = activity.getCurrentFocus();
@@ -75,6 +93,9 @@ public class Utils extends BaseUtils {
 
     /**
      * 关闭输入法
+     *
+     * @param activity 当前Activity
+     * @param view     打开输入法的View
      */
     public static void closeInputMethod(Activity activity, View view) {
         final InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -83,6 +104,9 @@ public class Utils extends BaseUtils {
 
     /**
      * 复制文本到剪贴板
+     *
+     * @param context 当前Activity
+     * @param text    文本内容
      */
     public static void copyToClipboard(Context context, String text) {
         final ClipboardManager cbm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
@@ -91,6 +115,9 @@ public class Utils extends BaseUtils {
 
     /**
      * 是否有网络
+     *
+     * @param context 当前Activity
+     * @return 文本内容
      */
     public static boolean isNetWorkAvilable(Context context) {
         final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -100,6 +127,9 @@ public class Utils extends BaseUtils {
 
     /**
      * 获取SharedPreferences
+     *
+     * @param context 当前Activity
+     * @return SharedPreferences
      */
     public static SharedPreferences getSharedPreference(Context context) {
         return context.getSharedPreferences(context.getPackageName(), Activity.MODE_PRIVATE);
