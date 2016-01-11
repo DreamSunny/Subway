@@ -4,11 +4,21 @@ import com.infrastructure.net.Request;
 import com.infrastructure.net.Response;
 
 /**
- * Created by user on 2016/1/5.
+ * Mock基类
  */
 public abstract class MockBaseInfo {
+    /**
+     * 模拟接口数据
+     *
+     * @return 返回信息
+     */
     public abstract String getJsonData();
 
+    /**
+     * 模拟接口返回成功
+     *
+     * @return 返回信息
+     */
     public Response getSuccessResponse() {
         Response response = new Response();
         response.setError(false);
@@ -17,6 +27,13 @@ public abstract class MockBaseInfo {
         return response;
     }
 
+    /**
+     * 模拟接口返回失败
+     *
+     * @param errorType    错误类型
+     * @param errorMessage 错误消息
+     * @return 返回信息
+     */
     public Response getFailResponse(int errorType, String errorMessage) {
         Response response = new Response();
         response.setError(true);

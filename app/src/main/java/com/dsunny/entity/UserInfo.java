@@ -3,7 +3,7 @@ package com.dsunny.entity;
 import java.io.Serializable;
 
 /**
- * Created by user on 2016/1/5.
+ * 用户信息
  */
 public class UserInfo implements Serializable {
     private static final long serialVersionUID = 1L;

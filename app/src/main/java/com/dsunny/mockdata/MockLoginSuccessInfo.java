@@ -5,7 +5,7 @@ import com.dsunny.entity.UserInfo;
 import com.infrastructure.net.Response;
 
 /**
- * Created by user on 2016/1/5.
+ * 模拟登陆接口
  */
 public class MockLoginSuccessInfo extends MockBaseInfo {
     @Override

@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * 搜索页面
+ */
 public class SearchActivity extends AppBaseActivity {
 
     private TextView tvHelloWorld;

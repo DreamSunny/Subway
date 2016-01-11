@@ -12,6 +12,7 @@ public class UtilsLog {
     public static final String TAG_APP = "subway";
     public static final String TAG_URL = "url";
     public static final String TAG_SDCARD = "sdcard";
+    public static final String TAG_SQL = "sql";
 
     /**
      * 打印log

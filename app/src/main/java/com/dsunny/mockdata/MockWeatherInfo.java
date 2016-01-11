@@ -5,7 +5,7 @@ import com.dsunny.entity.WeatherInfo;
 import com.infrastructure.net.Response;
 
 /**
- * Created by user on 2016/1/5.
+ * 模拟天气接口
  */
 public class MockWeatherInfo extends MockBaseInfo {
     @Override

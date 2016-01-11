@@ -2,6 +2,7 @@ package com.dsunny.engine;
 
 import android.app.Application;
 
+import com.dsunny.utils.Utils;
 import com.infrastructure.cache.CacheManager;
 
 /**
@@ -13,6 +14,7 @@ public class SubwayApplication extends Application {
         super.onCreate();
 
         // 拷贝数据库
+        Utils.copyDBFile(this);
         // 初始化缓存目录
         CacheManager.getInstance().initCacheDir();
     }

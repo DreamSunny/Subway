@@ -1,7 +1,7 @@
 package com.dsunny.entity;
 
 /**
- * Created by user on 2015/12/31.
+ * 天气接口
  */
 public class WeatherInfo {
     private String city;

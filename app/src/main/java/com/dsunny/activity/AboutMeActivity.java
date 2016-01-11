@@ -11,6 +11,9 @@ import com.infrastructure.net.RequestParameter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 关于我页面
+ */
 public class AboutMeActivity extends AppBaseActivity {
 
     private RequestCallback mRequestCallback;

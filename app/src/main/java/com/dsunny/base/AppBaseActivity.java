@@ -21,7 +21,7 @@ public abstract class AppBaseActivity extends BaseActivity {
     /**
      * 抽象回调类
      */
-    public abstract class AbstractRequestCallback implements RequestCallback {
+    protected abstract class AppRequestCallback implements RequestCallback {
         @Override
         public void onSuccess(String content) {
 
@@ -38,6 +38,18 @@ public abstract class AppBaseActivity extends BaseActivity {
                     .setPositiveButton("确定", null)
                     .show();
         }
+
+        @Override
+        public void onCookieExpired() {
+            if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                mProgressDialog.dismiss();
+            }
+            new AlertDialog.Builder(mContext)
+                    .setTitle("出错啦")
+                    .setMessage("Cookie失效")
+                    .setPositiveButton("确定", null)
+                    .show();
+        }
     }
 
     /**
@@ -45,32 +57,8 @@ public abstract class AppBaseActivity extends BaseActivity {
      *
      * @param title 标题名称
      */
-    public void setActionBarTitle(String title) {
+    protected void setActionBarTitle(String title) {
         mActionBar.setTitle(title == null ? "" : title);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_base, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.action_settings:
-                break;
-            case R.id.action_about_me:
-                startAppActivity(AppConstants.ACTIVITY_ABOUT_ME);
-                break;
-            case android.R.id.home:
-                finish();
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-        return true;
     }
 
     /**
@@ -131,5 +119,29 @@ public abstract class AppBaseActivity extends BaseActivity {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_base, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_settings:
+                break;
+            case R.id.action_about_me:
+                startAppActivity(AppConstants.ACTIVITY_ABOUT_ME);
+                break;
+            case android.R.id.home:
+                finish();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
     }
 }

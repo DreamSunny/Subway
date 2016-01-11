@@ -12,7 +12,12 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.dsunny.engine.AppConstants;
 import com.infrastructure.utils.BaseUtils;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 
 /**
  * 本地工具类
@@ -133,6 +138,29 @@ public class Utils extends BaseUtils {
      */
     public static SharedPreferences getSharedPreference(Context context) {
         return context.getSharedPreferences(context.getPackageName(), Activity.MODE_PRIVATE);
+    }
+
+    /**
+     * 拷贝数据库文件
+     *
+     * @param context Application Context
+     */
+    public static void copyDBFile(Context context) {
+        if (!(new File(AppConstants.DB_FILE_PATH).exists())) {
+            try {
+                InputStream is = context.getResources().getAssets().open(AppConstants.DB_NAME);
+                FileOutputStream fos = new FileOutputStream(AppConstants.DB_FILE_PATH);
+                byte[] buffer = new byte[1024];
+                int count;
+                while ((count = is.read(buffer)) > 0) {
+                    fos.write(buffer, 0, count);
+                }
+                fos.close();
+                is.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }
