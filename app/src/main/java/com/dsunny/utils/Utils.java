@@ -146,10 +146,10 @@ public class Utils extends BaseUtils {
      * @param context Application Context
      */
     public static void copyDBFile(Context context) {
-        if (!(new File(AppConstants.DB_FILE_PATH).exists())) {
+        if (!(new File(AppConstants.SUBWAY_DB_FILE_PATH).exists())) {
             try {
-                InputStream is = context.getResources().getAssets().open(AppConstants.DB_NAME);
-                FileOutputStream fos = new FileOutputStream(AppConstants.DB_FILE_PATH);
+                InputStream is = context.getResources().getAssets().open(AppConstants.SUBWAY_DB_NAME);
+                FileOutputStream fos = new FileOutputStream(AppConstants.SUBWAY_DB_FILE_PATH);
                 byte[] buffer = new byte[1024];
                 int count;
                 while ((count = is.read(buffer)) > 0) {

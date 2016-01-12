@@ -1,6 +1,5 @@
 package com.infrastructure.utils;
 
-import android.text.TextUtils;
 import android.util.Log;
 
 /**
@@ -38,7 +37,7 @@ public class UtilsLog {
      */
     public static void d(String tag, String msg) {
         if (DEBUG) {
-            Log.d(tag, TextUtils.isEmpty(msg) ? "" : msg);
+            Log.d(tag, BaseUtils.IsStringEmpty(msg) ? "" : msg);
         }
     }
 

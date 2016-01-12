@@ -1,9 +1,8 @@
 package com.dsunny.engine;
 
-import android.text.TextUtils;
-
 import com.alibaba.fastjson.JSON;
 import com.dsunny.mockdata.MockBaseInfo;
+import com.dsunny.utils.Utils;
 import com.infrastructure.activity.BaseActivity;
 import com.infrastructure.net.Request;
 import com.infrastructure.net.RequestCallback;
@@ -64,7 +63,7 @@ public class AppHttpRequest {
             if (forceUpdate) {
                 urlData.setExpires(0);
             }
-            if (!TextUtils.isEmpty(urlData.getMockClass())) {
+            if (!Utils.IsStringEmpty(urlData.getMockClass())) {
                 try {
                     MockBaseInfo mockInfo = (MockBaseInfo) Class.forName(urlData.getMockClass()).newInstance();
                     String strResponse = mockInfo.getJsonData();

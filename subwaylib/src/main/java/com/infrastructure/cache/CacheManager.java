@@ -114,7 +114,7 @@ public class CacheManager {
      */
     private synchronized CacheItem getFromCache(final String key) {
         CacheItem cacheItem = null;
-        Object findItem = BaseUtils.restoreObject(BaseConstants.APP_CACHE_PATH + key);
+        Object findItem = BaseUtils.RestoreObject(BaseConstants.APP_CACHE_PATH + key);
         if (findItem == null) {
             // 缓存不存在
             return null;

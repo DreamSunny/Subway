@@ -1,7 +1,5 @@
 package com.infrastructure.net;
 
-import android.text.TextUtils;
-
 import com.alibaba.fastjson.JSON;
 import com.infrastructure.cache.CacheManager;
 import com.infrastructure.utils.BaseConstants;
@@ -50,7 +48,7 @@ public class HttpClientRequest extends Request {
         if (mExpires > 0) {
             strCacheContent = CacheManager.getInstance().getFileCache(mUrl);
         }
-        if (!TextUtils.isEmpty(strCacheContent)) {
+        if (!BaseUtils.IsStringEmpty(strCacheContent)) {
             handleSuccess(strCacheContent);
         } else {
             mRequest = new HttpGet(mUrl);
@@ -94,7 +92,7 @@ public class HttpClientRequest extends Request {
     protected void doPost() throws Exception {
         mRequest = new HttpPost(mUrl);
         // 添加传递参数
-        if ((mParameters != null) && (mParameters.size() > 0)) {
+        if (!BaseUtils.IsListEmpty(mParameters)) {
             final List<BasicNameValuePair> list = new ArrayList<>();
             for (final RequestParameter p : mParameters) {
                 list.add(new BasicNameValuePair(p.getName(), p.getValue()));
@@ -197,7 +195,7 @@ public class HttpClientRequest extends Request {
         // 将普通cookie转换为可序列化的cookie
         List<SerializableCookie> serializableCookies = null;
 
-        if ((cookies != null) && (cookies.size() > 0)) {
+        if (!BaseUtils.IsListEmpty(cookies)) {
             serializableCookies = new ArrayList<>();
             for (final Cookie cookie : cookies) {
                 serializableCookies.add(new SerializableCookie(cookie));
@@ -212,12 +210,12 @@ public class HttpClientRequest extends Request {
      */
     private void addCookie() {
         List<SerializableCookie> cookieList = null;
-        Object cookieObj = BaseUtils.restoreObject(BaseConstants.COOKIE_CACHE_PATH);
+        Object cookieObj = BaseUtils.RestoreObject(BaseConstants.COOKIE_CACHE_PATH);
         if (cookieObj != null) {
             cookieList = (ArrayList<SerializableCookie>) cookieObj;
         }
 
-        if ((cookieList != null) && (cookieList.size() > 0)) {
+        if (!BaseUtils.IsListEmpty(cookieList)) {
             final BasicCookieStore cs = new BasicCookieStore();
             cs.addCookies(cookieList.toArray(new Cookie[]{}));
             mHttpClient.setCookieStore(cs);

@@ -1,7 +1,6 @@
 package com.infrastructure.net;
 
 import android.os.Handler;
-import android.text.TextUtils;
 
 import com.infrastructure.utils.BaseUtils;
 import com.infrastructure.utils.UtilsLog;
@@ -165,7 +164,7 @@ public abstract class Request implements Runnable {
      */
     protected void updateDeltaBetweenServerAndClientTime(String serverDate) {
         try {
-            if (!TextUtils.isEmpty(serverDate)) {
+            if (!BaseUtils.IsStringEmpty(serverDate)) {
                 final SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.ENGLISH);
                 TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));
                 Date serverDateUAT = sdf.parse(serverDate);

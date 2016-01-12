@@ -2,7 +2,6 @@ package com.dsunny.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -11,6 +10,7 @@ import com.dsunny.base.AppBaseActivity;
 import com.dsunny.engine.AppHttpRequest;
 import com.dsunny.entity.WeatherInfo;
 import com.dsunny.subway.R;
+import com.dsunny.utils.Utils;
 import com.infrastructure.net.RequestCallback;
 import com.infrastructure.net.RequestParameter;
 import com.infrastructure.utils.UtilsLog;
@@ -54,7 +54,7 @@ public class SearchActivity extends AppBaseActivity {
             public void onSuccess(String content) {
                 WeatherInfo weatherInfo = JSON.parseObject(content, WeatherInfo.class);
                 UtilsLog.d(weatherInfo);
-                if (!TextUtils.isEmpty(content)) {
+                if (!Utils.IsStringEmpty(content)) {
                     tvHelloWorld.setText(content);
                 }
             }

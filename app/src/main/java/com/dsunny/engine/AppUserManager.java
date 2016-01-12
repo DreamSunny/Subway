@@ -43,7 +43,7 @@ public class AppUserManager {
      * @return 用户信息
      */
     public UserInfo restoreUserInfo() {
-        Object object = Utils.restoreObject(AppConstants.USER_CACHE_PATH);
+        Object object = Utils.RestoreObject(AppConstants.USER_CACHE_PATH);
         return object == null ? null : (UserInfo) object;
     }
 

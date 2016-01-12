@@ -17,6 +17,7 @@ import java.io.ObjectOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 工具类
@@ -191,7 +192,7 @@ public class BaseUtils {
      * @param path 存储路径
      * @return 存储对象
      */
-    public static final Object restoreObject(String path) {
+    public static final Object RestoreObject(String path) {
         FileInputStream fileInputStream = null;
         ObjectInputStream objectInputStream = null;
         Object object = null;
@@ -251,7 +252,28 @@ public class BaseUtils {
      *
      * @return 服务器时间
      */
-    public static Date getServerTime() {
+    public static Date GetServerTime() {
         return new Date(System.currentTimeMillis() + Request.DELTA_BETWEEN_SERVER_AND_CLIENT_TIME);
+    }
+
+    /**
+     * 判断List是否为空
+     *
+     * @param list 列表
+     * @param <T>  泛型类
+     * @return true，为空；false，不为空
+     */
+    public static <T> boolean IsListEmpty(List<T> list) {
+        return list == null || list.size() == 0;
+    }
+
+    /**
+     * 判断String是否为空
+     *
+     * @param s 字符串
+     * @return true，为空；false，不为空
+     */
+    public static boolean IsStringEmpty(String s) {
+        return s == null || s.length() == 0;
     }
 }

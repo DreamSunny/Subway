@@ -33,14 +33,14 @@ public class HurlRequest extends Request {
 
     @Override
     protected void doGet() throws Exception {
-        if ((mParameters != null) && (mParameters.size() > 0)) {
+        if (!BaseUtils.IsListEmpty(mParameters)) {
             mUrl = mUrl + HOST_PARAMS_SEPARATOR + formatRequestParams();
         }
         String cacheContent = null;
         if (mExpires > 0) {
             cacheContent = CacheManager.getInstance().getFileCache(mUrl);
         }
-        if (!TextUtils.isEmpty(cacheContent)) {
+        if (!BaseUtils.IsStringEmpty(cacheContent)) {
             handleSuccess(cacheContent);
         } else {
             // 打开一个HttpURLConnection连接
@@ -87,7 +87,7 @@ public class HurlRequest extends Request {
         // 开始连接
         urlConn.connect();
         // 发送请求参数
-        if ((mParameters != null) && (mParameters.size() > 0)) {
+        if (!BaseUtils.IsListEmpty(mParameters)) {
             DataOutputStream dos = new DataOutputStream(urlConn.getOutputStream());
             byte[] postData = URLEncoder.encode(formatRequestParams(), "UTF-8").getBytes();
             dos.write(postData);
@@ -166,7 +166,7 @@ public class HurlRequest extends Request {
      */
     private void addCoocie() {
         String strCookie = restoreCoocie();
-        if (TextUtils.isEmpty(strCookie)) {
+        if (!BaseUtils.IsStringEmpty(strCookie)) {
             urlConn.setRequestProperty(COOKIE, strCookie);
         }
     }
@@ -196,7 +196,7 @@ public class HurlRequest extends Request {
      * 从本地获取cookie列表
      */
     private String restoreCoocie() {
-        Object object = BaseUtils.restoreObject(BaseConstants.COOKIE_CACHE_PATH);
+        Object object = BaseUtils.RestoreObject(BaseConstants.COOKIE_CACHE_PATH);
         return object == null ? null : (String) object;
     }
 }
