@@ -14,6 +14,9 @@ import java.util.List;
 public class BaseDao {
     protected SubwayDB db;
 
+    /**
+     * 构造函数
+     */
     public BaseDao() {
         db = SubwayDB.getInstance();
     }

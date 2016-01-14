@@ -34,13 +34,11 @@ public class TransferDao extends BaseDao {
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT * ");
         sql.append(" FROM TRANSFER ");
-        sql.append(" WHERE LID = '").append(lids[0]).append("' ");
-        for (int i = 1; i < lids.length; i++) {
-            sql.append(" UNION ");
-            sql.append(" SELECT * ");
-            sql.append(" FROM TRANSFER ");
-            sql.append(" WHERE LID = '").append(lids[i]).append("' ");
+        sql.append(" WHERE LID IN ( ");
+        for(String lid : lids){
+            sql.append(" '").append(lid).append("', ");
         }
+        sql.append(" '') ");
 
         return queryListBean(sql.toString(), Transfer.class);
     }

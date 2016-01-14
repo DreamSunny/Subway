@@ -44,7 +44,7 @@ public class StationDao extends BaseDao {
      * 判断指定车站ID是否为普通车站(存在相邻的换乘车站)
      *
      * @param sid 车站ID
-     * @return true，是普通车站；false，换乘站或首尾车站
+     * @return true，是普通车站；false，换乘站或首尾车站或单向车站
      */
     public boolean isOrdinaryStation(String sid) {
         StringBuilder sql = new StringBuilder();
@@ -54,6 +54,60 @@ public class StationDao extends BaseDao {
         sql.append(" AND SType == '0' ");
 
         return queryCount(sql.toString()) != 0;
+    }
+
+    /**
+     * 获取指定车站名的所有车站ID
+     *
+     * @param name 车站名
+     * @return 车站ID集合
+     */
+    public List<String> getStationIdsByStationName(String name){
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT ID ");
+        sql.append(" FROM STATION ");
+        sql.append(" WHERE Name = '").append(name).append("' ");
+        sql.append(" AND State == '1' ");
+        sql.append(" ORDER BY ID ASC ");
+
+        return queryListString(sql.toString());
+    }
+
+    /**
+     * 获取指定车站ID的所有车站ID
+     *
+     * @param sid 车站ID
+     * @return 车站ID集合
+     */
+    public List<String> getStationIdsByStationId(String sid){
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT ID ");
+        sql.append(" FROM STATION ");
+        sql.append(" WHERE Name = ( ");
+        sql.append("     SELECT Name ");
+        sql.append("     FROM STATION ");
+        sql.append("     WHERE ID = '").append(sid).append("' ");
+        sql.append(" ) ");
+        sql.append(" AND State = '1' ");
+        sql.append(" ORDER BY ID ASC ");
+
+        return queryListString(sql.toString());
+    }
+
+    /**
+     * 获取指定车站名的所有线路ID(14号线分为AB段，本期不用)
+     *
+     * @param name 车站名
+     * @return 线路ID集合
+     */
+    public List<String> getLineIdsOfSameStation(String name){
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT SUBSTR(ID, 1, 2) ");
+        sql.append(" FROM STATION ");
+        sql.append(" WHERE Name = '").append(name).append("' ");
+        sql.append(" AND State == '1' ");
+
+        return queryListString(sql.toString());
     }
 
     /**

@@ -2,6 +2,8 @@ package com.dsunny.db;
 
 import com.dsunny.engine.SubwayData;
 
+import java.util.List;
+
 /**
  * LINE表的查询类
  */
@@ -53,12 +55,29 @@ public class LineDao extends BaseDao {
     }
 
     /**
+     * 线路存在环路，获取横穿lid的线路ID集合
+     *
+     * @param lid 线路ID
+     * @return 横穿lid的线路ID集合
+     */
+    public String[] getCrossLineIds(String lid) {
+        if (SubwayData.LINE_02.equals(lid)) {
+            return SubwayData.ID_CROSS_LINE_02;
+        } else if (SubwayData.LINE_10.equals(lid)) {
+            return SubwayData.ID_CROSS_LINE_10;
+        } else if (SubwayData.LINE_13.equals(lid)) {
+            return SubwayData.ID_CROSS_LINE_13;
+        }
+        return null;
+    }
+
+    /**
      * 获取指定线路ID的最小车站ID的车站名
      *
      * @param lid 线路ID
      * @return 车站名
      */
-    public String getLineFirstStation(String lid) {
+    public String getFirstStationNameByLineId(String lid) {
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT Name ");
         sql.append(" FROM STATION ");
@@ -78,7 +97,7 @@ public class LineDao extends BaseDao {
      * @param lid 线路ID
      * @return 车站名
      */
-    public String getLineLastStation(String lid) {
+    public String getLastStationNameByLineId(String lid) {
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT Name ");
         sql.append(" FROM STATION ");
@@ -93,59 +112,79 @@ public class LineDao extends BaseDao {
     }
 
     /**
-     * 获取车站相临接的换乘车站或终点站ID
+     * 获取车站相临接的换乘车站或终点站的车站ID
      *
      * @param sid 车站ID
      * @return [车站ID较小值，车站ID较大值]
      */
-    public String[] getAdjacentSids(String sid) {
+    public List<String> getAdjacentStationIds(String sid) {
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT MAX(L1.SID) ");
         sql.append(" FROM ( ");
-        sql.append("     SELECT LINE.SID ");
-        sql.append("     FROM STATION, LINE ");
-        sql.append("     WHERE STATION.ID LIKE '").append(sid.substring(0, 2)).append("%' ");
-        sql.append("     AND STATION.State = '1' ");
-        sql.append("     AND LINE.SType <> '0' ");
-        sql.append("     AND STATION.ID = LINE.SID ");
+        sql.append("     SELECT SID ");
+        sql.append("     FROM LINE ");
+        sql.append("     WHERE SID LIKE '").append(sid.substring(0, 2)).append("%' ");
+        sql.append("     AND SType <> '0' ");
         sql.append(" ) L1 ");
         sql.append(" WHERE L1.SID < '").append(sid).append("' ");
         sql.append(" UNION ALL ");
         sql.append(" SELECT MIN(L2.SID) ");
         sql.append(" FROM ( ");
-        sql.append("     SELECT LINE.SID ");
-        sql.append("     FROM STATION, LINE ");
-        sql.append("     WHERE STATION.ID LIKE '").append(sid.substring(0, 2)).append("%' ");
-        sql.append("     AND STATION.State = '1' ");
-        sql.append("     AND LINE.SType <> '0' ");
-        sql.append("     AND STATION.ID = LINE.SID ");
+        sql.append("     SELECT SID ");
+        sql.append("     FROM LINE ");
+        sql.append("     WHERE SID LIKE '").append(sid.substring(0, 2)).append("%' ");
+        sql.append("     AND SType <> '0' ");
         sql.append(" ) L2 ");
         sql.append(" WHERE L2.SID > '").append(sid).append("' ");
 
-        return queryListString(sql.toString()).toArray(new String[2]);
+        return queryListString(sql.toString());
     }
 
 
     /**
      * 获取两站之间的距离
      *
-     * @param from 两站起始站ID
-     * @param to   两站终止站ID
+     * @param fromSid 两站起点站ID
+     * @param toSid   两站终点站ID
      * @return 两站之间的距离，单位m
      */
-    public int getIntervalDistance(String from, String to) {
+    public int getIntervalDistance(String fromSid, String toSid) {
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT SUM(Distance) ");
         sql.append(" FROM LINE ");
-        if (from.compareTo(to) < 0) {
-            sql.append(" WHERE SID >= '").append(from).append("' ");
-            sql.append(" AND SID < '").append(to).append("' ");
+        if (fromSid.compareTo(toSid) < 0) {
+            sql.append(" WHERE SID >= '").append(fromSid).append("' ");
+            sql.append(" AND SID < '").append(toSid).append("' ");
         } else {
-            sql.append(" WHERE SID >= '").append(to).append("' ");
-            sql.append(" AND SID < '").append(from).append("' ");
+            sql.append(" WHERE SID >= '").append(toSid).append("' ");
+            sql.append(" AND SID < '").append(fromSid).append("' ");
         }
 
         return queryInt(sql.toString());
+    }
+
+    /**
+     * 判断同一线路的两个普通车站是否在相同区间
+     *
+     * @param fromSid 两站起点站ID
+     * @param toSid   两站终点站ID
+     * @return true，在相同区间；false，不在相同区间
+     */
+    public boolean isFromToStationInSameInterval(String fromSid, String toSid) {
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT COUNT(*) ");
+        sql.append(" FROM LINE ");
+        if (fromSid.compareTo(toSid) < 0) {
+            sql.append(" WHERE SType <> '0' ");
+            sql.append(" AND SID < '").append(toSid).append("' ");
+            sql.append(" AND SID > '").append(fromSid).append("' ");
+        } else {
+            sql.append(" WHERE SType <> '0' ");
+            sql.append(" AND SID < '").append(fromSid).append("' ");
+            sql.append(" AND SID > '").append(toSid).append("' ");
+        }
+
+        return queryCount(sql.toString()) == 0;
     }
 
 }
