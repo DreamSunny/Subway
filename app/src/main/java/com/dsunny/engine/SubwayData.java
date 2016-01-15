@@ -19,9 +19,12 @@ public class SubwayData {
     // 机场线
     public static final String LINE_99 = "99";
 
-    // 东直门站
+    // 机场线
+    public static final String LINE_NAME_JICHANGXIAN = "机场线";
+
+    // 东直门
     public static final String STATION_DONGZHIMEN = "东直门";
-    // 三元桥站
+    // 三元桥
     public static final String STATION_SANYUANQIAO = "三元桥";
 
     // 14号线A段
@@ -32,6 +35,10 @@ public class SubwayData {
     public static final String LINE_14B = "14B";
     // 14号线B段起点与终点站ID
     public static final String[] ID_LINE_14B = {"1413", "1437"};
+    // 西局
+    public static final String STATION_XIJU = "西局";
+    // 北京南站
+    public static final String STATION_BEIJINGNANZHAN = "北京南站";
 
     // 环线线路ID
     public static final String[] ID_CIRCULAR_LINES = {"02", "10"};

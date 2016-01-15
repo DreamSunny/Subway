@@ -10,6 +10,46 @@ import java.util.List;
 public class TransferDao extends BaseDao {
 
     /**
+     * 计算乘车价格
+     *
+     * @param airportLineDistance 机场线乘车距离
+     * @param otherLinesDistance  其他线路乘车距离
+     * @return 乘车价格
+     */
+    public int getTransferPrice(int airportLineDistance, int otherLinesDistance) {
+        int price = 0;
+        if (airportLineDistance != 0) {
+            price += 25;
+        }
+        if (otherLinesDistance == 0) {
+            price += 0;
+        } else if (otherLinesDistance <= 6000) {
+            price += 3;
+        } else if (otherLinesDistance <= 12000) {
+            price += 4;
+        } else if (otherLinesDistance <= 22000) {
+            price += 5;
+        } else if (otherLinesDistance <= 32000) {
+            price += 6;
+        } else {
+            price += 7 + (otherLinesDistance - 32000) / 20000;
+        }
+
+        return price;
+    }
+
+    /**
+     * 计算乘车时间
+     *
+     * @param airportLineDistance 机场线乘车距离
+     * @param otherLinesDistance  其他线路乘车距离
+     * @return 乘车时间
+     */
+    public int getTransferElapsedTime(int airportLineDistance, int otherLinesDistance) {
+        return airportLineDistance / 1000 + otherLinesDistance / 500 + 1;
+    }
+
+    /**
      * 获取指定线路ID的换乘信息
      *
      * @param lid 线路id
@@ -35,7 +75,7 @@ public class TransferDao extends BaseDao {
         sql.append(" SELECT * ");
         sql.append(" FROM TRANSFER ");
         sql.append(" WHERE LID IN ( ");
-        for(String lid : lids){
+        for (String lid : lids) {
             sql.append(" '").append(lid).append("', ");
         }
         sql.append(" '') ");
