@@ -186,6 +186,7 @@ public class BaseDao {
                         }
                     }
                 }
+                results.add(t);
             }
         } catch (Exception e) {
             e.printStackTrace();

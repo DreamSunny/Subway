@@ -33,6 +33,14 @@ public class SubwayMap {
             this.sid = sid;
             this.lstItems = new ArrayList<>();
         }
+
+        @Override
+        public String toString() {
+            return "Head{" +
+                    "sid='" + sid + '\'' +
+                    ", lstItems=" + lstItems +
+                    '}';
+        }
     }
 
     /**
@@ -47,6 +55,15 @@ public class SubwayMap {
             this.sid = sid;
             this.lid = lid;
             this.distance = distance;
+        }
+
+        @Override
+        public String toString() {
+            return "Item{" +
+                    "sid='" + sid + '\'' +
+                    ", lid='" + lid + '\'' +
+                    ", distance=" + distance +
+                    '}';
         }
     }
 
@@ -152,19 +169,23 @@ public class SubwayMap {
 
         // 起点车站名对应的车站ID集合
         List<String> lstFromStationIds = mStationDao.getStationIdsByStationName(fromStationName);
-        UtilsLog.d(lstFromStationIds);
+        UtilsLog.d("lstFromStationIds = " + lstFromStationIds);
 
         // 终点车站名对应的车站ID集合
         List<String> lstToStationIds = mStationDao.getStationIdsByStationName(toStationName);
-        UtilsLog.d(lstToStationIds);
+        UtilsLog.d("lstToStationIds = " + lstToStationIds);
 
         // 起点终点线路集合
         List<String[]> lstFromToLineIds = getFromToLineIds(lstFromStationIds, lstToStationIds);
-        UtilsLog.d(lstFromToLineIds);
+        if (UtilsLog.DEBUG) {
+            UtilsLog.d("lstFromToLineIds = " + Utils.ListStringArray2String(lstFromToLineIds));
+        }
 
         // 起点到终点换乘路线详细信息
         List<String[]> lstTransferRouteLineIds = getFromToTransferRouteLineIds(lstFromToLineIds);
-        UtilsLog.d(lstTransferRouteLineIds);
+        if (UtilsLog.DEBUG) {
+            UtilsLog.d("lstTransferRouteLineIds = " + Utils.ListStringArray2String(lstTransferRouteLineIds));
+        }
 
         // 遍历所有起点到终点换乘路线详细信息，搜索换乘信息
         TransferDetail transferDetail = new TransferDetail();
@@ -174,10 +195,13 @@ public class SubwayMap {
         for (String[] lids : lstTransferRouteLineIds) {
             // 构建临接表建图
             createSubwayMap(lids, lstFromStationIds.get(0), lstToStationIds.get(0));
+            UtilsLog.d("mLstHeads = " + mLstHeads);
             // 从图中搜索两点之间最短距离
             TransferRoute transferRoute = searchTransferRoute(lstFromStationIds.get(0), lstToStationIds.get(0));
+            UtilsLog.d("transferRoute = " + transferRoute);
             // 添加换乘路线
             updateTransferDetail(transferDetail, transferRoute);
+            UtilsLog.d("transferDetail = " + transferDetail);
         }
 
         transferDetail.ticketPrice = transferDetail.lstTransferRoute.get(0).ticketPrice;
@@ -500,27 +524,27 @@ public class SubwayMap {
         visited[fromStationIndex] = true;
 
         // 迪杰斯特拉算法，14号分为AB段，图中任意两点可达
+        int cur = 0, min, tmp;
         while (!visited[toStationIndex]) {
-            int current = -1;
             // 寻找当前最小的路径
-            int min = Integer.MAX_VALUE;
+            min = Integer.MAX_VALUE;
             for (int i = 0; i < size; i++) {
                 if (!visited[i] && distance[i] < min) {
                     min = distance[i];
-                    current = i;
+                    cur = i;
                 }
             }
             // 标记已获取到最短路径
-            visited[current] = true;
+            visited[cur] = true;
             // 修正当前最短路径和前驱结点
             for (int i = 0; i < size; i++) {
-                int tmp = getFromToDistanceByIndex(current, i);
+                tmp = getFromToDistanceByIndex(cur, i);
                 if (tmp != Integer.MAX_VALUE) {
                     tmp += min;
                 }
                 if (!visited[i] && tmp < distance[i]) {
                     distance[i] = tmp;
-                    previous[i] = current;
+                    previous[i] = cur;
                 }
             }
         }
@@ -651,7 +675,11 @@ public class SubwayMap {
             }
             // 换乘方向
             if (mLineDao.isCircularLine(subRoute.lineName)) {
-                subRoute.transferDirection = subRoute.lstStationNames.get(0);
+                if (subRoute.lstStationNames.size() > 0) {
+                    subRoute.transferDirection = subRoute.lstStationNames.get(0);
+                } else {
+                    subRoute.transferDirection = mStationDao.getStationName(subRoute.toStationName);
+                }
             } else if (SubwayData.LINE_14.equals(subRoute.lineName)) {
                 if (subRoute.fromStationName.compareTo(subRoute.toStationName) < 0
                         && subRoute.toStationName.compareTo(SubwayData.ID_LINE_14A[1]) <= 0) {

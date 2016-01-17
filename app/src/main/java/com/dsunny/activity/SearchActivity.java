@@ -1,22 +1,15 @@
 package com.dsunny.activity;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.dsunny.base.AppBaseActivity;
-import com.dsunny.engine.AppHttpRequest;
-import com.dsunny.entity.WeatherInfo;
+import com.dsunny.db.StationDao;
+import com.dsunny.engine.SubwayMap;
 import com.dsunny.subway.R;
-import com.dsunny.utils.Utils;
 import com.infrastructure.net.RequestCallback;
-import com.infrastructure.net.RequestParameter;
-import com.infrastructure.utils.UtilsLog;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -45,34 +38,37 @@ public class SearchActivity extends AppBaseActivity {
 
     @Override
     protected void loadData() {
-        List<RequestParameter> params = new ArrayList<>();
-        params.add(new RequestParameter("cityId", "101010100"));
-        params.add(new RequestParameter("cityName", "Beijing"));
-
-        mRequestCallback = new RequestCallback() {
-            @Override
-            public void onSuccess(String content) {
-                WeatherInfo weatherInfo = JSON.parseObject(content, WeatherInfo.class);
-                UtilsLog.d(weatherInfo);
-                if (!Utils.IsStringEmpty(content)) {
-                    tvHelloWorld.setText(content);
-                }
-            }
-
-            @Override
-            public void onFail(String errorMsg) {
-                new AlertDialog.Builder(mContext).setTitle("出错啦").setMessage(errorMsg).setPositiveButton("确定", null).show();
-            }
-
-            @Override
-            public void onCookieExpired() {
-
-            }
-        };
-
-        AppHttpRequest.getInstance().performRequest(this, "getWeatherInfo", params, mRequestCallback);
-
         setActionBarTitle("北京地铁");
+        new AsyncTask<Void, String, String>() {
+            @Override
+            protected String doInBackground(Void... voids) {
+                SubwayMap map = new SubwayMap();
+                StationDao dao = new StationDao();
+//                List<Station> lstStations = dao.getAllStationNamesAndAbbrs();
+//                for (Station s1 : lstStations) {
+//                    for (Station s2 : lstStations) {
+//                        if (!s1.Name.equals(s2.Name)) {
+//                            map.search(s1.Name, s2.Name);
+//                        }
+//                        publishProgress(s1.Name, s2.Name);
+//                    }
+//                }
+                map.search("丰台科技园", "北京站");
+                return "ok";
+            }
+
+            @Override
+            protected void onProgressUpdate(String... values) {
+                super.onProgressUpdate(values);
+                tvHelloWorld.setText(values[0] + "-" + values[1]);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                tvHelloWorld.setText(s);
+            }
+        }.execute();
     }
 
 //    @Override

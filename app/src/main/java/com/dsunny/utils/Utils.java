@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import com.infrastructure.utils.BaseUtils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * 本地工具类
@@ -161,6 +163,21 @@ public class Utils extends BaseUtils {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * 将List<String[]>转换为String形式表示
+     *
+     * @return List<String[]>的String值
+     */
+    public static String ListStringArray2String(List<String[]> lstStringArray) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        for (String[] sArr : lstStringArray) {
+            sb.append("{").append(TextUtils.join(",", sArr)).append("}");
+        }
+        sb.append("}");
+        return sb.toString();
     }
 
 }

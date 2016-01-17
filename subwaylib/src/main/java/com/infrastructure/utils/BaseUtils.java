@@ -268,6 +268,17 @@ public class BaseUtils {
     }
 
     /**
+     * 判断array是否为空
+     *
+     * @param array 数组
+     * @param <T>   泛型类
+     * @return true，为空；false，不为空
+     */
+    public static <T> boolean ISArrayEmpty(T[] array) {
+        return array == null || array.length == 0;
+    }
+
+    /**
      * 判断String是否为空
      *
      * @param s 字符串

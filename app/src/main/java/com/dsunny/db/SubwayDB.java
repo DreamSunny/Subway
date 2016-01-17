@@ -46,6 +46,8 @@ public class SubwayDB {
      * 关闭数据库
      */
     public void closeDB() {
-        db.close();
+        if (db != null) {
+            db.close();
+        }
     }
 }
