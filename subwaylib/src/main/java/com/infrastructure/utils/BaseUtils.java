@@ -157,7 +157,7 @@ public class BaseUtils {
      * @param path       存储路径
      * @param saveObject 存储对象
      */
-    public static final void SaveObject(String path, Object saveObject) {
+    public static final void SaveObject(final String path, final Object saveObject) {
         FileOutputStream fileOutputStream = null;
         ObjectOutputStream objectOutputStream = null;
         File file = new File(path);
@@ -192,7 +192,7 @@ public class BaseUtils {
      * @param path 存储路径
      * @return 存储对象
      */
-    public static final Object RestoreObject(String path) {
+    public static final Object RestoreObject(final String path) {
         FileInputStream fileInputStream = null;
         ObjectInputStream objectInputStream = null;
         Object object = null;
@@ -263,7 +263,7 @@ public class BaseUtils {
      * @param <T>  泛型类
      * @return true，为空；false，不为空
      */
-    public static <T> boolean IsListEmpty(List<T> list) {
+    public static <T> boolean IsListEmpty(final List<T> list) {
         return list == null || list.size() == 0;
     }
 
@@ -274,7 +274,7 @@ public class BaseUtils {
      * @param <T>   泛型类
      * @return true，为空；false，不为空
      */
-    public static <T> boolean ISArrayEmpty(T[] array) {
+    public static <T> boolean ISArrayEmpty(final T[] array) {
         return array == null || array.length == 0;
     }
 
@@ -284,7 +284,7 @@ public class BaseUtils {
      * @param s 字符串
      * @return true，为空；false，不为空
      */
-    public static boolean IsStringEmpty(String s) {
+    public static boolean IsStringEmpty(final String s) {
         return s == null || s.length() == 0;
     }
 }

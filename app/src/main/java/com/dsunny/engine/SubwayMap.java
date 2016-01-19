@@ -97,8 +97,8 @@ public class SubwayMap {
          */
         public void searchTransferRouteLineIds(final List<String[]> lstFromToLineIds) {
             for (String[] lids : lstFromToLineIds) {
-                final int from = getIndexOfLinesTransferEdges(lids[0]);
-                final int to = getIndexOfLinesTransferEdges(lids[1]);
+                int from = getIndexOfLinesTransferEdges(lids[0]);
+                int to = getIndexOfLinesTransferEdges(lids[1]);
                 DFS(from, to);
             }
         }
@@ -178,13 +178,13 @@ public class SubwayMap {
         // 起点终点线路集合
         List<String[]> lstFromToLineIds = getFromToLineIds(lstFromStationIds, lstToStationIds);
         if (UtilsLog.DEBUG) {
-            UtilsLog.d("lstFromToLineIds = " + Utils.ListStringArray2String(lstFromToLineIds));
+            UtilsLog.d("lstFromToLineIds = " + Utils.ListArray2String(lstFromToLineIds));
         }
 
         // 起点到终点换乘路线详细信息
         List<String[]> lstTransferRouteLineIds = getFromToTransferRouteLineIds(lstFromToLineIds);
         if (UtilsLog.DEBUG) {
-            UtilsLog.d("lstTransferRouteLineIds = " + Utils.ListStringArray2String(lstTransferRouteLineIds));
+            UtilsLog.d("lstTransferRouteLineIds = " + Utils.ListArray2String(lstTransferRouteLineIds));
         }
 
         // 遍历所有起点到终点换乘路线详细信息，搜索换乘信息
@@ -198,13 +198,14 @@ public class SubwayMap {
             UtilsLog.d("mLstHeads = " + mLstHeads);
             // 从图中搜索两点之间最短距离
             TransferRoute transferRoute = searchTransferRoute(lstFromStationIds.get(0), lstToStationIds.get(0));
-            UtilsLog.d("transferRoute = " + transferRoute);
+            UtilsLog.d(transferRoute);
             // 添加换乘路线
             updateTransferDetail(transferDetail, transferRoute);
-            UtilsLog.d("transferDetail = " + transferDetail);
+            UtilsLog.d(transferDetail);
         }
 
         transferDetail.ticketPrice = transferDetail.lstTransferRoute.get(0).ticketPrice;
+        UtilsLog.d("result = " + transferDetail);
         return transferDetail;
     }
 
@@ -290,7 +291,7 @@ public class SubwayMap {
             // 起点终点在同一线路
             lstTransferRouteLineIds = new ArrayList<>();
             if (lstFromToLineIds.size() == 1) {
-                String lineId = lstFromToLineIds.get(0)[0];
+                final String lineId = lstFromToLineIds.get(0)[0];
                 lstTransferRouteLineIds.add(new String[]{lineId});
                 // 机场线特殊
                 if (SubwayData.LINE_99.equals(lineId)) {
@@ -340,14 +341,14 @@ public class SubwayMap {
         // 起点终点是否是普通车站及所在线路ID
         final boolean fromIsOrdinaryStation = mStationDao.isOrdinaryStation(fromSid);
         final boolean toIsOrdinaryStation = mStationDao.isOrdinaryStation(toSid);
-        final String fromStationLineId = fromSid.substring(0, 2);
-        final String toStationLineId = toSid.substring(0, 2);
+        final String fromStationLineId = transferRouteLineIds[0];
+        final String toStationLineId = transferRouteLineIds[transferRouteLineIds.length - 1];
         // 如果起点终点均为普通车站，且在同一线路，且具有相同的区间(相临接的非普通车站相同)，则只加载此路线
         if (fromIsOrdinaryStation
                 && toIsOrdinaryStation
                 && fromStationLineId.equals(toStationLineId)
                 && mLineDao.isFromToStationInSameInterval(fromSid, toSid)) {
-            final List<Transfer> lstTransfer = mTransferDao.getLineTransfers(fromStationLineId);
+            List<Transfer> lstTransfer = mTransferDao.getLineTransfers(fromStationLineId);
             for (Transfer transfer : lstTransfer) {
                 addHeadAndItems(transfer.FromSID, transfer.ToSID, transfer.LID, transfer.Distance);
                 addHeadAndItems(transfer.ToSID, transfer.FromSID, transfer.LID, transfer.Distance);
@@ -377,17 +378,19 @@ public class SubwayMap {
             }
         }
         // 查询其余线路换乘信息(不包括机场线)
-        final List<Transfer> lstTransfer = mTransferDao.getLinesTransfers(newTransferRouteLineIds);
+        List<Transfer> lstTransfer = mTransferDao.getLinesTransfers(newTransferRouteLineIds);
         for (Transfer transfer : lstTransfer) {
             addHeadAndItems(transfer.FromSID, transfer.ToSID, transfer.LID, transfer.Distance);
             addHeadAndItems(transfer.ToSID, transfer.FromSID, transfer.LID, transfer.Distance);
         }
         // 如果起点为普通车站，向地铁图插入车站
         if (fromIsOrdinaryStation) {
+            UtilsLog.d("insertStationToSubwayMap{" + fromStationLineId + "," + fromSid + "}");
             insertStationToSubwayMap(fromStationLineId, fromSid);
         }
         // 如果终点为普通车站，向地铁图插入车站
         if (toIsOrdinaryStation) {
+            UtilsLog.d("insertStationToSubwayMap{" + toStationLineId + "," + toSid + "}");
             insertStationToSubwayMap(toStationLineId, toSid);
         }
     }
@@ -439,49 +442,49 @@ public class SubwayMap {
     /**
      * 向换乘区间插入新车站，例如：向[七里庄,郭公庄]插入丰台科技园，则变为[七里庄,丰台科技园]，[丰台科技园,郭公庄]
      *
-     * @param lid 插入的车站线路ID
-     * @param sid 插入的车站ID
+     * @param targetLid 插入的车站线路ID
+     * @param targetSid 插入的车站ID
      */
-    private void insertStationToSubwayMap(final String lid, final String sid) {
+    private void insertStationToSubwayMap(final String targetLid, final String targetSid) {
         // 获取普通车站的临接车站，List长度为2，表示[from,to]
-        final List<String> lstAdjacentStationIds = mLineDao.getAdjacentStationIds(sid);
+        List<String> lstAdjacentStationIds = mLineDao.getAdjacentStationIds(targetSid);
         // 获取所有与from同名的车站ID
-        final List<String> lstFromStationIds = mStationDao.getStationIdsByStationId(lstAdjacentStationIds.get(0));
+        List<String> lstFromStationIds = mStationDao.getStationIdsByStationId(lstAdjacentStationIds.get(0));
         // 获取所有与to同名的车站ID
-        final List<String> lstToStationIds = mStationDao.getStationIdsByStationId(lstAdjacentStationIds.get(1));
+        List<String> lstToStationIds = mStationDao.getStationIdsByStationId(lstAdjacentStationIds.get(1));
 
         // 获取[from,to]车站ID的最小值，即SubwayMap中的车站ID
-        String minFromStationId = lstFromStationIds.get(0);
-        String minToStationId = lstToStationIds.get(0);
+        final String fromMapStationId = lstFromStationIds.get(0);
+        final String toMapStationId = lstToStationIds.get(0);
         // 双向删除[from,to]
-        delHeadAndItems(minFromStationId, minToStationId);
-        delHeadAndItems(minToStationId, minFromStationId);
+        delHeadAndItems(fromMapStationId, toMapStationId);
+        delHeadAndItems(toMapStationId, fromMapStationId);
 
         // 获取from所在lid的车站ID，用于计算站间距离
         String fromLineStationId = "";
         for (String id : lstFromStationIds) {
-            if (lid.equals(id.substring(0, 2))) {
+            if (targetLid.equals(id.substring(0, 2))) {
                 fromLineStationId = id;
             }
         }
         // 获取[from,insert]的站间距离
-        int fromInsertDistance = mLineDao.getIntervalDistance(fromLineStationId, sid);
+        int fromInsertDistance = mLineDao.getIntervalDistance(fromLineStationId, targetSid);
         // 双向添加[from,insert]
-        addHeadAndItems(sid, minFromStationId, lid, fromInsertDistance);
-        addHeadAndItems(minFromStationId, sid, lid, fromInsertDistance);
+        addHeadAndItems(targetSid, fromMapStationId, targetLid, fromInsertDistance);
+        addHeadAndItems(fromMapStationId, targetSid, targetLid, fromInsertDistance);
 
         // 获取to所在lid的车站ID，用于计算站间距离
         String toLineStationId = "";
         for (String id : lstToStationIds) {
-            if (lid.equals(id.substring(0, 2))) {
+            if (targetLid.equals(id.substring(0, 2))) {
                 toLineStationId = id;
             }
         }
         // 获取[insert,to]的站间距离
-        int insertToDistance = mLineDao.getIntervalDistance(toLineStationId, sid);
+        int insertToDistance = mLineDao.getIntervalDistance(toLineStationId, targetSid);
         // 双向添加[insert,to]
-        addHeadAndItems(minFromStationId, sid, lid, insertToDistance);
-        addHeadAndItems(sid, minFromStationId, lid, insertToDistance);
+        addHeadAndItems(toLineStationId, targetSid, targetLid, insertToDistance);
+        addHeadAndItems(targetSid, toLineStationId, targetLid, insertToDistance);
     }
 
     /**
@@ -516,7 +519,7 @@ public class SubwayMap {
 
         // 初始化From指各车站之间的距离，每一个车站的前驱车站下标，默认各车站均未访问
         for (int i = 0; i < size; i++) {
-            distance[i] = getFromToDistanceByIndex(fromStationIndex, i);
+            distance[i] = getFromToDistanceByHeadIndex(fromStationIndex, i);
             previous[i] = fromStationIndex;
             visited[i] = false;
         }
@@ -538,7 +541,7 @@ public class SubwayMap {
             visited[cur] = true;
             // 修正当前最短路径和前驱结点
             for (int i = 0; i < size; i++) {
-                tmp = getFromToDistanceByIndex(cur, i);
+                tmp = getFromToDistanceByHeadIndex(cur, i);
                 if (tmp != Integer.MAX_VALUE) {
                     tmp += min;
                 }
@@ -560,6 +563,15 @@ public class SubwayMap {
         }
         path[pathSize++] = fromStationIndex;
 
+        if (UtilsLog.DEBUG) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = pathSize - 1; i >= 0; i--) {
+                sb.append(mLstHeads.get(path[i]).sid).append(",");
+            }
+            sb.append("size:").append(pathSize);
+            UtilsLog.d(sb.toString());
+        }
+
         // 生成换乘路线并返回
         return generateTransferRoute(path, pathSize);
     }
@@ -571,8 +583,8 @@ public class SubwayMap {
      * @param toIndex   To在mLstHeads列表的索引
      * @return From-To站间距离，如果From-To不可达，则返回Integer.MAX_VALUE
      */
-    private int getFromToDistanceByIndex(final int fromIndex, final int toIndex) {
-        String toStationId = mLstHeads.get(toIndex).sid;
+    private int getFromToDistanceByHeadIndex(final int fromIndex, final int toIndex) {
+        final String toStationId = mLstHeads.get(toIndex).sid;
         for (Item item : mLstHeads.get(fromIndex).lstItems) {
             if (toStationId.equals(item.sid)) {
                 return item.distance;
@@ -588,8 +600,8 @@ public class SubwayMap {
      * @param toIndex   To在mLstHeads列表的索引
      * @return From-To站所在线路ID
      */
-    private String getFromToLineIdByIndex(final int fromIndex, final int toIndex) {
-        String toStationId = mLstHeads.get(toIndex).sid;
+    private String getFromToLineIdByHeadIndex(final int fromIndex, final int toIndex) {
+        final String toStationId = mLstHeads.get(toIndex).sid;
         for (Item item : mLstHeads.get(fromIndex).lstItems) {
             if (toStationId.equals(item.sid)) {
                 return item.lid;
@@ -610,10 +622,10 @@ public class SubwayMap {
         String curLineId = "";
         List<TransferSubRoute> lstTransferSubRoute = new ArrayList<>();
         for (int i = size - 1; i > 0; i--) {
-            String fromStationId = mLstHeads.get(path[i]).sid;// 车站A
-            String toStationId = mLstHeads.get(path[i - 1]).sid;// 车站C
-            String fromToLineId = getFromToLineIdByIndex(path[i], path[i - 1]);// A-C所在线路
-            int fromToDistance = getFromToDistanceByIndex(path[i], path[i - 1]);// A-C站间距离
+            final String fromStationId = mLstHeads.get(path[i]).sid;// 车站A
+            final String toStationId = mLstHeads.get(path[i - 1]).sid;// 车站C
+            final String fromToLineId = getFromToLineIdByHeadIndex(path[i], path[i - 1]);// A-C所在线路
+            final int fromToDistance = getFromToDistanceByHeadIndex(path[i], path[i - 1]);// A-C站间距离
 
             // 如果A-C站与C-B站在同一线路，则合并为A-B，并区分不同线路
             if (fromToLineId.equals(curLineId)) {
@@ -627,6 +639,7 @@ public class SubwayMap {
                 subRoute.lineName = fromToLineId;
                 subRoute.totalDistance = fromToDistance;
                 lstTransferSubRoute.add(subRoute);
+                curLineId = fromToLineId;
             }
         }
         // 更新换乘信息，将ID值转换为实际值
@@ -649,7 +662,7 @@ public class SubwayMap {
             }
         }
         transferRoute.ticketPrice = mTransferDao.getTransferPrice(airportLineDistance, otherLinesDistance);
-        transferRoute.elapsedTime = mTransferDao.getTransferElapsedTime(airportLineDistance, otherLinesDistance);
+        transferRoute.elapsedTime = mTransferDao.getTransferElapsedTime(airportLineDistance, otherLinesDistance, transferRoute.lstTransferSubRoute.size());
 
         return transferRoute;
     }
@@ -661,55 +674,49 @@ public class SubwayMap {
      */
     private void updateTransferSubRoutes(final List<TransferSubRoute> lstTransferSubRoute) {
         for (TransferSubRoute subRoute : lstTransferSubRoute) {
+            final String lineId = subRoute.lineName;
+            final String fromLineStationId = mStationDao.getLineStationId(lineId, subRoute.fromStationName);
+            final String toLineStationId = mStationDao.getLineStationId(lineId, subRoute.toStationName);
             // 途径车站
-            if (mLineDao.isCircularLine(subRoute.lineName)) {
-                List<String> lstStationNames1 = mStationDao.getIntervalStationNames(subRoute.fromStationName, subRoute.toStationName);
-                List<String> lstStationNames2 = mStationDao.getIntervalStationNamesInCircularLine(subRoute.fromStationName, subRoute.toStationName);
+            if (mLineDao.isCircularLine(lineId)) {
+                List<String> lstStationNames1 = mStationDao.getIntervalStationNames(fromLineStationId, toLineStationId);
+                List<String> lstStationNames2 = mStationDao.getIntervalStationNamesInCircularLine(fromLineStationId, toLineStationId);
                 if (lstStationNames1.size() < lstStationNames2.size()) {
                     subRoute.lstStationNames = lstStationNames1;
                 } else {
                     subRoute.lstStationNames = lstStationNames2;
                 }
             } else {
-                subRoute.lstStationNames = mStationDao.getIntervalStationNames(subRoute.fromStationName, subRoute.toStationName);
+                subRoute.lstStationNames = mStationDao.getIntervalStationNames(fromLineStationId, toLineStationId);
             }
             // 换乘方向
-            if (mLineDao.isCircularLine(subRoute.lineName)) {
-                if (subRoute.lstStationNames.size() > 0) {
-                    subRoute.transferDirection = subRoute.lstStationNames.get(0);
-                } else {
-                    subRoute.transferDirection = mStationDao.getStationName(subRoute.toStationName);
-                }
+            if (mLineDao.isCircularLine(lineId)) {
+                subRoute.transferDirection = subRoute.lstStationNames.size() > 0 ?
+                        subRoute.lstStationNames.get(0) : mStationDao.getStationName(toLineStationId);
             } else if (SubwayData.LINE_14.equals(subRoute.lineName)) {
-                if (subRoute.fromStationName.compareTo(subRoute.toStationName) < 0
-                        && subRoute.toStationName.compareTo(SubwayData.ID_LINE_14A[1]) <= 0) {
+                if (fromLineStationId.compareTo(toLineStationId) < 0
+                        && toLineStationId.compareTo(SubwayData.ID_LINE_14A[1]) <= 0) {
                     // 西局方向
                     subRoute.transferDirection = SubwayData.STATION_XIJU;
-                } else if (subRoute.fromStationName.compareTo(subRoute.toStationName) > 0
-                        && subRoute.toStationName.compareTo(SubwayData.ID_LINE_14B[0]) >= 0) {
+                } else if (fromLineStationId.compareTo(toLineStationId) > 0
+                        && toLineStationId.compareTo(SubwayData.ID_LINE_14B[0]) >= 0) {
                     // 北京南站方向
                     subRoute.transferDirection = SubwayData.STATION_BEIJINGNANZHAN;
                 } else {
-                    if (subRoute.fromStationName.compareTo(subRoute.toStationName) < 0) {
-                        subRoute.transferDirection = mLineDao.getLastStationNameByLineId(subRoute.lineName);
-                    } else {
-                        subRoute.transferDirection = mLineDao.getFirstStationNameByLineId(subRoute.lineName);
-                    }
+                    subRoute.transferDirection = fromLineStationId.compareTo(toLineStationId) < 0 ?
+                            mLineDao.getLineLastStationName(lineId) : mLineDao.getLineFirstStationName(lineId);
                 }
             } else {
                 // 起点车站<终点车站，取线路车站ID最大值的车站名，反之，取线路车站ID最小的车站名
-                if (subRoute.fromStationName.compareTo(subRoute.toStationName) < 0) {
-                    subRoute.transferDirection = mLineDao.getLastStationNameByLineId(subRoute.lineName);
-                } else {
-                    subRoute.transferDirection = mLineDao.getFirstStationNameByLineId(subRoute.lineName);
-                }
+                subRoute.transferDirection = fromLineStationId.compareTo(toLineStationId) < 0 ?
+                        mLineDao.getLineLastStationName(lineId) : mLineDao.getLineFirstStationName(lineId);
             }
             // 线路名
-            subRoute.lineName = mLineDao.getLineName(subRoute.lineName);
+            subRoute.lineName = mLineDao.getLineName(lineId);
             // 子路线起点站
-            subRoute.fromStationName = mStationDao.getStationName(subRoute.fromStationName);
+            subRoute.fromStationName = mStationDao.getStationName(fromLineStationId);
             // 子路线终点站
-            subRoute.toStationName = mStationDao.getStationName(subRoute.toStationName);
+            subRoute.toStationName = mStationDao.getStationName(toLineStationId);
         }
     }
 

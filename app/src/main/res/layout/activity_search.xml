@@ -1,17 +1,63 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                tools:context=".SearchActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="2dp"
+    tools:context=".SearchActivity">
 
-    <TextView
-        android:id="@+id/tv_helloworld"
-        android:text="@string/hello_world"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+    <View
+        android:id="@+id/line_start"
+        style="@style/dividing_line"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="2dp"/>
+
+    <Button
+        android:id="@+id/btn_select_from_station"
+        style="@style/search_btn_select"
+        android:layout_below="@id/line_start"
+        android:text="始发站"/>
+
+    <EditText
+        android:id="@+id/et_from_station"
+        style="@style/search_et_input"
+        android:layout_below="@id/line_start"
+        android:layout_toEndOf="@id/btn_select_from_station"
+        android:layout_toRightOf="@id/btn_select_from_station"
+        android:hint="请输入车站名或点击始发站选择车站"
+        android:imeOptions="actionNext"/>
+
+    <Button
+        android:id="@+id/btn_select_to_station"
+        style="@style/search_btn_select"
+        android:layout_below="@id/btn_select_from_station"
+        android:layout_marginTop="1dp"
+        android:text="终点站"/>
+
+    <EditText
+        android:id="@+id/et_to_station"
+        style="@style/search_et_input"
+        android:layout_below="@id/et_from_station"
+        android:layout_marginTop="1dp"
+        android:layout_toEndOf="@id/btn_select_to_station"
+        android:layout_toRightOf="@id/btn_select_to_station"
+        android:hint="请输入车站名或点击终点站选择车站"
+        android:imeOptions="actionSearch"/>
+
+    <Button
+        android:id="@+id/btn_search"
+        style="@style/search_btn_search"
+        android:layout_below="@id/et_to_station"
+        android:layout_marginTop="1dp"
+        android:text="检索"/>
+
+    <View
+        android:id="@+id/line_end"
+        style="@style/dividing_line"
+        android:layout_below="@id/btn_search"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="4dp"/>
 
 </RelativeLayout>

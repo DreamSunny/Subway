@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="search_btn_search_pressed">#F36611</color>
+    <color name="search_btn_search_normal">#F38511</color>
+    <color name="search_popwin_line_selected">#51AB72</color>
+    <color name="search_popwin_line_nomal">#FFFFFF</color>
+</resources>

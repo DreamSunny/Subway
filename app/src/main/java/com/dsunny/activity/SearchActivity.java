@@ -1,84 +1,131 @@
 package com.dsunny.activity;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
+import com.dsunny.Bean.TransferDetail;
 import com.dsunny.base.AppBaseActivity;
 import com.dsunny.db.StationDao;
 import com.dsunny.engine.SubwayMap;
 import com.dsunny.subway.R;
-import com.infrastructure.net.RequestCallback;
+import com.dsunny.utils.Utils;
 
 
 /**
  * 搜索页面
  */
-public class SearchActivity extends AppBaseActivity {
+public class SearchActivity extends AppBaseActivity implements View.OnClickListener, TextView.OnEditorActionListener {
 
-    private TextView tvHelloWorld;
-    private RequestCallback mRequestCallback;
+    private StationDao mStationDao;
+    private SubwayMap mSubwayMap;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    private Button mBtnSelectFromStation, mBtnSelectToStation, mBtnSearch;
+    private EditText mEtFromStation, mEtToStation;
+
 
     @Override
     protected void initVariables() {
-        Bundle bundle = getIntent().getExtras();
+        mStationDao = new StationDao();
+        mSubwayMap = new SubwayMap();
     }
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
         setContentView(R.layout.activity_search);
-        tvHelloWorld = findAppViewById(R.id.tv_helloworld);
+
+        mBtnSelectFromStation = findAppViewById(R.id.btn_select_from_station);
+        mBtnSelectFromStation.setOnClickListener(this);
+        mBtnSelectToStation = findAppViewById(R.id.btn_select_to_station);
+        mBtnSelectToStation.setOnClickListener(this);
+        mBtnSearch = findAppViewById(R.id.btn_search);
+        mBtnSearch.setOnClickListener(this);
+
+        mEtFromStation = findAppViewById(R.id.et_from_station);
+        mEtFromStation.setOnEditorActionListener(this);
+        mEtToStation = findAppViewById(R.id.et_to_station);
+        mEtToStation.setOnEditorActionListener(this);
     }
 
     @Override
     protected void loadData() {
-        setActionBarTitle("北京地铁");
-        new AsyncTask<Void, String, String>() {
-            @Override
-            protected String doInBackground(Void... voids) {
-                SubwayMap map = new SubwayMap();
-                StationDao dao = new StationDao();
-//                List<Station> lstStations = dao.getAllStationNamesAndAbbrs();
-//                for (Station s1 : lstStations) {
-//                    for (Station s2 : lstStations) {
-//                        if (!s1.Name.equals(s2.Name)) {
-//                            map.search(s1.Name, s2.Name);
-//                        }
-//                        publishProgress(s1.Name, s2.Name);
-//                    }
-//                }
-                map.search("丰台科技园", "北京站");
-                return "ok";
-            }
 
-            @Override
-            protected void onProgressUpdate(String... values) {
-                super.onProgressUpdate(values);
-                tvHelloWorld.setText(values[0] + "-" + values[1]);
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                tvHelloWorld.setText(s);
-            }
-        }.execute();
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_search, menu);
-//        return true;
-//    }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+    public void onClick(View view) {
+        Utils.closeInputMethod(this);
+
+        switch (view.getId()) {
+            case R.id.btn_select_from_station:
+                break;
+            case R.id.btn_select_to_station:
+                break;
+            case R.id.btn_search:
+                searchTransferDetail();
+                break;
+            default:
+                break;
+        }
     }
+
+    @Override
+    public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+        switch (actionId) {
+            case EditorInfo.IME_ACTION_SEARCH:
+                searchTransferDetail();
+                break;
+            default:
+                break;
+        }
+        return false;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    /**
+     * 验证起点终点车站是否合法
+     */
+    private void searchTransferDetail() {
+        String fromStationName = mEtFromStation.getText().toString().trim();
+        String toStationName = mEtToStation.getText().toString().trim();
+        if (verifyFromToStation(fromStationName, toStationName)) {
+            TransferDetail transferDetail = mSubwayMap.search(fromStationName, toStationName);
+        }
+    }
+
+    /**
+     * 验证起点终点站是否合法
+     *
+     * @param fromStationName 起点站
+     * @param toStationName   终点站
+     * @return true，合法；false，不合法
+     */
+    private boolean verifyFromToStation(String fromStationName, String toStationName) {
+        if (Utils.IsStringEmpty(fromStationName)) {
+            Utils.toast(mContext, "");
+            return false;
+        } else if (Utils.IsStringEmpty(toStationName)) {
+            Utils.toast(mContext, "");
+            return false;
+        } else if (fromStationName.equals(toStationName)) {
+            Utils.toast(mContext, "");
+            return false;
+        } else if (!Utils.isAlphanumeric(fromStationName) || !mStationDao.isStationExists(fromStationName)) {
+            Utils.toast(mContext, "");
+            return false;
+        } else if (!Utils.isAlphanumeric(toStationName) || !mStationDao.isStationExists(toStationName)) {
+            Utils.toast(mContext, "");
+            return false;
+        }
+        return true;
+    }
+
 }

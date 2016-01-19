@@ -77,14 +77,14 @@ public class LineDao extends BaseDao {
      * @param lid 线路ID
      * @return 车站名
      */
-    public String getFirstStationNameByLineId(String lid) {
+    public String getLineFirstStationName(String lid) {
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT Name ");
         sql.append(" FROM STATION ");
-        sql.append(" WHERE STATION.ID = ( ");
+        sql.append(" WHERE ID = ( ");
         sql.append("     SELECT MIN(ID) ");
         sql.append("     FROM STATION ");
-        sql.append("     WHERE ID LIKE '").append(lid).append("' ");
+        sql.append("     WHERE ID LIKE '").append(lid).append("%' ");
         sql.append("     AND State = '1' ");
         sql.append(" ) ");
 
@@ -97,14 +97,14 @@ public class LineDao extends BaseDao {
      * @param lid 线路ID
      * @return 车站名
      */
-    public String getLastStationNameByLineId(String lid) {
+    public String getLineLastStationName(String lid) {
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT Name ");
         sql.append(" FROM STATION ");
-        sql.append(" WHERE STATION.ID = ( ");
+        sql.append(" WHERE ID = ( ");
         sql.append("     SELECT MAX(ID) ");
         sql.append("     FROM STATION ");
-        sql.append("     WHERE ID LIKE '").append(lid).append("' ");
+        sql.append("     WHERE ID LIKE '").append(lid).append("%' ");
         sql.append("     AND State = '1' ");
         sql.append(" ) ");
 

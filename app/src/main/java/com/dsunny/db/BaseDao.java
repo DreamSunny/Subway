@@ -101,7 +101,8 @@ public class BaseDao {
                     if (field != null) {
                         if (field.getGenericType().toString().equals("class java.lang.String")) {
                             field.set(t, c.getString(i));
-                        } else if (field.getGenericType().toString().equals("class java.lang.Integer")) {
+                        } else if (field.getGenericType().toString().equals("int")
+                                || field.getGenericType().toString().equals("class java.lang.Integer")) {
                             field.set(t, c.getInt(i));
                         }
                     }
@@ -181,7 +182,8 @@ public class BaseDao {
                     if (field != null) {
                         if (field.getGenericType().toString().equals("class java.lang.String")) {
                             field.set(t, c.getString(i));
-                        } else if (field.getGenericType().toString().equals("class java.lang.Integer")) {
+                        } else if (field.getGenericType().toString().equals("int")
+                                || field.getGenericType().toString().equals("class java.lang.Integer")) {
                             field.set(t, c.getInt(i));
                         }
                     }

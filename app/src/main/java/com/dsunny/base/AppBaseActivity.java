@@ -10,6 +10,7 @@ import com.dsunny.engine.AppConstants;
 import com.dsunny.subway.R;
 import com.infrastructure.activity.BaseActivity;
 import com.infrastructure.net.RequestCallback;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * 封装业务相关的公用逻辑
@@ -17,6 +18,18 @@ import com.infrastructure.net.RequestCallback;
 public abstract class AppBaseActivity extends BaseActivity {
 
     protected ProgressDialog mProgressDialog;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
 
     /**
      * 抽象回调类

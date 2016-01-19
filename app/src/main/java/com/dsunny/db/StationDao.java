@@ -27,14 +27,14 @@ public class StationDao extends BaseDao {
     /**
      * 判断指定车站名是否存在
      *
-     * @param name 车站名
+     * @param sname 车站名
      * @return true，存在；false，不存在
      */
-    public boolean isStationExists(String name) {
+    public boolean isStationExists(String sname) {
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT COUNT(*) ");
         sql.append(" FROM STATION ");
-        sql.append(" WHERE Name = '").append(name).append("' ");
+        sql.append(" WHERE Name = '").append(sname).append("' ");
         sql.append(" AND State = '1' ");
 
         return queryCount(sql.toString()) != 0;
@@ -57,16 +57,38 @@ public class StationDao extends BaseDao {
     }
 
     /**
-     * 获取指定车站名的所有车站ID
+     * 返回车站在指定线路的车站ID
      *
-     * @param name 车站名
-     * @return 车站ID集合
+     * @param lid 线路ID
+     * @param sid 车站ID
+     * @return 车站在指定线路的车站ID
      */
-    public List<String> getStationIdsByStationName(String name){
+    public String getLineStationId(String lid, String sid){
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT ID ");
         sql.append(" FROM STATION ");
-        sql.append(" WHERE Name = '").append(name).append("' ");
+        sql.append(" WHERE Name = ( ");
+        sql.append("     SELECT Name ");
+        sql.append("     FROM STATION ");
+        sql.append("     WHERE ID = '").append(sid).append("' ");
+        sql.append(" ) ");
+        sql.append(" AND State = '1' ");
+        sql.append(" AND ID LIKE '").append(lid).append("%' ");
+
+        return queryString(sql.toString());
+    }
+
+    /**
+     * 获取指定车站名的所有车站ID
+     *
+     * @param sname 车站名
+     * @return 车站ID集合
+     */
+    public List<String> getStationIdsByStationName(String sname){
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT ID ");
+        sql.append(" FROM STATION ");
+        sql.append(" WHERE Name = '").append(sname).append("' ");
         sql.append(" AND State == '1' ");
         sql.append(" ORDER BY ID ASC ");
 
@@ -97,14 +119,14 @@ public class StationDao extends BaseDao {
     /**
      * 获取指定车站名的所有线路ID(14号线分为AB段，本期不用)
      *
-     * @param name 车站名
+     * @param sname 车站名
      * @return 线路ID集合
      */
-    public List<String> getLineIdsOfSameStation(String name){
+    public List<String> getLineIdsOfSameStation(String sname){
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT SUBSTR(ID, 1, 2) ");
         sql.append(" FROM STATION ");
-        sql.append(" WHERE Name = '").append(name).append("' ");
+        sql.append(" WHERE Name = '").append(sname).append("' ");
         sql.append(" AND State == '1' ");
 
         return queryListString(sql.toString());
@@ -116,7 +138,7 @@ public class StationDao extends BaseDao {
      * @param lid 线路id
      * @return 线路id的所有车站名
      */
-    public List<String> getLineStationNames(String lid) {
+    public List<String> getLineAllStationNames(String lid) {
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT Name ");
         sql.append(" FROM STATION ");
@@ -145,24 +167,24 @@ public class StationDao extends BaseDao {
     /**
      * 获取车站ID之间的车站名
      *
-     * @param from 起始车站ID
-     * @param to   终止车站ID
+     * @param fromSid 起始车站ID
+     * @param toSid   终止车站ID
      * @return 起始至终止车站ID之间车站名(不包括from和to)
      */
-    public List<String> getIntervalStationNames(String from, String to) {
+    public List<String> getIntervalStationNames(String fromSid, String toSid) {
         StringBuilder sql = new StringBuilder();
-        if (from.compareTo(to) < 0) {
+        if (fromSid.compareTo(toSid) < 0) {
             sql.append(" SELECT Name ");
             sql.append(" FROM STATION ");
-            sql.append(" WHERE ID > '").append(from).append("' ");
-            sql.append(" AND ID < '").append(to).append("' ");
+            sql.append(" WHERE ID > '").append(fromSid).append("' ");
+            sql.append(" AND ID < '").append(toSid).append("' ");
             sql.append(" AND State = '1' ");
             sql.append(" ORDER BY ID ASC ");
         } else {
             sql.append(" SELECT Name ");
             sql.append(" FROM STATION ");
-            sql.append(" WHERE ID > '").append(to).append("' ");
-            sql.append(" AND ID < '").append(from).append("' ");
+            sql.append(" WHERE ID > '").append(toSid).append("' ");
+            sql.append(" AND ID < '").append(fromSid).append("' ");
             sql.append(" AND State = '1' ");
             sql.append(" ORDER BY ID DESC ");
         }
@@ -173,18 +195,18 @@ public class StationDao extends BaseDao {
     /**
      * 获取环线车站ID之间的车站名(包含起始或终点车站)
      *
-     * @param from 起始车站ID
-     * @param to   终止车站ID
+     * @param fromSid 起始车站ID
+     * @param toSid   终止车站ID
      * @return 环线起始至终止车站ID之间车站名(不包括from和to)
      */
-    public List<String> getIntervalStationNamesInCircularLine(String from, String to) {
+    public List<String> getIntervalStationNamesInCircularLine(String fromSid, String toSid) {
         StringBuilder sql = new StringBuilder();
-        if (from.compareTo(to) < 0) {
+        if (fromSid.compareTo(toSid) < 0) {
             sql.append(" SELECT * FROM ( ");
             sql.append("     SELECT Name ");
             sql.append("     FROM STATION ");
-            sql.append("     WHERE ID LIKE '").append(from.substring(0, 2)).append("%' ");
-            sql.append("     AND ID < '").append(from).append("' ");
+            sql.append("     WHERE ID LIKE '").append(fromSid.substring(0, 2)).append("%' ");
+            sql.append("     AND ID < '").append(fromSid).append("' ");
             sql.append("     AND State = '1' ");
             sql.append("     ORDER BY ID DESC ");
             sql.append(" ) ");
@@ -192,8 +214,8 @@ public class StationDao extends BaseDao {
             sql.append(" SELECT * FROM ( ");
             sql.append("     SELECT Name ");
             sql.append("     FROM STATION ");
-            sql.append("     WHERE ID LIKE '").append(from.substring(0, 2)).append("%' ");
-            sql.append("     AND ID > '").append(to).append("' ");
+            sql.append("     WHERE ID LIKE '").append(fromSid.substring(0, 2)).append("%' ");
+            sql.append("     AND ID > '").append(toSid).append("' ");
             sql.append("     AND State = '1' ");
             sql.append("     ORDER BY ID DESC ");
             sql.append(" ) ");
@@ -201,8 +223,8 @@ public class StationDao extends BaseDao {
             sql.append(" SELECT * FROM ( ");
             sql.append("     SELECT Name ");
             sql.append("     FROM STATION ");
-            sql.append("     WHERE ID LIKE '").append(from.substring(0, 2)).append("%' ");
-            sql.append("     AND ID > '").append(from).append("' ");
+            sql.append("     WHERE ID LIKE '").append(fromSid.substring(0, 2)).append("%' ");
+            sql.append("     AND ID > '").append(fromSid).append("' ");
             sql.append("     AND State = '1' ");
             sql.append("     ORDER BY ID ASC ");
             sql.append(" ) ");
@@ -210,8 +232,8 @@ public class StationDao extends BaseDao {
             sql.append(" SELECT * FROM ( ");
             sql.append("     SELECT Name ");
             sql.append("     FROM STATION ");
-            sql.append("     WHERE ID LIKE '").append(from.substring(0, 2)).append("%' ");
-            sql.append("     AND ID < '").append(to).append("' ");
+            sql.append("     WHERE ID LIKE '").append(fromSid.substring(0, 2)).append("%' ");
+            sql.append("     AND ID < '").append(toSid).append("' ");
             sql.append("     AND State = '1' ");
             sql.append("     ORDER BY ID ASC ");
             sql.append(" ) ");

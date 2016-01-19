@@ -30,6 +30,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
     protected void onPause() {
         // 在activity停止的时候同时设置停止请求，停止线程请求回调
         if (mRequestManager != null) {

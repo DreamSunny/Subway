@@ -38,15 +38,17 @@ public class TransferDao extends BaseDao {
         return price;
     }
 
+
     /**
      * 计算乘车时间
      *
      * @param airportLineDistance 机场线乘车距离
      * @param otherLinesDistance  其他线路乘车距离
+     * @param transferTimes       换乘次数
      * @return 乘车时间
      */
-    public int getTransferElapsedTime(int airportLineDistance, int otherLinesDistance) {
-        return airportLineDistance / 1000 + otherLinesDistance / 500 + 1;
+    public int getTransferElapsedTime(int airportLineDistance, int otherLinesDistance, int transferTimes) {
+        return airportLineDistance / 1024 + otherLinesDistance / 512 + transferTimes * 6 + 1;
     }
 
     /**

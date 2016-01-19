@@ -18,14 +18,14 @@ public class UtilsLog {
      *
      * @param msg log信息
      */
-    public static void d(String msg) {
+    public static void d(final String msg) {
         d(TAG_APP, msg);
     }
 
     /**
      * @param o log信息
      */
-    public static void d(Object o) {
+    public static void d(final Object o) {
         d(TAG_APP, o);
     }
 
@@ -35,7 +35,7 @@ public class UtilsLog {
      * @param tag log标签
      * @param msg log信息
      */
-    public static void d(String tag, String msg) {
+    public static void d(final String tag, final String msg) {
         if (DEBUG) {
             Log.d(tag, BaseUtils.IsStringEmpty(msg) ? "" : msg);
         }
@@ -47,7 +47,7 @@ public class UtilsLog {
      * @param tag log标签
      * @param o   log信息
      */
-    public static void d(String tag, Object o) {
+    public static void d(final String tag, final Object o) {
         if (DEBUG) {
             Log.d(tag, o == null ? "null" : o.toString());
         }
