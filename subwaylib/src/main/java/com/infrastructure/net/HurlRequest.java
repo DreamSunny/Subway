@@ -7,6 +7,7 @@ import com.infrastructure.utils.BaseConstants;
 import com.infrastructure.utils.BaseUtils;
 
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -32,7 +33,7 @@ public class HurlRequest extends Request {
     }
 
     @Override
-    protected void doGet() throws Exception {
+    protected void doGet() {
         if (!BaseUtils.IsListEmpty(mParameters)) {
             mUrl = mUrl + HOST_PARAMS_SEPARATOR + formatRequestParams();
         }
@@ -43,6 +44,55 @@ public class HurlRequest extends Request {
         if (!BaseUtils.IsStringEmpty(cacheContent)) {
             handleSuccess(cacheContent);
         } else {
+            InputStream is = null;
+            try {
+                // 打开一个HttpURLConnection连接
+                openConnection();
+                // 添加Coocie
+                addCoocie();
+                // 添加头部信息
+                addRequestProperties();
+                // 添加连接参数
+                setConnectionParametersForRequest(REQUEST_GET);
+                // 开始连接
+                urlConn.connect();
+                // 判断请求是否成功
+                if (urlConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    // 保存Coocie
+                    storeCookie();
+                    // 获取返回的数据
+                    is = urlConn.getInputStream();
+                    String response = BaseUtils.InputStream2String(is);
+                    is.close();
+                    // 把成功获取到的数据记录到缓存
+                    if (mExpires > 0) {
+                        CacheManager.getInstance().putFileCache(mUrl, response, mExpires);
+                    }
+                    // 处理返回信息
+                    doResponse(response);
+                } else {
+                    handleFail("网络异常");
+                }
+            } catch (Exception e) {
+                handleFail("网络异常");
+            } finally {
+                if (is != null) {
+                    try {
+                        is.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            urlConn.disconnect();
+        }
+    }
+
+    @Override
+    protected void doPost() {
+        DataOutputStream dos = null;
+        InputStream is = null;
+        try {
             // 打开一个HttpURLConnection连接
             openConnection();
             // 添加Coocie
@@ -50,62 +100,47 @@ public class HurlRequest extends Request {
             // 添加头部信息
             addRequestProperties();
             // 添加连接参数
-            setConnectionParametersForRequest(REQUEST_GET);
+            setConnectionParametersForRequest(REQUEST_POST);
             // 开始连接
             urlConn.connect();
+            // 发送请求参数
+            if (!BaseUtils.IsListEmpty(mParameters)) {
+                dos = new DataOutputStream(urlConn.getOutputStream());
+                byte[] postData = URLEncoder.encode(formatRequestParams(), "UTF-8").getBytes();
+                dos.write(postData);
+                dos.flush();
+                dos.close();
+            }
             // 判断请求是否成功
             if (urlConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 // 保存Coocie
                 storeCookie();
                 // 获取返回的数据
-                InputStream is = urlConn.getInputStream();
+                is = urlConn.getInputStream();
                 String response = BaseUtils.InputStream2String(is);
                 is.close();
-                // 把成功获取到的数据记录到缓存
-                if (mExpires > 0) {
-                    CacheManager.getInstance().putFileCache(mUrl, response, mExpires);
-                }
                 // 处理返回信息
                 doResponse(response);
             } else {
                 handleFail("网络异常");
             }
-            urlConn.disconnect();
-        }
-    }
-
-    @Override
-    protected void doPost() throws Exception {
-        // 打开一个HttpURLConnection连接
-        openConnection();
-        // 添加Coocie
-        addCoocie();
-        // 添加头部信息
-        addRequestProperties();
-        // 添加连接参数
-        setConnectionParametersForRequest(REQUEST_POST);
-        // 开始连接
-        urlConn.connect();
-        // 发送请求参数
-        if (!BaseUtils.IsListEmpty(mParameters)) {
-            DataOutputStream dos = new DataOutputStream(urlConn.getOutputStream());
-            byte[] postData = URLEncoder.encode(formatRequestParams(), "UTF-8").getBytes();
-            dos.write(postData);
-            dos.flush();
-            dos.close();
-        }
-        // 判断请求是否成功
-        if (urlConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            // 保存Coocie
-            storeCookie();
-            // 获取返回的数据
-            InputStream is = urlConn.getInputStream();
-            String response = BaseUtils.InputStream2String(is);
-            is.close();
-            // 处理返回信息
-            doResponse(response);
-        } else {
+        } catch (Exception e) {
             handleFail("网络异常");
+        } finally {
+            if (dos != null) {
+                try {
+                    dos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         urlConn.disconnect();
     }

@@ -78,7 +78,7 @@ public class SubwayMap {
         public LineMap() {
             mStack = new Stack<>();
             mLstTransferRouteLineIds = new ArrayList<>();
-            isVisited = new boolean[SubwayData.LINES_TRANSFER_EDGES.length];
+            isVisited = new boolean[SubwayData.TRANSFER_EDGES.length];
         }
 
         /**
@@ -110,20 +110,20 @@ public class SubwayMap {
          * @param to   终点线路在LINES_TRANSFER_EDGES数组的下标，14号线分为AB段
          */
         private void DFS(final int from, final int to) {
-            if (SubwayData.LINES_TRANSFER[from][to] == 1) {
+            if (SubwayData.LINE_TRANSFERS[from][to] == 1) {
                 int i = 0;
                 String[] lineIds = new String[mStack.size() + 2];
                 for (int index : mStack) {
-                    lineIds[i++] = SubwayData.LINES_TRANSFER_EDGES[index];
+                    lineIds[i++] = SubwayData.TRANSFER_EDGES[index];
                 }
-                lineIds[i++] = SubwayData.LINES_TRANSFER_EDGES[from];
-                lineIds[i] = SubwayData.LINES_TRANSFER_EDGES[to];
+                lineIds[i++] = SubwayData.TRANSFER_EDGES[from];
+                lineIds[i] = SubwayData.TRANSFER_EDGES[to];
                 mLstTransferRouteLineIds.add(lineIds);
             } else {
                 mStack.push(from);
                 isVisited[from] = true;
                 for (int i = 0; i < mMinTransferTimes; i++) {
-                    if (!isVisited[i] && SubwayData.LINES_TRANSFER[from][i] == 1 && mStack.size() < mMinTransferTimes) {
+                    if (!isVisited[i] && SubwayData.LINE_TRANSFERS[from][i] == 1 && mStack.size() < mMinTransferTimes) {
                         DFS(i, to);
                     }
                 }
@@ -220,17 +220,17 @@ public class SubwayMap {
         List<String> lstFromLineIds = getLineIdsFromStationIds(lstFromSids);// 起点线路集合
         List<String> listToLineIds = getLineIdsFromStationIds(lstToSids);// 终点线路集合
 
-        mMinTransferTimes = SubwayData.LINES_NAME.length;// 线路i到j的最小换乘次数
+        mMinTransferTimes = SubwayData.LINE_NAMES.length;// 线路i到j的最小换乘次数
         List<String[]> lstFromToLineIds = new ArrayList<>();// 起点终点是最少换乘的线路集合
         for (String fromLineId : lstFromLineIds) {
             final int i = getIndexOfLinesTransferEdges(fromLineId);
             for (String toLineId : listToLineIds) {
                 final int j = getIndexOfLinesTransferEdges(toLineId);
-                if (SubwayData.LINES_TRANSFER[i][j] < mMinTransferTimes) {
+                if (SubwayData.LINE_TRANSFERS[i][j] < mMinTransferTimes) {
                     lstFromToLineIds.clear();
                     lstFromToLineIds.add(new String[]{fromLineId, toLineId});
-                    mMinTransferTimes = SubwayData.LINES_TRANSFER[i][j];
-                } else if (SubwayData.LINES_TRANSFER[i][j] == mMinTransferTimes) {
+                    mMinTransferTimes = SubwayData.LINE_TRANSFERS[i][j];
+                } else if (SubwayData.LINE_TRANSFERS[i][j] == mMinTransferTimes) {
                     lstFromToLineIds.add(new String[]{fromLineId, toLineId});
                 }
             }
@@ -250,9 +250,9 @@ public class SubwayMap {
         for (String sid : lstSids) {
             final String lid = sid.substring(0, 2);
             if (SubwayData.LINE_14.equals(lid)) {
-                if (sid.compareTo(SubwayData.ID_LINE_14A[1]) <= 0) {
+                if (sid.compareTo(SubwayData.LINE_14A_IDS[1]) <= 0) {
                     lstLineIds.add(SubwayData.LINE_14A);
-                } else if (sid.compareTo(SubwayData.ID_LINE_14B[0]) >= 0) {
+                } else if (sid.compareTo(SubwayData.LINE_14B_IDS[0]) >= 0) {
                     lstLineIds.add(SubwayData.LINE_14B);
                 } else {
                     lstLineIds.add(SubwayData.LINE_14);
@@ -271,8 +271,8 @@ public class SubwayMap {
      * @return 数组下标，即线路在LINES_TRANSFER数组的下标
      */
     private int getIndexOfLinesTransferEdges(final String lid) {
-        for (int i = 0; i < SubwayData.LINES_TRANSFER_EDGES.length; i++) {
-            if (SubwayData.LINES_TRANSFER_EDGES[i].equals(lid)) {
+        for (int i = 0; i < SubwayData.TRANSFER_EDGES.length; i++) {
+            if (SubwayData.TRANSFER_EDGES[i].equals(lid)) {
                 return i;
             }
         }
@@ -655,7 +655,7 @@ public class SubwayMap {
         int airportLineDistance = 0;
         int otherLinesDistance = 0;
         for (TransferSubRoute subRoute : lstTransferSubRoute) {
-            if (SubwayData.LINE_NAME_JICHANGXIAN.equals(subRoute.lineName)) {
+            if (SubwayData.LINE_JICHANGXIAN.equals(subRoute.lineName)) {
                 airportLineDistance += subRoute.totalDistance;
             } else {
                 otherLinesDistance += subRoute.totalDistance;
@@ -695,11 +695,11 @@ public class SubwayMap {
                         subRoute.lstStationNames.get(0) : mStationDao.getStationName(toLineStationId);
             } else if (SubwayData.LINE_14.equals(subRoute.lineName)) {
                 if (fromLineStationId.compareTo(toLineStationId) < 0
-                        && toLineStationId.compareTo(SubwayData.ID_LINE_14A[1]) <= 0) {
+                        && toLineStationId.compareTo(SubwayData.LINE_14A_IDS[1]) <= 0) {
                     // 西局方向
                     subRoute.transferDirection = SubwayData.STATION_XIJU;
                 } else if (fromLineStationId.compareTo(toLineStationId) > 0
-                        && toLineStationId.compareTo(SubwayData.ID_LINE_14B[0]) >= 0) {
+                        && toLineStationId.compareTo(SubwayData.LINE_14B_IDS[0]) >= 0) {
                     // 北京南站方向
                     subRoute.transferDirection = SubwayData.STATION_BEIJINGNANZHAN;
                 } else {

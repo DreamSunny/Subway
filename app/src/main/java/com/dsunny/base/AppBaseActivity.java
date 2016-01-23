@@ -2,12 +2,12 @@ package com.dsunny.base;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.dsunny.engine.AppConstants;
 import com.dsunny.subway.R;
+import com.dsunny.utils.Utils;
 import com.infrastructure.activity.BaseActivity;
 import com.infrastructure.net.RequestCallback;
 import com.umeng.analytics.MobclickAgent;
@@ -45,11 +45,7 @@ public abstract class AppBaseActivity extends BaseActivity {
             if (mProgressDialog != null && mProgressDialog.isShowing()) {
                 mProgressDialog.dismiss();
             }
-            new AlertDialog.Builder(mContext)
-                    .setTitle("出错啦")
-                    .setMessage(errorMsg)
-                    .setPositiveButton("确定", null)
-                    .show();
+            Utils.toast(mContext, errorMsg);
         }
 
         @Override
@@ -57,11 +53,7 @@ public abstract class AppBaseActivity extends BaseActivity {
             if (mProgressDialog != null && mProgressDialog.isShowing()) {
                 mProgressDialog.dismiss();
             }
-            new AlertDialog.Builder(mContext)
-                    .setTitle("出错啦")
-                    .setMessage("Cookie失效")
-                    .setPositiveButton("确定", null)
-                    .show();
+            Utils.toast(mContext, "Cookie失效");
         }
     }
 

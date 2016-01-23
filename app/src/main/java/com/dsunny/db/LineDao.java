@@ -16,9 +16,9 @@ public class LineDao extends BaseDao {
      * @return 线路名
      */
     public String getLineName(String lid) {
-        for (int i = 0; i < SubwayData.LINES_ID.length; i++) {
-            if (SubwayData.LINES_ID[i].equals(lid)) {
-                return SubwayData.LINES_NAME[i];
+        for (int i = 0; i < SubwayData.LINE_IDS.length; i++) {
+            if (SubwayData.LINE_IDS[i].equals(lid)) {
+                return SubwayData.LINE_NAMES[i];
             }
         }
         return "";
@@ -31,7 +31,7 @@ public class LineDao extends BaseDao {
      * @return true，是环线；false，非环线
      */
     public boolean isCircularLine(String lid) {
-        for (String id : SubwayData.ID_CIRCULAR_LINES) {
+        for (String id : SubwayData.CIRCULAR_LINE_IDS) {
             if (id.equals(lid)) {
                 return true;
             }
@@ -46,7 +46,7 @@ public class LineDao extends BaseDao {
      * @return true，存在环路；false，不存在环路
      */
     public boolean isLineExistLoop(String lid) {
-        for (String id : SubwayData.ID_LINES_EXIST_LOOP) {
+        for (String id : SubwayData.LINES_EXIST_LOOP_IDS) {
             if (id.equals(lid)) {
                 return true;
             }
@@ -62,11 +62,11 @@ public class LineDao extends BaseDao {
      */
     public String[] getCrossLineIds(String lid) {
         if (SubwayData.LINE_02.equals(lid)) {
-            return SubwayData.ID_CROSS_LINE_02;
+            return SubwayData.CROSS_LINE_02_IDS;
         } else if (SubwayData.LINE_10.equals(lid)) {
-            return SubwayData.ID_CROSS_LINE_10;
+            return SubwayData.CROSS_LINE_10_IDS;
         } else if (SubwayData.LINE_13.equals(lid)) {
-            return SubwayData.ID_CROSS_LINE_13;
+            return SubwayData.CROSS_LINE_13_IDS;
         }
         return null;
     }

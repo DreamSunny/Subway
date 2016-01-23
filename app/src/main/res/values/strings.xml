@@ -1,8 +1,11 @@
 <resources>
-    <string name="app_name">Subway</string>
+    <string name="app_name">帝都地铁</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">设置</string>
     <string name="action_about_me">关于我</string>
-    <string name="title_activity_about_me">AboutMeActivity</string>
+
+    <string name="title_activity_about_me">关于我</string>
+    <string name="title_activity_transfer_detail">换乘详情</string>
+    <string name="title_activity_transfer_route">换乘路线</string>
 </resources>

@@ -3,6 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/activity_padding"
-    tools:context="com.dsunny.activity.AboutMeActivity">
+    tools:context="com.dsunny.activity.TransferRouteActivity">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_transfer_route"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

@@ -20,7 +20,7 @@ public class SubwayData {
     public static final String LINE_99 = "99";
 
     // 机场线
-    public static final String LINE_NAME_JICHANGXIAN = "机场线";
+    public static final String LINE_JICHANGXIAN = "机场线";
 
     // 东直门
     public static final String STATION_DONGZHIMEN = "东直门";
@@ -30,43 +30,45 @@ public class SubwayData {
     // 14号线A段
     public static final String LINE_14A = "14A";
     // 14号线A段起点与终点站ID
-    public static final String[] ID_LINE_14A = {"1401", "1407"};
+    public static final String[] LINE_14A_IDS = {"1401", "1407"};
     // 14号线B段
     public static final String LINE_14B = "14B";
     // 14号线B段起点与终点站ID
-    public static final String[] ID_LINE_14B = {"1413", "1437"};
+    public static final String[] LINE_14B_IDS = {"1413", "1437"};
     // 西局
     public static final String STATION_XIJU = "西局";
     // 北京南站
     public static final String STATION_BEIJINGNANZHAN = "北京南站";
 
     // 环线线路ID
-    public static final String[] ID_CIRCULAR_LINES = {"02", "10"};
+    public static final String[] CIRCULAR_LINE_IDS = {"02", "10"};
     // 存在环线的线路ID
-    public static final String[] ID_LINES_EXIST_LOOP = {"02", "10", "13"};
+    public static final String[] LINES_EXIST_LOOP_IDS = {"02", "10", "13"};
     // 横穿存在环线的线路ID(线路与存在环线的线路有两个交点)
-    public static final String[] ID_CROSS_LINE_02 = {"01", "04", "05", "06", "13"};
-    public static final String[] ID_CROSS_LINE_10 = {"01", "04", "05", "06", "13"};
-    public static final String[] ID_CROSS_LINE_13 = {"02", "10"};
+    public static final String[] CROSS_LINE_02_IDS = {"01", "04", "05", "06", "13"};
+    public static final String[] CROSS_LINE_10_IDS = {"01", "04", "05", "06", "13"};
+    public static final String[] CROSS_LINE_13_IDS = {"02", "10"};
+
+    public static final String LINE_ALL = "全部";
 
     // 线路ID
-    public static final String[] LINES_ID = {
+    public static final String[] LINE_IDS = {
             "01", "02", "04", "05", "06", "07", "08", "09", "10",
             "13", "14", "15", "94", "95", "96", "97", "98", "99"
     };
     // 线路名
-    public static final String[] LINES_NAME = {
+    public static final String[] LINE_NAMES = {
             "1号线", "2号线", "4号线", "5号线", "6号线", "7号线", "8号线",
             "9号线", "10号线", "13号线", "14号线", "15号线", "八通线", "昌平线",
             "亦庄线", "大兴线", "房山线", "机场线"
     };
     // LINES_TRANSFER数组的边
-    public static final String[] LINES_TRANSFER_EDGES = {
+    public static final String[] TRANSFER_EDGES = {
             "01", "02", "04", "05", "06", "07", "08", "09", "10",
             "13", "14A", "14B", "15", "94", "95", "96", "97", "98", "99"
     };
     // 线路间换乘表(14号线分为AB段)，arr[i][j]表示从i号线到j号线至少需要换乘arr[i][j]-1次
-    public static final int[][] LINES_TRANSFER = {
+    public static final int[][] LINE_TRANSFERS = {
             {0, 1, 1, 1, 2, 2, 2, 1, 1, 2, 2, 1, 2, 1, 3, 2, 2, 2, 2},
             {1, 0, 1, 1, 1, 2, 1, 2, 2, 1, 3, 2, 2, 2, 2, 2, 2, 3, 1},
             {1, 1, 0, 2, 1, 1, 2, 1, 1, 1, 2, 1, 2, 2, 2, 2, 1, 2, 2},

@@ -20,6 +20,7 @@ import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ public class HttpClientRequest extends Request {
     }
 
     @Override
-    protected void doGet() throws Exception {
+    protected void doGet() {
         if ((mParameters != null) && (mParameters.size() > 0)) {
             mUrl = mUrl + HOST_PARAMS_SEPARATOR + formatRequestParams();
         }
@@ -51,7 +52,78 @@ public class HttpClientRequest extends Request {
         if (!BaseUtils.IsStringEmpty(strCacheContent)) {
             handleSuccess(strCacheContent);
         } else {
-            mRequest = new HttpGet(mUrl);
+            InputStream is = null;
+            InputStream gzip = null;
+            try {
+                mRequest = new HttpGet(mUrl);
+                // 添加Http参数
+                setHttpParams();
+                // 添加头信息
+                addHttpHeaders();
+                // 添加Cookie到请求头中
+                addCookie();
+                // 发送请求
+                mResponse = mHttpClient.execute(mRequest);
+                if (mResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                    // 保存Cookie
+                    saveCookie();
+                    // 更新服务器时间和本地时间的差值
+                    updateDeltaBetweenServerAndClientTime(mResponse.getLastHeader("Date").getValue());
+                    // 处理返回内容
+                    if (mCallback != null) {
+                        String strResponse;
+                        if (mResponse.getEntity().getContentEncoding() != null
+                                && mResponse.getEntity().getContentEncoding().getValue() != null
+                                && mResponse.getEntity().getContentEncoding().getValue().contains("gzip")) {
+                            is = mResponse.getEntity().getContent();
+                            gzip = new GZIPInputStream(is);
+                            strResponse = BaseUtils.InputStream2String(gzip);
+                            gzip.close();
+                            is.close();
+                        } else {
+                            strResponse = EntityUtils.toString(mResponse.getEntity(), "UTF-8");
+                        }
+                        // 处理返回信息
+                        doResponse(strResponse);
+                    }
+                } else {
+                    handleFail("网络异常");
+                }
+            } catch (IOException e) {
+                handleFail("网络异常");
+            } finally {
+                if (is != null) {
+                    try {
+                        is.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (gzip != null) {
+                    try {
+                        gzip.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void doPost() {
+        InputStream is = null;
+        InputStream gzip = null;
+        try {
+            mRequest = new HttpPost(mUrl);
+            // 添加传递参数
+            if (!BaseUtils.IsListEmpty(mParameters)) {
+                final List<BasicNameValuePair> list = new ArrayList<>();
+                for (final RequestParameter p : mParameters) {
+                    list.add(new BasicNameValuePair(p.getName(), p.getValue()));
+                }
+                ((HttpPost) mRequest).setEntity(new UrlEncodedFormEntity(list, HTTP.UTF_8));
+            }
             // 添加Http参数
             setHttpParams();
             // 添加头信息
@@ -71,8 +143,8 @@ public class HttpClientRequest extends Request {
                     if (mResponse.getEntity().getContentEncoding() != null
                             && mResponse.getEntity().getContentEncoding().getValue() != null
                             && mResponse.getEntity().getContentEncoding().getValue().contains("gzip")) {
-                        final InputStream is = mResponse.getEntity().getContent();
-                        final InputStream gzip = new GZIPInputStream(is);
+                        is = mResponse.getEntity().getContent();
+                        gzip = new GZIPInputStream(is);
                         strResponse = BaseUtils.InputStream2String(gzip);
                         gzip.close();
                         is.close();
@@ -85,52 +157,23 @@ public class HttpClientRequest extends Request {
             } else {
                 handleFail("网络异常");
             }
-        }
-    }
-
-    @Override
-    protected void doPost() throws Exception {
-        mRequest = new HttpPost(mUrl);
-        // 添加传递参数
-        if (!BaseUtils.IsListEmpty(mParameters)) {
-            final List<BasicNameValuePair> list = new ArrayList<>();
-            for (final RequestParameter p : mParameters) {
-                list.add(new BasicNameValuePair(p.getName(), p.getValue()));
-            }
-            ((HttpPost) mRequest).setEntity(new UrlEncodedFormEntity(list, HTTP.UTF_8));
-        }
-        // 添加Http参数
-        setHttpParams();
-        // 添加头信息
-        addHttpHeaders();
-        // 添加Cookie到请求头中
-        addCookie();
-        // 发送请求
-        mResponse = mHttpClient.execute(mRequest);
-        if (mResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-            // 保存Cookie
-            saveCookie();
-            // 更新服务器时间和本地时间的差值
-            updateDeltaBetweenServerAndClientTime(mResponse.getLastHeader("Date").getValue());
-            // 处理返回内容
-            if (mCallback != null) {
-                String strResponse;
-                if (mResponse.getEntity().getContentEncoding() != null
-                        && mResponse.getEntity().getContentEncoding().getValue() != null
-                        && mResponse.getEntity().getContentEncoding().getValue().contains("gzip")) {
-                    final InputStream is = mResponse.getEntity().getContent();
-                    final InputStream gzip = new GZIPInputStream(is);
-                    strResponse = BaseUtils.InputStream2String(gzip);
-                    gzip.close();
-                    is.close();
-                } else {
-                    strResponse = EntityUtils.toString(mResponse.getEntity(), "UTF-8");
-                }
-                // 处理返回信息
-                doResponse(strResponse);
-            }
-        } else {
+        } catch (IOException e) {
             handleFail("网络异常");
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (gzip != null) {
+                try {
+                    gzip.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

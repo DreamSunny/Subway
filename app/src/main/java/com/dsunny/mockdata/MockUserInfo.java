@@ -7,7 +7,7 @@ import com.infrastructure.net.Response;
 /**
  * 模拟登陆接口
  */
-public class MockLoginSuccessInfo extends MockBaseInfo {
+public class MockUserInfo extends MockBaseInfo {
     @Override
     public String getJsonData() {
         UserInfo userInfo = new UserInfo();

@@ -4,6 +4,16 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
     </style>
 
+    <style name="SubwayTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/SubwayActionBarStyle</item>
+        <item name="actionBarStyle">@style/SubwayActionBarStyle</item>
+    </style>
+
+    <style name="SubwayActionBarStyle" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/actionbar_background</item>
+        <item name="background">@color/actionbar_background</item>
+    </style>
+
     <!-- 分割线 -->
     <style name="dividing_line">
         <item name="android:layout_width">match_parent</item>
@@ -44,5 +54,11 @@
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">#FFFFFF</item>
     </style>
+    <style name="SubwayTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="SubwayTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="SubwayTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

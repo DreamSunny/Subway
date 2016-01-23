@@ -4,27 +4,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import java.util.List;
-
 /**
- * ListAdapter基类
+ * ArrayAdapter基类
  */
-public abstract class BaseListAdapter<T> extends BaseAdapter {
+public abstract class BaseArrayAdapter<T> extends BaseAdapter {
 
-    protected List<T> mValues;
+    protected T[] mValues;
 
-    public BaseListAdapter(List<T> values) {
+    public BaseArrayAdapter(T[] values) {
         mValues = values;
     }
 
     @Override
     public int getCount() {
-        return mValues != null ? mValues.size() : 0;
+        return mValues != null ? mValues.length : 0;
     }
 
     @Override
     public T getItem(int position) {
-        return mValues != null && position < mValues.size() ? mValues.get(position) : null;
+        return mValues != null && position < mValues.length ? mValues[position] : null;
     }
 
     @Override

@@ -53,20 +53,9 @@ public abstract class Request implements Runnable {
     @Override
     public void run() {
         if (REQUEST_GET.equals(mNetType.toUpperCase())) {
-            try {
-                doGet();
-            } catch (Exception e) {
-                e.printStackTrace();
-                handleFail("网络异常");
-            }
-
+            doGet();
         } else if (REQUEST_POST.equals(mNetType.toUpperCase())) {
-            try {
-                doPost();
-            } catch (Exception e) {
-                e.printStackTrace();
-                handleFail("网络异常");
-            }
+            doPost();
         } else {
             throw new IllegalArgumentException("NetType is " + mNetType);
         }
@@ -75,17 +64,13 @@ public abstract class Request implements Runnable {
 
     /**
      * Get方式请求
-     *
-     * @throws Exception
      */
-    protected abstract void doGet() throws Exception;
+    protected abstract void doGet();
 
     /**
      * Post方式请求
-     *
-     * @throws Exception
      */
-    protected abstract void doPost() throws Exception;
+    protected abstract void doPost();
 
     /**
      * 终止请求
