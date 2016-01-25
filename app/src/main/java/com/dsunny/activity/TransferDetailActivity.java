@@ -18,6 +18,7 @@ import com.dsunny.Bean.TransferSubRoute;
 import com.dsunny.base.AppBaseActivity;
 import com.dsunny.engine.AppConstants;
 import com.dsunny.subway.R;
+import com.dsunny.utils.Utils;
 import com.dsunny.utils.ViewHolder;
 
 import java.util.ArrayList;
@@ -69,6 +70,8 @@ public class TransferDetailActivity extends AppBaseActivity {
                         case VIEW_TYPE_TRANSFER_ROUTE:
                             Intent intent = new Intent();
                             intent.putExtra(AppConstants.KEY_TRANSFER_DETAIL, mTransferDetail);
+                            final String transferRouteNumber = Utils.getFirstNumberInString(mItems.get(position).content);
+                            intent.putExtra(AppConstants.KEY_TRANSFER_ROUTE_NUMBER, Utils.string2Int(transferRouteNumber));
                             startAppActivity(AppConstants.ACTIVITY_TRANSFER_ROUTE, intent);
                             break;
                         default:
@@ -91,15 +94,15 @@ public class TransferDetailActivity extends AppBaseActivity {
      * @return List<Item>
      */
     private List<Item> transferDetail2ListItem(final TransferDetail transferDetail) {
-        int index = 1;
+        int transferRouteNumber = 1;
         List<Item> lstItems = new ArrayList<>();
         for (TransferRoute td : transferDetail.lstTransferRoute) {
             // 线路X
             final int size = td.lstTransferSubRoute.size();
             if (size == 1) {
-                lstItems.add(new Item(VIEW_TYPE_TRANSFER_ROUTE, String.format(TRANSFER_ROUTE, index++, td.elapsedTime, td.ticketPrice)));
+                lstItems.add(new Item(VIEW_TYPE_TRANSFER_ROUTE, String.format(TRANSFER_ROUTE, transferRouteNumber++, td.elapsedTime, td.ticketPrice)));
             } else {
-                lstItems.add(new Item(VIEW_TYPE_TRANSFER_ROUTE, String.format(TRANSFER_ROUTE2, index++, td.elapsedTime, size - 1, td.ticketPrice)));
+                lstItems.add(new Item(VIEW_TYPE_TRANSFER_ROUTE, String.format(TRANSFER_ROUTE2, transferRouteNumber++, td.elapsedTime, size - 1, td.ticketPrice)));
             }
             // 换乘站名
             lstItems.add(new Item(VIEW_TYPE_TRANSFER_STATION, td.lstTransferSubRoute.get(0).fromStationName));

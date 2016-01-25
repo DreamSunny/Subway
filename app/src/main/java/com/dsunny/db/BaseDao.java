@@ -28,14 +28,7 @@ public class BaseDao {
      * @return 检索结果(Count)
      */
     protected int queryCount(String sql) {
-        Cursor c = db.query(sql);
-        int result = c.getCount();
-
-        UtilsLog.d(UtilsLog.TAG_SQL, sql);
-        UtilsLog.d(UtilsLog.TAG_SQL, result);
-
-        c.close();
-        return result;
+        return queryInt(sql);
     }
 
     /**

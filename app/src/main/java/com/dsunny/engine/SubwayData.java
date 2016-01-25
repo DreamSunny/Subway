@@ -63,7 +63,7 @@ public class SubwayData {
             "亦庄线", "大兴线", "房山线", "机场线"
     };
     // LINES_TRANSFER数组的边
-    public static final String[] TRANSFER_EDGES = {
+    public static final String[] LINE_EDGES = {
             "01", "02", "04", "05", "06", "07", "08", "09", "10",
             "13", "14A", "14B", "15", "94", "95", "96", "97", "98", "99"
     };

@@ -57,6 +57,26 @@ public class StationDao extends BaseDao {
     }
 
     /**
+     * 换乘站有多个车站ID，返回车站ID的最小值，例如：军事博物馆(0109,0904)，返回0109
+     *
+     * @param sid 车站ID
+     * @return 车站在地铁图中的ID
+     */
+    public String getMapStationId(String sid){
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT MIN(ID) ");
+        sql.append(" FROM STATION ");
+        sql.append(" WHERE Name = ( ");
+        sql.append("     SELECT Name ");
+        sql.append("     FROM STATION ");
+        sql.append("     WHERE ID = '").append(sid).append("' ");
+        sql.append(" ) ");
+        sql.append(" AND State = '1' ");
+
+        return queryString(sql.toString());
+    }
+
+    /**
      * 返回车站在指定线路的车站ID
      *
      * @param lid 线路ID

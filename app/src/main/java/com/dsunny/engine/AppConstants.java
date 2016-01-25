@@ -17,4 +17,5 @@ public class AppConstants extends BaseConstants {
     public static final String ACTIVITY_ABOUT_ME = "com.dsunny.activity.AboutMeActivity";
     // Activity传值Key
     public static final String KEY_TRANSFER_DETAIL = "transferdetail";
+    public static final String KEY_TRANSFER_ROUTE_NUMBER = "transferroutenumber";
 }

@@ -1,14 +1,17 @@
 package com.dsunny.activity;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.dsunny.base.AppBaseActivity;
-import com.dsunny.engine.AppHttpRequest;
+import com.dsunny.db.BaseDao;
+import com.dsunny.engine.SubwayMap;
 import com.dsunny.subway.R;
-import com.infrastructure.net.RequestCallback;
-import com.infrastructure.net.RequestParameter;
+import com.infrastructure.utils.UtilsLog;
 
-import java.util.ArrayList;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 
 /**
@@ -16,8 +19,8 @@ import java.util.List;
  */
 public class AboutMeActivity extends AppBaseActivity {
 
-    private RequestCallback mRequestCallback;
-    
+    private TextView tvTest;
+
     @Override
     protected void initVariables() {
 
@@ -26,31 +29,93 @@ public class AboutMeActivity extends AppBaseActivity {
     @Override
     protected void initViews(Bundle savedInstanceState) {
         setContentView(R.layout.activity_about_me);
+
+        tvTest = findAppViewById(R.id.tv_test);
     }
 
     @Override
     protected void loadData() {
-        List<RequestParameter> params = new ArrayList<>();
-        params.add(new RequestParameter("cityId", "101010100"));
-        params.add(new RequestParameter("cityName", "Beijing"));
+        final TestDao dao = new TestDao();
+        final SubwayMap mSubwayMap = new SubwayMap();
 
-        mRequestCallback = new RequestCallback() {
+        new AsyncTask<Void, String, String>() {
             @Override
-            public void onSuccess(String content) {
+            protected String doInBackground(Void... params) {
 
+                String fromStationId = "";
+                String toStationId = "";
+                String fromStationName = "";
+                String toStationName = "";
+
+                try {
+                    //0101,0201,0401,0501,0607,0701,0801,0901,1001,1301,1401,1501,9401,9501,9601,9701,9801,9902
+                    for (String from : dao.getAllStationIds("0607")) {
+                        for (String to : dao.getAllStationIds(from)) {
+                            fromStationId = from;
+                            toStationId = to;
+                            fromStationName = dao.getStationName(from);
+                            toStationName = dao.getStationName(to);
+                            publishProgress(fromStationId + "-" + toStationId + "(" + fromStationName + "-" + toStationName + ")");
+                            mSubwayMap.search(fromStationName, toStationName);
+                        }
+                    }
+                } catch (Exception e) {
+                    StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw);
+                    e.printStackTrace(pw);
+                    String msg = fromStationId + "-" + toStationId + "(" + fromStationName + "-" + toStationName + ")" + "\r\n" + sw.toString();
+                    UtilsLog.d(msg);
+                    return msg;
+                }
+
+                return "ok!";
             }
 
             @Override
-            public void onFail(String errorMsg) {
-
+            protected void onProgressUpdate(String... values) {
+                super.onProgressUpdate(values);
+                tvTest.setText(values[0]);
             }
 
             @Override
-            public void onCookieExpired() {
-
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                tvTest.setText(s);
             }
-        };
+        }.execute();
+    }
 
-        AppHttpRequest.getInstance().performRequest(this, "getWeatherInfo", params, mRequestCallback);
+
+    private static class TestDao extends BaseDao {
+        public List<String> getAllStationIds() {
+            StringBuilder sql = new StringBuilder();
+            sql.append(" SELECT ID ");
+            sql.append(" FROM STATION ");
+            sql.append(" WHERE State == '1' ");
+            sql.append(" ORDER BY ID ASC ");
+
+            return queryListString(sql.toString());
+        }
+
+        public List<String> getAllStationIds(String sid) {
+            StringBuilder sql = new StringBuilder();
+            sql.append(" SELECT ID ");
+            sql.append(" FROM STATION ");
+            sql.append(" WHERE State == '1' ");
+            sql.append(" AND ID > '").append(sid).append("' ");
+            sql.append(" ORDER BY ID ASC ");
+
+            return queryListString(sql.toString());
+        }
+
+        public String getStationName(String sid) {
+            StringBuilder sql = new StringBuilder();
+            sql.append(" SELECT Name ");
+            sql.append(" FROM STATION ");
+            sql.append(" WHERE ID = '").append(sid).append("' ");
+
+            return queryString(sql.toString());
+        }
+
     }
 }

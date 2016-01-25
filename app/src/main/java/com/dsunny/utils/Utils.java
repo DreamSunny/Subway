@@ -173,7 +173,7 @@ public class Utils extends BaseUtils {
      * @param array 数组
      * @return 数组的String形式
      */
-    public static <T> String Array2String(final T[] array) {
+    public static <T> String ArrayAsString(final T[] array) {
         StringBuilder sb = new StringBuilder();
         sb.append("[").append(TextUtils.join(",", array)).append("]");
         return sb.toString();
@@ -186,7 +186,7 @@ public class Utils extends BaseUtils {
      * @param lstStringArray 数组List
      * @return List<T[]>的String形式
      */
-    public static <T> String ListArray2String(final List<T[]> lstStringArray) {
+    public static <T> String ListArrayAsString(final List<T[]> lstStringArray) {
         StringBuilder sb = new StringBuilder();
         sb.append("{");
         for (T[] sArr : lstStringArray) {
@@ -206,6 +206,37 @@ public class Utils extends BaseUtils {
         Pattern p = Pattern.compile("^[a-zA-Z0-9\\u4e00-\\u9fa5]+$");
         Matcher m = p.matcher(s);
         return m.matches();
+    }
+
+    /**
+     * 将字符串数字转换为Int值
+     *
+     * @param number 字符串数字
+     * @return 字符串数字的数值
+     */
+    public static int string2Int(String number) {
+        try {
+            return Integer.parseInt(number);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Integer.MIN_VALUE;
+    }
+
+    /**
+     * 返回字符串中第一个出现的数字，例如：str="线路2:大约用时50分钟,票价5元"，则返回2
+     *
+     * @param str 字符串
+     * @return 字符串中第一个整数，不存在则返回空
+     */
+    public static String getFirstNumberInString(String str) {
+        String[] nums = str.split("\\D+");
+        for (String num : nums) {
+            if (!IsStringEmpty(num)) {
+                return num;
+            }
+        }
+        return "";
     }
 
 }

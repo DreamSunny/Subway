@@ -62,6 +62,10 @@ public class TransferRouteActivity extends AppBaseActivity {
         mVpTransferRoute = findAppViewById(R.id.vp_transfer_route);
         TransferRoutePagerAdapter adapter = new TransferRoutePagerAdapter(getSupportFragmentManager(), mTransferRoutes);
         mVpTransferRoute.setAdapter(adapter);
+        final int transferRouteNumber = getIntent().getIntExtra(AppConstants.KEY_TRANSFER_ROUTE_NUMBER, Integer.MIN_VALUE);
+        if (transferRouteNumber != Integer.MIN_VALUE) {
+            mVpTransferRoute.setCurrentItem(transferRouteNumber - 1);
+        }
     }
 
     @Override
