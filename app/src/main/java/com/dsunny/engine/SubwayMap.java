@@ -359,9 +359,9 @@ public class SubwayMap {
             }
             // 插入相同换乘区间的车站
             if (fromStationId.compareTo(toStationId) < 0) {
-                insertStationToSubwayMap(fromStationLineId, fromStationId, toStationId);
+                insertStationToSubwayMap(fromStationLineId.substring(0, 2), fromStationId, toStationId);
             } else {
-                insertStationToSubwayMap(fromStationLineId, toStationId, fromStationId);
+                insertStationToSubwayMap(fromStationLineId.substring(0, 2), toStationId, fromStationId);
             }
         } else {
             // 如果存在机场线，添加机场线换乘信息
@@ -395,18 +395,18 @@ public class SubwayMap {
             // 如何起点线路或终点线路为八通线时，[四惠-四惠东]换车信息添加了两次，需删除一条
             if (!fromStationLineId.equals(toStationLineId)
                     && (fromStationLineId.equals(SubwayData.LINE_94) || toStationLineId.equals(SubwayData.LINE_94))) {
-                delHeadAndItems("0122", "0123");
-                delHeadAndItems("0123", "0122");
+                delHeadAndItems(SubwayData.STATION_ID_SIHUI, SubwayData.STATION_ID_SIHUIDONG);
+                delHeadAndItems(SubwayData.STATION_ID_SIHUIDONG, SubwayData.STATION_ID_SIHUI);
             }
             // 如果起点为普通车站，向地铁图插入车站
             if (fromIsOrdinaryStation) {
                 UtilsLog.d("insertStationToSubwayMap{" + fromStationLineId + "," + fromStationId + "}");
-                insertStationToSubwayMap(fromStationLineId, fromStationId);
+                insertStationToSubwayMap(fromStationLineId.substring(0, 2), fromStationId);
             }
             // 如果终点为普通车站，向地铁图插入车站
             if (toIsOrdinaryStation) {
                 UtilsLog.d("insertStationToSubwayMap{" + toStationLineId + "," + toStationId + "}");
-                insertStationToSubwayMap(toStationLineId, toStationId);
+                insertStationToSubwayMap(toStationLineId.substring(0, 2), toStationId);
             }
         }
     }
@@ -675,12 +675,20 @@ public class SubwayMap {
                 TransferSubRoute curSubRoute = lstTransferSubRoute.get(lstTransferSubRoute.size() - 1);
                 curSubRoute.toStationName = toStationId;
                 curSubRoute.totalDistance += fromToDistance;
+                // 机场线为单向换乘，记录所有换乘路径
+                if (SubwayData.LINE_99.equals(fromToLineId)) {
+                    curSubRoute.lstStationNames.add(fromStationId);
+                }
             } else {
                 TransferSubRoute subRoute = new TransferSubRoute();
                 subRoute.fromStationName = fromStationId;
                 subRoute.toStationName = toStationId;
                 subRoute.lineName = fromToLineId;
                 subRoute.totalDistance = fromToDistance;
+                // 机场线为单向换乘，记录所有换乘路径
+                if (SubwayData.LINE_99.equals(fromToLineId)) {
+                    subRoute.lstStationNames = new ArrayList<>();
+                }
                 lstTransferSubRoute.add(subRoute);
                 curLineId = fromToLineId;
             }
@@ -729,6 +737,13 @@ public class SubwayMap {
                 } else {
                     subRoute.lstStationNames = lstStationNames2;
                 }
+            } else if (SubwayData.LINE_99.equals(lineId)) {
+                ArrayList<String> newStationNames = new ArrayList<>();
+                for (String sid : subRoute.lstStationNames) {
+                    newStationNames.add(mStationDao.getStationName(sid));
+                }
+                subRoute.lstStationNames.clear();
+                subRoute.lstStationNames.addAll(newStationNames);
             } else {
                 subRoute.lstStationNames = mStationDao.getIntervalStationNames(fromLineStationId, toLineStationId);
             }

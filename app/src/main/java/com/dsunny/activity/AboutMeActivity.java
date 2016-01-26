@@ -49,7 +49,7 @@ public class AboutMeActivity extends AppBaseActivity {
 
                 try {
                     //0101,0201,0401,0501,0607,0701,0801,0901,1001,1301,1401,1501,9401,9501,9601,9701,9801,9902
-                    for (String from : dao.getAllStationIds("0607")) {
+                    for (String from : dao.getAllStationIds()) {
                         for (String to : dao.getAllStationIds(from)) {
                             fromStationId = from;
                             toStationId = to;

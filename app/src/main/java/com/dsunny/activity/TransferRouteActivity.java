@@ -62,8 +62,8 @@ public class TransferRouteActivity extends AppBaseActivity {
         mVpTransferRoute = findAppViewById(R.id.vp_transfer_route);
         TransferRoutePagerAdapter adapter = new TransferRoutePagerAdapter(getSupportFragmentManager(), mTransferRoutes);
         mVpTransferRoute.setAdapter(adapter);
-        final int transferRouteNumber = getIntent().getIntExtra(AppConstants.KEY_TRANSFER_ROUTE_NUMBER, Integer.MIN_VALUE);
-        if (transferRouteNumber != Integer.MIN_VALUE) {
+        final int transferRouteNumber = getIntent().getIntExtra(AppConstants.KEY_TRANSFER_ROUTE_NUMBER, Integer.MAX_VALUE);
+        if (transferRouteNumber != Integer.MAX_VALUE) {
             mVpTransferRoute.setCurrentItem(transferRouteNumber - 1);
         }
     }
@@ -235,7 +235,7 @@ public class TransferRouteActivity extends AppBaseActivity {
                     lstItems.add(new Item(VIEW_TYPE_INTERVAL_STATION, stationName));
                 }
                 // 换乘站名
-                lstItems.add(new Item(VIEW_TYPE_TRANSFER_STATION, transferRoute.toStationName));
+                lstItems.add(new Item(VIEW_TYPE_TRANSFER_STATION, tsr.toStationName));
             }
 
             return lstItems;

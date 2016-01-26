@@ -32,7 +32,8 @@ public class TransferDetailActivity extends AppBaseActivity {
     private static final String FROM_TO_STATION = "%s - %s";
     private static final String TRANSFER_ROUTE = "线路%d:大约用时%d分钟,票价%d元";
     private static final String TRANSFER_ROUTE2 = "线路%d:大约用时%d分钟,换乘%d次,票价%d元";
-    private static final String TRANSFER_DIRECTION = "换乘%s,%s方向,途径%d站";
+    private static final String TRANSFER_DIRECTION = "换乘%s,%s方向";
+    private static final String TRANSFER_DIRECTION2 = "换乘%s,%s方向,途径%d站";
 
     private static final int VIEW_TYPE_TRANSFER_ROUTE = 0;
     private static final int VIEW_TYPE_TRANSFER_STATION = 1;
@@ -108,7 +109,12 @@ public class TransferDetailActivity extends AppBaseActivity {
             lstItems.add(new Item(VIEW_TYPE_TRANSFER_STATION, td.lstTransferSubRoute.get(0).fromStationName));
             for (TransferSubRoute tsr : td.lstTransferSubRoute) {
                 // 换乘方向
-                lstItems.add(new Item(VIEW_TYPE_TRANSFER_DIRECTION, String.format(TRANSFER_DIRECTION, tsr.lineName, tsr.transferDirection, tsr.lstStationNames.size())));
+                final int size2 = tsr.lstStationNames.size();
+                if (size2 == 0) {
+                    lstItems.add(new Item(VIEW_TYPE_TRANSFER_DIRECTION, String.format(TRANSFER_DIRECTION, tsr.lineName, tsr.transferDirection)));
+                } else {
+                    lstItems.add(new Item(VIEW_TYPE_TRANSFER_DIRECTION, String.format(TRANSFER_DIRECTION2, tsr.lineName, tsr.transferDirection, size2)));
+                }
                 // 换乘站名
                 lstItems.add(new Item(VIEW_TYPE_TRANSFER_STATION, tsr.toStationName));
             }

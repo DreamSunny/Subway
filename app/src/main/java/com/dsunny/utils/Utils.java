@@ -220,7 +220,7 @@ public class Utils extends BaseUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Integer.MIN_VALUE;
+        return Integer.MAX_VALUE;
     }
 
     /**

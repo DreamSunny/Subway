@@ -22,6 +22,10 @@ public class SubwayData {
     // 机场线
     public static final String LINE_JICHANGXIAN = "机场线";
 
+    // 四惠
+    public static final String STATION_ID_SIHUI = "0122";
+    // 四惠东
+    public static final String STATION_ID_SIHUIDONG = "0123";
     // 东直门
     public static final String STATION_DONGZHIMEN = "东直门";
     // 三元桥
