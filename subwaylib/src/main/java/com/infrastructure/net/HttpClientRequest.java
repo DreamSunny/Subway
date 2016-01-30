@@ -92,20 +92,8 @@ public class HttpClientRequest extends Request {
             } catch (IOException e) {
                 handleFail("网络异常");
             } finally {
-                if (is != null) {
-                    try {
-                        is.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (gzip != null) {
-                    try {
-                        gzip.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+                BaseUtils.closeStream(is);
+                BaseUtils.closeStream(gzip);
             }
         }
     }
@@ -160,20 +148,8 @@ public class HttpClientRequest extends Request {
         } catch (IOException e) {
             handleFail("网络异常");
         } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (gzip != null) {
-                try {
-                    gzip.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            BaseUtils.closeStream(is);
+            BaseUtils.closeStream(gzip);
         }
     }
 

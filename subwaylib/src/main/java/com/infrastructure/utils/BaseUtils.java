@@ -1,11 +1,13 @@
 package com.infrastructure.utils;
 
+import android.content.res.Resources;
 import android.os.Environment;
 import android.os.StatFs;
 
 import com.infrastructure.net.Request;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -286,5 +288,38 @@ public class BaseUtils {
      */
     public static boolean IsStringEmpty(final String s) {
         return s == null || s.length() == 0;
+    }
+
+    /**
+     * 关闭流
+     *
+     * @param closeable stream
+     */
+    public static void closeStream(Closeable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 取屏幕宽度
+     *
+     * @return 屏幕宽度
+     */
+    public static int GetScreenWidth() {
+        return Resources.getSystem().getDisplayMetrics().widthPixels;
+    }
+
+    /**
+     * 取屏幕高度
+     *
+     * @return 屏幕高度
+     */
+    public static int GetScreenHeight() {
+        return Resources.getSystem().getDisplayMetrics().heightPixels;
     }
 }

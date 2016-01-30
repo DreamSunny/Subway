@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <url>
     <Node
-        Key="getWeatherInfo"
-        Expires="600"
+        Key="dsapi"
+        Expires="21600"
         NetType="get"
         MockClass = ""
-        Url="http://www.weather.com.cn/data/sk/101010100.html"/>
+        Url="http://open.iciba.com/dsapi/"/>
     <Node
-        Key="login"
+        Key=""
         Expires="0"
         NetType="post"
         MockClass = ""
-        Url="http://www.weather.com.cn/data/login.api" />
+        Url="" />
 </url>

@@ -71,24 +71,6 @@ public class Utils extends BaseUtils {
     }
 
     /**
-     * 取屏幕宽度
-     *
-     * @return 屏幕宽度
-     */
-    public static int getScreenWidth() {
-        return Resources.getSystem().getDisplayMetrics().widthPixels;
-    }
-
-    /**
-     * 取屏幕高度
-     *
-     * @return 屏幕高度
-     */
-    public static int getScreenHeight() {
-        return Resources.getSystem().getDisplayMetrics().heightPixels;
-    }
-
-    /**
      * 关闭输入法
      *
      * @param activity 当前Activity

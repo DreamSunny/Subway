@@ -37,11 +37,14 @@ public class CacheManager {
         if (BaseUtils.IsSdcardMounted()) {
             if (BaseUtils.GetAvailableSdcardSize() < SDCARD_MIN_SPACE) {
                 clearAllData();
-            } else {
-                final File dir = new File(BaseConstants.APP_CACHE_PATH);
-                if (!dir.exists()) {
-                    dir.mkdirs();
-                }
+            }
+            final File dir = new File(BaseConstants.APP_CACHE_PATH);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            final File imageDir = new File(BaseConstants.APP_IMAGE_CACHE_PATH);
+            if (!imageDir.exists()) {
+                imageDir.mkdirs();
             }
         }
     }
@@ -81,11 +84,34 @@ public class CacheManager {
      * 清除缓存文件
      */
     public void clearAllData() {
+        clearRequestData();
+        clearImageData();
+    }
+
+    /**
+     * 清除网络请求缓存数据
+     */
+    public void clearRequestData() {
         if (BaseUtils.IsSdcardMounted()) {
             File file = new File(BaseConstants.APP_CACHE_PATH);
             File[] files = file.listFiles();
             if (files != null) {
-                for (final File f : files) {
+                for (File f : files) {
+                    f.delete();
+                }
+            }
+        }
+    }
+
+    /**
+     * 清除图片缓存数据
+     */
+    public void clearImageData() {
+        if (BaseUtils.IsSdcardMounted()) {
+            File file = new File(BaseConstants.APP_IMAGE_CACHE_PATH);
+            File[] files = file.listFiles();
+            if (files != null) {
+                for (File f : files) {
                     f.delete();
                 }
             }

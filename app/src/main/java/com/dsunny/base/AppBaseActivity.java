@@ -9,6 +9,7 @@ import com.dsunny.engine.AppConstants;
 import com.dsunny.subway.R;
 import com.dsunny.utils.Utils;
 import com.infrastructure.activity.BaseActivity;
+import com.infrastructure.cache.CacheManager;
 import com.infrastructure.net.RequestCallback;
 import com.umeng.analytics.MobclickAgent;
 
@@ -136,10 +137,13 @@ public abstract class AppBaseActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.action_settings:
-                break;
             case R.id.action_about_me:
                 startAppActivity(AppConstants.ACTIVITY_ABOUT_ME);
+                break;
+            case R.id.action_clear_cache:
+                CacheManager.getInstance().clearAllData();
+                break;
+            case R.id.action_settings:
                 break;
             case android.R.id.home:
                 finish();

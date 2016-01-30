@@ -7,7 +7,6 @@ import com.infrastructure.utils.BaseConstants;
 import com.infrastructure.utils.BaseUtils;
 
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -76,15 +75,11 @@ public class HurlRequest extends Request {
             } catch (Exception e) {
                 handleFail("网络异常");
             } finally {
-                if (is != null) {
-                    try {
-                        is.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                BaseUtils.closeStream(is);
+                if (urlConn != null) {
+                    urlConn.disconnect();
                 }
             }
-            urlConn.disconnect();
         }
     }
 
@@ -127,22 +122,12 @@ public class HurlRequest extends Request {
         } catch (Exception e) {
             handleFail("网络异常");
         } finally {
-            if (dos != null) {
-                try {
-                    dos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            BaseUtils.closeStream(dos);
+            BaseUtils.closeStream(is);
+            if (urlConn != null) {
+                urlConn.disconnect();
             }
         }
-        urlConn.disconnect();
     }
 
     @Override

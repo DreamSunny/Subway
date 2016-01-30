@@ -14,23 +14,30 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.dsunny.Bean.Station;
 import com.dsunny.Bean.TransferDetail;
 import com.dsunny.base.AppBaseActivity;
 import com.dsunny.db.StationDao;
 import com.dsunny.engine.AppConstants;
+import com.dsunny.engine.AppHttpRequest;
 import com.dsunny.engine.SubwayData;
 import com.dsunny.engine.SubwayMap;
+import com.dsunny.entity.Sentence;
 import com.dsunny.subway.R;
 import com.dsunny.utils.Utils;
 import com.dsunny.utils.ViewHolder;
+import com.infrastructure.image.ImageLoader;
+import com.infrastructure.utils.UtilsLog;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -58,6 +65,9 @@ public class SearchActivity extends AppBaseActivity implements View.OnClickListe
     private Button mBtnSelectFromStation, mBtnSelectToStation, mBtnSearch;
     private EditText mEtFromStation, mEtToStation;
 
+    private ImageView ivPicture;
+    private TextView tvContent, tvNote;
+
     @Override
     protected void initVariables() {
         mStationDao = new StationDao();
@@ -66,6 +76,24 @@ public class SearchActivity extends AppBaseActivity implements View.OnClickListe
         mLstLineNames = new ArrayList<>();
         mLstStationNames = new ArrayList<>();
         mLstStationNamesAndAbbrs = new ArrayList<>();
+
+        // 线路名
+        mLstLineNames.add(SubwayData.LINE_ALL);
+        mLstLineNames.addAll(Arrays.asList(SubwayData.LINE_NAMES));
+
+        // 车站名
+        List<Station> lstStations = mStationDao.getAllStationNamesAndAbbrs();
+        String preAbbr = "";
+        String curAbbr;
+        for (Station station : lstStations) {
+            curAbbr = station.Abbr.substring(0, 1);
+            if (!curAbbr.equals(preAbbr)) {
+                mLstStationNamesAndAbbrs.add(curAbbr);
+                preAbbr = curAbbr;
+            }
+            mLstStationNamesAndAbbrs.add(station.Name);
+        }
+        mLstStationNames.addAll(mLstStationNamesAndAbbrs);
     }
 
     @Override
@@ -83,29 +111,27 @@ public class SearchActivity extends AppBaseActivity implements View.OnClickListe
         mEtFromStation.setOnEditorActionListener(this);
         mEtToStation = findAppViewById(R.id.et_to_station);
         mEtToStation.setOnEditorActionListener(this);
+
+        ivPicture = findAppViewById(R.id.iv_picture);
+        tvContent = findAppViewById(R.id.tv_content);
+        tvNote = findAppViewById(R.id.tv_note);
     }
 
     @Override
     protected void loadData() {
-        // 线路名
-        mLstLineNames.add(SubwayData.LINE_ALL);
-        for (String lineName : SubwayData.LINE_NAMES) {
-            mLstLineNames.add(lineName);
-        }
-
-        // 车站名
-        List<Station> lstStations = mStationDao.getAllStationNamesAndAbbrs();
-        String preAbbr = "";
-        String curAbbr;
-        for (Station station : lstStations) {
-            curAbbr = station.Abbr.substring(0, 1);
-            if (!curAbbr.equals(preAbbr)) {
-                mLstStationNamesAndAbbrs.add(curAbbr);
-                preAbbr = curAbbr;
+        final AppRequestCallback callback = new AppRequestCallback() {
+            @Override
+            public void onSuccess(String content) {
+                Sentence sentence = JSON.parseObject(content, Sentence.class);
+                if (sentence != null) {
+                    ImageLoader.getInstance().displayImage(sentence.getPicture2(), ivPicture);
+                    tvContent.setText(sentence.getContent());
+                    tvNote.setText(sentence.getNote());
+                    UtilsLog.d(sentence);
+                }
             }
-            mLstStationNamesAndAbbrs.add(station.Name);
-        }
-        mLstStationNames.addAll(mLstStationNamesAndAbbrs);
+        };
+        AppHttpRequest.getInstance().performRequest(this, "dsapi", null, callback);
     }
 
     @Override
@@ -253,7 +279,7 @@ public class SearchActivity extends AppBaseActivity implements View.OnClickListe
             });
 
             final int popwinHeight = 8 * 40 + 4;// 每个item高40dp
-            mPopWin = new PopupWindow(popwin, Utils.getScreenWidth(), Utils.dp2px(popwinHeight));
+            mPopWin = new PopupWindow(popwin, Utils.GetScreenWidth(), Utils.dp2px(popwinHeight));
             mPopWin.setBackgroundDrawable(new PaintDrawable());
             mPopWin.setFocusable(true);
             mPopWin.setOutsideTouchable(true);
