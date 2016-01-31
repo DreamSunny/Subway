@@ -46,6 +46,9 @@ import java.util.List;
  */
 public class SearchActivity extends AppBaseActivity implements View.OnClickListener, TextView.OnEditorActionListener {
 
+    private static final String KEY_FROM_STATION = "from";
+    private static final String KEY_TO_STATION = "to";
+
     private static final String MSG_FROM_STATION_EMPTY = "请您输入始发站";
     private static final String MSG_TO_STATION_EMPTY = "请您输入终点站";
     private static final String MSG_FROM_TO_STATION_IS_SAME = "您输入的始发站与终点站相同";
@@ -115,6 +118,11 @@ public class SearchActivity extends AppBaseActivity implements View.OnClickListe
         ivPicture = findAppViewById(R.id.iv_picture);
         tvContent = findAppViewById(R.id.tv_content);
         tvNote = findAppViewById(R.id.tv_note);
+
+        if (savedInstanceState != null) {
+            mEtFromStation.setText(savedInstanceState.getString(KEY_FROM_STATION, ""));
+            mEtToStation.setText(savedInstanceState.getString(KEY_TO_STATION, ""));
+        }
     }
 
     @Override
@@ -124,7 +132,7 @@ public class SearchActivity extends AppBaseActivity implements View.OnClickListe
             public void onSuccess(String content) {
                 Sentence sentence = JSON.parseObject(content, Sentence.class);
                 if (sentence != null) {
-                    ImageLoader.getInstance().displayImage(sentence.getPicture2(), ivPicture);
+                    ImageLoader.getInstance().displayImage(sentence.getPicture(), ivPicture);
                     tvContent.setText(sentence.getContent());
                     tvNote.setText(sentence.getNote());
                     UtilsLog.d(sentence);
@@ -167,6 +175,8 @@ public class SearchActivity extends AppBaseActivity implements View.OnClickListe
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(KEY_FROM_STATION, mEtFromStation.getText().toString().trim());
+        outState.putString(KEY_TO_STATION, mEtToStation.getText().toString().trim());
         super.onSaveInstanceState(outState);
     }
 
@@ -341,7 +351,7 @@ public class SearchActivity extends AppBaseActivity implements View.OnClickListe
             return mSelectedPosition;
         }
 
-        public void setSelectedPosition(int selectedPosition) {
+        public void setSelectedPosition(final int selectedPosition) {
             this.mSelectedPosition = selectedPosition;
         }
     }

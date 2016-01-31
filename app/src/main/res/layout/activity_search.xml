@@ -18,7 +18,7 @@
         android:id="@+id/btn_select_from_station"
         style="@style/search_btn_select"
         android:layout_below="@id/line_start"
-        android:text="始发站" />
+        android:text="起点站" />
 
     <EditText
         android:id="@+id/et_from_station"
@@ -26,7 +26,7 @@
         android:layout_below="@id/line_start"
         android:layout_toEndOf="@id/btn_select_from_station"
         android:layout_toRightOf="@id/btn_select_from_station"
-        android:hint="请输入车站名或点击始发站选择车站"
+        android:hint="请输入车站名或点击起点站选择车站"
         android:imeOptions="actionNext" />
 
     <Button
@@ -70,7 +70,9 @@
         <ImageView
             android:id="@+id/iv_picture"
             android:layout_width="260dp"
-            android:layout_height="160dp" />
+            android:layout_height="160dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/dreamsunny"/>
 
         <TextView
             android:id="@+id/tv_content"

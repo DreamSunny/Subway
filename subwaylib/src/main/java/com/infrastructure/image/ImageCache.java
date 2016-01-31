@@ -75,7 +75,7 @@ public class ImageCache {
      * @param imageUrl 图片URL
      * @param bitmap   图片Bitmap
      */
-    public void addBitmapToMemCache(String imageUrl, Bitmap bitmap) {
+    public void addBitmapToMemCache(final String imageUrl, final Bitmap bitmap) {
         final String md5Key = BaseUtils.GetMd5(imageUrl);
         if (mMemoryCache != null) {
             mMemoryCache.put(md5Key, bitmap);
@@ -89,7 +89,7 @@ public class ImageCache {
      * @param imageUrl 图片URL
      * @param bitmap   图片Bitmap
      */
-    public void addBitmapToDiskCache(String imageUrl, Bitmap bitmap) {
+    public void addBitmapToDiskCache(final String imageUrl, final Bitmap bitmap) {
         if (mDiskLruCache != null) {
             final String md5Key = BaseUtils.GetMd5(imageUrl);
             OutputStream out = null;
@@ -122,7 +122,7 @@ public class ImageCache {
      * @param imageUrl 图片URL
      * @return 图片Bitmap
      */
-    public Bitmap getBitmapFromMemCache(String imageUrl) {
+    public Bitmap getBitmapFromMemCache(final String imageUrl) {
         if (mMemoryCache != null) {
             final String md5Key = BaseUtils.GetMd5(imageUrl);
             return mMemoryCache.get(md5Key);
@@ -136,7 +136,7 @@ public class ImageCache {
      * @param imageUrl 图片URL
      * @return 图片Bitmap
      */
-    public Bitmap getBitmapFromDiskCache(String imageUrl) {
+    public Bitmap getBitmapFromDiskCache(final String imageUrl) {
         final String md5Key = BaseUtils.GetMd5(imageUrl);
         Bitmap bitmap = null;
 

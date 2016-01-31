@@ -1,7 +1,6 @@
 package com.infrastructure.image;
 
 import android.graphics.Bitmap;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.infrastructure.utils.UtilsLog;
@@ -36,7 +35,7 @@ public class ImageLoader {
      * @param imageUrl  图片URL
      * @param imageView 显示图片的ImageView
      */
-    public void displayImage(String imageUrl, ImageView imageView) {
+    public void displayImage(final String imageUrl, final ImageView imageView) {
         UtilsLog.d(UtilsLog.TAG_IMAGE, imageUrl);
         displayImage(imageUrl, new ImageViewWrapper(imageView), new SimpleListener());
     }
@@ -46,7 +45,7 @@ public class ImageLoader {
      * @param imageViewWrapper ImageView包装类
      * @param listener         图片加载Listener
      */
-    public void displayImage(String imageUrl, ImageViewWrapper imageViewWrapper, ImageLoadingListener listener) {
+    public void displayImage(final String imageUrl, final ImageViewWrapper imageViewWrapper, final ImageLoadingListener listener) {
         Bitmap bitmap;
         if (mImageCache != null) {
             // 从内存中获取Bitmap
@@ -77,16 +76,12 @@ public class ImageLoader {
      */
     private static class SimpleListener implements ImageLoadingListener {
         @Override
-        public void onFailed(String imageUri, ImageView imageView) {
-            if (imageView != null) {
-                imageView.setVisibility(View.GONE);
-            }
+        public void onFailed(final String imageUri, final ImageView imageView) {
         }
 
         @Override
-        public void onComplete(String imageUri, ImageView imageView, Bitmap loadedImage) {
+        public void onComplete(final String imageUri, final ImageView imageView, final Bitmap loadedImage) {
             if (imageView != null) {
-                imageView.setVisibility(View.VISIBLE);
                 imageView.setImageBitmap(loadedImage);
             }
         }

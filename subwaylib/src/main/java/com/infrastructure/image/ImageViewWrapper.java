@@ -18,11 +18,11 @@ public class ImageViewWrapper {
     private WeakReference<ImageView> viewRef;
     private boolean checkActualViewSize;
 
-    public ImageViewWrapper(ImageView imageView) {
+    public ImageViewWrapper(final ImageView imageView) {
         this(imageView, true);
     }
 
-    public ImageViewWrapper(ImageView imageView, boolean checkActualViewSize) {
+    public ImageViewWrapper(final ImageView imageView, final boolean checkActualViewSize) {
         this.viewRef = new WeakReference<>(imageView);
         this.checkActualViewSize = checkActualViewSize;
     }
@@ -96,7 +96,7 @@ public class ImageViewWrapper {
      *
      * @param bitmap 加载的图片
      */
-    protected void setImageBitmap(Bitmap bitmap) {
+    protected void setImageBitmap(final Bitmap bitmap) {
         ImageView imageView = viewRef.get();
         if (imageView != null) {
             imageView.setImageBitmap(bitmap);
@@ -110,7 +110,7 @@ public class ImageViewWrapper {
      * @param fieldName 属性
      * @return 属性值
      */
-    private static int getImageViewFiledValue(Object object, String fieldName) {
+    private static int getImageViewFiledValue(final Object object, final String fieldName) {
         int value = 0;
         try {
             Field field = ImageView.class.getDeclaredField(fieldName);

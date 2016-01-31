@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.dsunny.engine.AppConstants;
 import com.dsunny.subway.R;
-import com.dsunny.utils.Utils;
 import com.infrastructure.activity.BaseActivity;
 import com.infrastructure.cache.CacheManager;
 import com.infrastructure.net.RequestCallback;
@@ -46,7 +44,7 @@ public abstract class AppBaseActivity extends BaseActivity {
             if (mProgressDialog != null && mProgressDialog.isShowing()) {
                 mProgressDialog.dismiss();
             }
-            Utils.toast(mContext, errorMsg);
+            //Utils.toast(mContext, errorMsg);
         }
 
         @Override
@@ -54,7 +52,7 @@ public abstract class AppBaseActivity extends BaseActivity {
             if (mProgressDialog != null && mProgressDialog.isShowing()) {
                 mProgressDialog.dismiss();
             }
-            Utils.toast(mContext, "Cookie失效");
+            //Utils.toast(mContext, "Cookie失效");
         }
     }
 
@@ -137,13 +135,8 @@ public abstract class AppBaseActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.action_about_me:
-                startAppActivity(AppConstants.ACTIVITY_ABOUT_ME);
-                break;
             case R.id.action_clear_cache:
                 CacheManager.getInstance().clearAllData();
-                break;
-            case R.id.action_settings:
                 break;
             case android.R.id.home:
                 finish();

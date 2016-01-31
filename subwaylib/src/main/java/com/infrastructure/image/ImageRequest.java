@@ -3,7 +3,6 @@ package com.infrastructure.image;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
-import android.view.View;
 
 import com.infrastructure.utils.BaseUtils;
 import com.infrastructure.utils.UtilsLog;
@@ -30,7 +29,7 @@ public class ImageRequest implements Runnable {
     private ImageCache mImageCache;
     private Handler mHandler;
 
-    public ImageRequest(String imageUrl, ImageViewWrapper imageViewWrapper, ImageLoadingListener listener, ImageCache imageCache) {
+    public ImageRequest(final String imageUrl, final ImageViewWrapper imageViewWrapper, final ImageLoadingListener listener, final ImageCache imageCache) {
         mImageUrl = imageUrl;
         mImageViewWrapper = imageViewWrapper;
         mListener = listener;
@@ -83,7 +82,14 @@ public class ImageRequest implements Runnable {
                 mImageCache.addBitmapToDiskCache(mImageUrl, bitmap);
             }
         } catch (IOException e) {
-            mImageViewWrapper.getWrappedView().setVisibility(View.GONE);
+            if (mListener != null) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mListener.onFailed(mImageUrl, mImageViewWrapper.getWrappedView());
+                    }
+                });
+            }
         } finally {
             BaseUtils.closeStream(is);
             BaseUtils.closeStream(baos);

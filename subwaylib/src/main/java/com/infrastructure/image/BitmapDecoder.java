@@ -57,7 +57,7 @@ public class BitmapDecoder {
      * @param reqHeight      ImageView的高
      * @return Bitmap位图
      */
-    public static Bitmap decodeBitmapFromDescriptor(FileDescriptor fileDescriptor, int reqWidth, int reqHeight) {
+    public static Bitmap decodeBitmapFromDescriptor(final FileDescriptor fileDescriptor, final int reqWidth, final int reqHeight) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFileDescriptor(fileDescriptor, null, options);
@@ -75,7 +75,7 @@ public class BitmapDecoder {
      * @param reqHeight   ImageView的高
      * @return Bitmap位图
      */
-    public static BitmapFactory.Options getBitmapFactoryOptions(InputStream inputStream, int reqWidth, int reqHeight) {
+    public static BitmapFactory.Options getBitmapFactoryOptions(final InputStream inputStream, final int reqWidth, final int reqHeight) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeStream(inputStream, null, options);
@@ -92,7 +92,7 @@ public class BitmapDecoder {
      * @param options     图片的Options
      * @return Bitmap位图
      */
-    public static Bitmap decodeBitmapFromInputStream(InputStream inputStream, BitmapFactory.Options options) {
+    public static Bitmap decodeBitmapFromInputStream(final InputStream inputStream, final BitmapFactory.Options options) {
         return BitmapFactory.decodeStream(inputStream, null, options);
     }
 
@@ -104,7 +104,7 @@ public class BitmapDecoder {
      * @param reqHeight ImageView的高
      * @return inSampleSize值
      */
-    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+    public static int calculateInSampleSize(final BitmapFactory.Options options, final int reqWidth, final int reqHeight) {
         final int height = options.outHeight;
         final int width = options.outWidth;
         int inSampleSize = 1;

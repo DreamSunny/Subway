@@ -6,7 +6,7 @@ import android.util.Log;
  * Log工具类
  */
 public class UtilsLog {
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
 
     public static final String TAG_APP = "subway";
     public static final String TAG_URL = "url";
