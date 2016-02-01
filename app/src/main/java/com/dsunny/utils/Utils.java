@@ -5,6 +5,8 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -16,7 +18,6 @@ import android.widget.Toast;
 import com.dsunny.engine.AppConstants;
 import com.infrastructure.utils.BaseUtils;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.List;
@@ -127,25 +128,44 @@ public class Utils extends BaseUtils {
     }
 
     /**
+     * 获取当前App版本号
+     *
+     * @param context 当前Activity或Application
+     * @return App版本号
+     */
+    public static int getVersionCode(Context context) {
+        try {
+            final PackageInfo packInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            return packInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return 1;
+    }
+
+    /**
      * 拷贝数据库文件
      *
      * @param context Application Context
      */
     public static void copyDBFile(final Context context) {
-        if (!(new File(AppConstants.SUBWAY_DB_FILE_PATH).exists())) {
-            try {
-                InputStream is = context.getResources().getAssets().open(AppConstants.SUBWAY_DB_NAME);
-                FileOutputStream fos = new FileOutputStream(AppConstants.SUBWAY_DB_FILE_PATH);
-                byte[] buffer = new byte[1024];
-                int count;
-                while ((count = is.read(buffer)) > 0) {
-                    fos.write(buffer, 0, count);
-                }
-                fos.close();
-                is.close();
-            } catch (Exception e) {
-                e.printStackTrace();
+        InputStream is = null;
+        FileOutputStream fos = null;
+        try {
+            is = context.getResources().getAssets().open(AppConstants.SUBWAY_DB_NAME);
+            fos = new FileOutputStream(AppConstants.SUBWAY_DB_FILE_PATH);
+            byte[] buffer = new byte[1024];
+            int count;
+            while ((count = is.read(buffer)) > 0) {
+                fos.write(buffer, 0, count);
             }
+            fos.close();
+            is.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeStream(is);
+            closeStream(fos);
         }
     }
 
