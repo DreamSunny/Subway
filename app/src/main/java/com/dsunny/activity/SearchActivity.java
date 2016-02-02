@@ -49,10 +49,10 @@ public class SearchActivity extends AppBaseActivity implements View.OnClickListe
     private static final String KEY_FROM_STATION = "from";
     private static final String KEY_TO_STATION = "to";
 
-    private static final String MSG_FROM_STATION_EMPTY = "请您输入始发站";
+    private static final String MSG_FROM_STATION_EMPTY = "请您输入起点站";
     private static final String MSG_TO_STATION_EMPTY = "请您输入终点站";
-    private static final String MSG_FROM_TO_STATION_IS_SAME = "您输入的始发站与终点站相同";
-    private static final String MSG_FROM_STATION_NOT_EXIST = "您输入的始发站不可乘坐";
+    private static final String MSG_FROM_TO_STATION_IS_SAME = "您输入的起点站与终点站相同";
+    private static final String MSG_FROM_STATION_NOT_EXIST = "您输入的起点站不可乘坐";
     private static final String MSG_TO_STATION_NOT_EXIST = "您输入的终点站不可乘坐";
 
     private PopupWindow mPopWin;
