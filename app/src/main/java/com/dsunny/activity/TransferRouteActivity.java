@@ -156,11 +156,11 @@ public class TransferRouteActivity extends AppBaseActivity {
                 switch (getItemViewType(position)) {
                     case VIEW_TYPE_TRANSFER_STATION:
                         convertView = LayoutInflater.from(mContext)
-                                .inflate(R.layout.item_route_transfer_station, new RelativeLayout(mContext), true);
+                                .inflate(R.layout.item_route_transfer_station, parent, false);
                         break;
                     case VIEW_TYPE_INTERVAL_STATION:
                         convertView = LayoutInflater.from(mContext)
-                                .inflate(R.layout.item_route_interval_staion, new RelativeLayout(mContext), true);
+                                .inflate(R.layout.item_route_interval_staion, parent, false);
                         break;
                 }
             }

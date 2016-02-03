@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dsunny.Bean.TransferDetail;
@@ -177,15 +176,15 @@ public class TransferDetailActivity extends AppBaseActivity {
                 switch (getItemViewType(position)) {
                     case VIEW_TYPE_TRANSFER_ROUTE:
                         convertView = LayoutInflater.from(mContext)
-                                .inflate(R.layout.item_detail_transfer_route, new RelativeLayout(mContext), true);
+                                .inflate(R.layout.item_detail_transfer_route, parent, false);
                         break;
                     case VIEW_TYPE_TRANSFER_STATION:
                         convertView = LayoutInflater.from(mContext)
-                                .inflate(R.layout.item_detail_transfer_station, new RelativeLayout(mContext), true);
+                                .inflate(R.layout.item_detail_transfer_station, parent, false);
                         break;
                     case VIEW_TYPE_TRANSFER_DIRECTION:
                         convertView = LayoutInflater.from(mContext)
-                                .inflate(R.layout.item_detail_transfer_direction, new RelativeLayout(mContext), true);
+                                .inflate(R.layout.item_detail_transfer_direction, parent, false);
                         break;
                 }
             }
