@@ -2,7 +2,7 @@ package com.dsunny.db;
 
 import android.database.Cursor;
 
-import com.infrastructure.utils.UtilsLog;
+import com.infrastructure.util.LogUtil;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -45,8 +45,8 @@ public class BaseDao {
             result = c.getInt(0);
         }
 
-        UtilsLog.d(UtilsLog.TAG_SQL, sql);
-        UtilsLog.d(UtilsLog.TAG_SQL, result);
+        LogUtil.d(LogUtil.TAG_SQL, sql);
+        LogUtil.d(LogUtil.TAG_SQL, result);
 
         c.close();
         return result;
@@ -66,8 +66,8 @@ public class BaseDao {
             result = c.getString(0);
         }
 
-        UtilsLog.d(UtilsLog.TAG_SQL, sql);
-        UtilsLog.d(UtilsLog.TAG_SQL, result);
+        LogUtil.d(LogUtil.TAG_SQL, sql);
+        LogUtil.d(LogUtil.TAG_SQL, result);
 
         c.close();
         return result;
@@ -105,8 +105,8 @@ public class BaseDao {
             e.printStackTrace();
         }
 
-        UtilsLog.d(UtilsLog.TAG_SQL, sql);
-        UtilsLog.d(UtilsLog.TAG_SQL, t == null ? "" : t.toString());
+        LogUtil.d(LogUtil.TAG_SQL, sql);
+        LogUtil.d(LogUtil.TAG_SQL, t == null ? "" : t.toString());
 
         c.close();
         return t;
@@ -126,8 +126,8 @@ public class BaseDao {
             results.add(c.getInt(0));
         }
 
-        UtilsLog.d(UtilsLog.TAG_SQL, sql);
-        UtilsLog.d(UtilsLog.TAG_SQL, results.toString());
+        LogUtil.d(LogUtil.TAG_SQL, sql);
+        LogUtil.d(LogUtil.TAG_SQL, results.toString());
 
         c.close();
         return results;
@@ -147,8 +147,8 @@ public class BaseDao {
             results.add(c.getString(0));
         }
 
-        UtilsLog.d(UtilsLog.TAG_SQL, sql);
-        UtilsLog.d(UtilsLog.TAG_SQL, results.toString());
+        LogUtil.d(LogUtil.TAG_SQL, sql);
+        LogUtil.d(LogUtil.TAG_SQL, results.toString());
 
         c.close();
         return results;
@@ -187,8 +187,8 @@ public class BaseDao {
             e.printStackTrace();
         }
 
-        UtilsLog.d(UtilsLog.TAG_SQL, sql);
-        UtilsLog.d(UtilsLog.TAG_SQL, results.toString());
+        LogUtil.d(LogUtil.TAG_SQL, sql);
+        LogUtil.d(LogUtil.TAG_SQL, results.toString());
 
         c.close();
         return results;

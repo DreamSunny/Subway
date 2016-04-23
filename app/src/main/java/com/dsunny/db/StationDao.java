@@ -1,6 +1,6 @@
 package com.dsunny.db;
 
-import com.dsunny.Bean.Station;
+import com.dsunny.db.bean.Station;
 
 import java.util.List;
 

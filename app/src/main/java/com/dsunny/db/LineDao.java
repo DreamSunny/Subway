@@ -1,6 +1,6 @@
 package com.dsunny.db;
 
-import com.dsunny.engine.SubwayData;
+import com.dsunny.common.SubwayData;
 
 import java.util.List;
 
