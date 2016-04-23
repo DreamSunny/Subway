@@ -2,7 +2,7 @@ package com.dsunny.activity;
 
 import android.os.Bundle;
 
-import com.dsunny.base.AppBaseActivity;
+import com.dsunny.activity.base.AppBaseActivity;
 import com.dsunny.subway.R;
 
 /**

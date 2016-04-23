@@ -1,7 +1,7 @@
 package com.infrastructure.cache;
 
-import com.infrastructure.utils.BaseConstants;
-import com.infrastructure.utils.BaseUtils;
+import com.infrastructure.commom.BaseConstants;
+import com.infrastructure.util.BaseUtil;
 
 import java.io.File;
 
@@ -34,8 +34,8 @@ public class CacheManager {
      */
     public void initCacheDir() {
         // sdcard已经挂载并且空间不小于10M，可以写入文件;小于10M时，清除缓存
-        if (BaseUtils.IsSdcardMounted()) {
-            if (BaseUtils.GetAvailableSdcardSize() < SDCARD_MIN_SPACE) {
+        if (BaseUtil.IsSdcardMounted()) {
+            if (BaseUtil.GetAvailableSdcardSize() < SDCARD_MIN_SPACE) {
                 clearAllData();
             }
             final File dir = new File(BaseConstants.APP_CACHE_PATH);
@@ -57,7 +57,7 @@ public class CacheManager {
      * @param expiredTime 缓存项的过期时间戳
      */
     public void putFileCache(final String key, final String data, long expiredTime) {
-        String md5Key = BaseUtils.GetMd5(key);
+        String md5Key = BaseUtil.GetMd5(key);
         final CacheItem item = new CacheItem(md5Key, data, expiredTime);
         putIntoCache(item);
     }
@@ -69,7 +69,7 @@ public class CacheManager {
      * @return 缓存项的data值
      */
     public String getFileCache(final String key) {
-        String md5Key = BaseUtils.GetMd5(key);
+        String md5Key = BaseUtil.GetMd5(key);
         final File file = new File(BaseConstants.APP_CACHE_PATH + md5Key);
         if (file.exists()) {
             final CacheItem item = getFromCache(md5Key);
@@ -92,7 +92,7 @@ public class CacheManager {
      * 清除网络请求缓存数据
      */
     public void clearRequestData() {
-        if (BaseUtils.IsSdcardMounted()) {
+        if (BaseUtil.IsSdcardMounted()) {
             File file = new File(BaseConstants.APP_CACHE_PATH);
             File[] files = file.listFiles();
             if (files != null) {
@@ -107,7 +107,7 @@ public class CacheManager {
      * 清除图片缓存数据
      */
     public void clearImageData() {
-        if (BaseUtils.IsSdcardMounted()) {
+        if (BaseUtil.IsSdcardMounted()) {
             File file = new File(BaseConstants.APP_IMAGE_CACHE_PATH);
             File[] files = file.listFiles();
             if (files != null) {
@@ -125,8 +125,8 @@ public class CacheManager {
      * @return 缓存结果
      */
     private synchronized boolean putIntoCache(final CacheItem item) {
-        if (BaseUtils.GetAvailableSdcardSize() > SDCARD_MIN_SPACE) {
-            BaseUtils.SaveObject(BaseConstants.APP_CACHE_PATH + item.getKey(), item);
+        if (BaseUtil.GetAvailableSdcardSize() > SDCARD_MIN_SPACE) {
+            BaseUtil.SaveObject(BaseConstants.APP_CACHE_PATH + item.getKey(), item);
             return true;
         }
         return false;
@@ -140,7 +140,7 @@ public class CacheManager {
      */
     private synchronized CacheItem getFromCache(final String key) {
         CacheItem cacheItem = null;
-        Object findItem = BaseUtils.RestoreObject(BaseConstants.APP_CACHE_PATH + key);
+        Object findItem = BaseUtil.RestoreObject(BaseConstants.APP_CACHE_PATH + key);
         if (findItem == null) {
             // 缓存不存在
             return null;

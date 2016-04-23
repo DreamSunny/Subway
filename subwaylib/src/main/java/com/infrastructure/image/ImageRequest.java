@@ -4,8 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 
-import com.infrastructure.utils.BaseUtils;
-import com.infrastructure.utils.UtilsLog;
+import com.infrastructure.util.BaseUtil;
+import com.infrastructure.util.LogUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -61,7 +61,7 @@ public class ImageRequest implements Runnable {
 
             final BitmapFactory.Options options = BitmapDecoder.getBitmapFactoryOptions(new ByteArrayInputStream(baos.toByteArray()), mImageViewWrapper.getWidth(), mImageViewWrapper.getHeight());
             final Bitmap bitmap = BitmapDecoder.decodeBitmapFromInputStream(new ByteArrayInputStream(baos.toByteArray()), options);
-            UtilsLog.d(UtilsLog.TAG_IMAGE, "Download image " + (bitmap != null ? "success" : "fail"));
+            LogUtil.d(LogUtil.TAG_IMAGE, "Download image " + (bitmap != null ? "success" : "fail"));
 
             if (mListener != null) {
                 mHandler.post(new Runnable() {
@@ -91,8 +91,8 @@ public class ImageRequest implements Runnable {
                 });
             }
         } finally {
-            BaseUtils.closeStream(is);
-            BaseUtils.closeStream(baos);
+            BaseUtil.closeStream(is);
+            BaseUtil.closeStream(baos);
         }
     }
 }

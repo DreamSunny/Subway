@@ -2,9 +2,9 @@ package com.infrastructure.net;
 
 import com.alibaba.fastjson.JSON;
 import com.infrastructure.cache.CacheManager;
-import com.infrastructure.utils.BaseConstants;
-import com.infrastructure.utils.BaseUtils;
-import com.infrastructure.utils.UtilsLog;
+import com.infrastructure.commom.BaseConstants;
+import com.infrastructure.util.BaseUtil;
+import com.infrastructure.util.LogUtil;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -49,7 +49,7 @@ public class HttpClientRequest extends Request {
         if (mExpires > 0) {
             strCacheContent = CacheManager.getInstance().getFileCache(mUrl);
         }
-        if (!BaseUtils.IsStringEmpty(strCacheContent)) {
+        if (!BaseUtil.IsStringEmpty(strCacheContent)) {
             handleSuccess(strCacheContent);
         } else {
             InputStream is = null;
@@ -77,7 +77,7 @@ public class HttpClientRequest extends Request {
                                 && mResponse.getEntity().getContentEncoding().getValue().contains("gzip")) {
                             is = mResponse.getEntity().getContent();
                             gzip = new GZIPInputStream(is);
-                            strResponse = BaseUtils.InputStream2String(gzip);
+                            strResponse = BaseUtil.InputStream2String(gzip);
                             gzip.close();
                             is.close();
                         } else {
@@ -92,8 +92,8 @@ public class HttpClientRequest extends Request {
             } catch (IOException e) {
                 handleFail("网络异常");
             } finally {
-                BaseUtils.closeStream(is);
-                BaseUtils.closeStream(gzip);
+                BaseUtil.closeStream(is);
+                BaseUtil.closeStream(gzip);
             }
         }
     }
@@ -105,7 +105,7 @@ public class HttpClientRequest extends Request {
         try {
             mRequest = new HttpPost(mUrl);
             // 添加传递参数
-            if (!BaseUtils.IsListEmpty(mParameters)) {
+            if (!BaseUtil.IsListEmpty(mParameters)) {
                 final List<BasicNameValuePair> list = new ArrayList<>();
                 for (final RequestParameter p : mParameters) {
                     list.add(new BasicNameValuePair(p.getName(), p.getValue()));
@@ -133,7 +133,7 @@ public class HttpClientRequest extends Request {
                             && mResponse.getEntity().getContentEncoding().getValue().contains("gzip")) {
                         is = mResponse.getEntity().getContent();
                         gzip = new GZIPInputStream(is);
-                        strResponse = BaseUtils.InputStream2String(gzip);
+                        strResponse = BaseUtil.InputStream2String(gzip);
                         gzip.close();
                         is.close();
                     } else {
@@ -148,8 +148,8 @@ public class HttpClientRequest extends Request {
         } catch (IOException e) {
             handleFail("网络异常");
         } finally {
-            BaseUtils.closeStream(is);
-            BaseUtils.closeStream(gzip);
+            BaseUtil.closeStream(is);
+            BaseUtil.closeStream(gzip);
         }
     }
 
@@ -170,9 +170,9 @@ public class HttpClientRequest extends Request {
      * @param content 请求返回的内容
      */
     protected void doResponse(String content) {
-        UtilsLog.d(UtilsLog.TAG_URL, "Entity{" + content + "}");
+        LogUtil.d(LogUtil.TAG_URL, "Entity{" + content + "}");
         final Response responseInJson = JSON.parseObject(content, Response.class);
-        UtilsLog.d(UtilsLog.TAG_URL, responseInJson);
+        LogUtil.d(LogUtil.TAG_URL, responseInJson);
         if (responseInJson.isError()) {
             if (responseInJson.getErrorType() == RESPONSE_ERROR_COOKIE_EXPIRED) {
                 handleCookieExpired();
@@ -214,14 +214,14 @@ public class HttpClientRequest extends Request {
         // 将普通cookie转换为可序列化的cookie
         List<SerializableCookie> serializableCookies = null;
 
-        if (!BaseUtils.IsListEmpty(cookies)) {
+        if (!BaseUtil.IsListEmpty(cookies)) {
             serializableCookies = new ArrayList<>();
             for (final Cookie cookie : cookies) {
                 serializableCookies.add(new SerializableCookie(cookie));
             }
         }
 
-        BaseUtils.SaveObject(BaseConstants.COOKIE_CACHE_PATH, serializableCookies);
+        BaseUtil.SaveObject(BaseConstants.COOKIE_CACHE_PATH, serializableCookies);
     }
 
     /**
@@ -229,12 +229,12 @@ public class HttpClientRequest extends Request {
      */
     private void addCookie() {
         List<SerializableCookie> cookieList = null;
-        Object cookieObj = BaseUtils.RestoreObject(BaseConstants.COOKIE_CACHE_PATH);
+        Object cookieObj = BaseUtil.RestoreObject(BaseConstants.COOKIE_CACHE_PATH);
         if (cookieObj != null) {
             cookieList = (ArrayList<SerializableCookie>) cookieObj;
         }
 
-        if (!BaseUtils.IsListEmpty(cookieList)) {
+        if (!BaseUtil.IsListEmpty(cookieList)) {
             final BasicCookieStore cs = new BasicCookieStore();
             cs.addCookies(cookieList.toArray(new Cookie[]{}));
             mHttpClient.setCookieStore(cs);

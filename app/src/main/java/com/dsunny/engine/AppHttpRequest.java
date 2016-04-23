@@ -1,8 +1,8 @@
 package com.dsunny.engine;
 
 import com.alibaba.fastjson.JSON;
-import com.dsunny.mockdata.MockBaseInfo;
-import com.dsunny.utils.Utils;
+import com.dsunny.net.mockdata.MockBaseInfo;
+import com.dsunny.util.Util;
 import com.infrastructure.activity.BaseActivity;
 import com.infrastructure.net.Request;
 import com.infrastructure.net.RequestCallback;
@@ -11,7 +11,7 @@ import com.infrastructure.net.RequestThreadPool;
 import com.infrastructure.net.Response;
 import com.infrastructure.net.URLData;
 import com.infrastructure.net.UrlConfigManager;
-import com.infrastructure.utils.UtilsLog;
+import com.infrastructure.util.LogUtil;
 
 import java.util.List;
 
@@ -63,12 +63,12 @@ public class AppHttpRequest {
             if (forceUpdate) {
                 urlData.setExpires(0);
             }
-            if (!Utils.IsStringEmpty(urlData.getMockClass())) {
+            if (!Util.IsStringEmpty(urlData.getMockClass())) {
                 try {
                     MockBaseInfo mockInfo = (MockBaseInfo) Class.forName(urlData.getMockClass()).newInstance();
                     String strResponse = mockInfo.getJsonData();
                     final Response responseInJson = JSON.parseObject(strResponse, Response.class);
-                    UtilsLog.d(responseInJson);
+                    LogUtil.d(responseInJson);
                     if (callback != null) {
                         if (responseInJson.isError()) {
                             callback.onFail(responseInJson.getErrorMessage());

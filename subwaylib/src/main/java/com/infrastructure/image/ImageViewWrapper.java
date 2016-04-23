@@ -4,8 +4,8 @@ import android.graphics.Bitmap;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.infrastructure.utils.BaseUtils;
-import com.infrastructure.utils.UtilsLog;
+import com.infrastructure.util.BaseUtil;
+import com.infrastructure.util.LogUtil;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
@@ -47,11 +47,11 @@ public class ImageViewWrapper {
                 width = getImageViewFiledValue(imageView, "mMaxWidth");
             }
             if (width <= 0) {
-                width = BaseUtils.GetScreenWidth();
+                width = BaseUtil.GetScreenWidth();
             }
             return width;
         }
-        return BaseUtils.GetScreenWidth();
+        return BaseUtil.GetScreenWidth();
     }
 
     /**
@@ -74,11 +74,11 @@ public class ImageViewWrapper {
                 height = getImageViewFiledValue(imageView, "mMaxHeight");
             }
             if (height <= 0) {
-                height = BaseUtils.GetScreenHeight();
+                height = BaseUtil.GetScreenHeight();
             }
             return height;
         }
-        return BaseUtils.GetScreenHeight();
+        return BaseUtil.GetScreenHeight();
     }
 
 
@@ -120,7 +120,7 @@ public class ImageViewWrapper {
                 value = fieldValue;
             }
         } catch (Exception e) {
-            UtilsLog.d(UtilsLog.TAG_IMAGE, e);
+            LogUtil.d(LogUtil.TAG_IMAGE, e);
         }
         return value;
     }

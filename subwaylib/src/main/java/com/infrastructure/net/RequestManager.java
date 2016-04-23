@@ -1,6 +1,6 @@
 package com.infrastructure.net;
 
-import com.infrastructure.utils.BaseUtils;
+import com.infrastructure.util.BaseUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ public class RequestManager {
      * 取消网络请求
      */
     public void cancelRequest() {
-        if (!BaseUtils.IsListEmpty(mRequestList)) {
+        if (!BaseUtil.IsListEmpty(mRequestList)) {
             for (final Request request : mRequestList) {
                 request.abort();
             }

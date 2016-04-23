@@ -1,7 +1,7 @@
 package com.dsunny.engine;
 
-import com.dsunny.entity.UserInfo;
-import com.dsunny.utils.Utils;
+import com.dsunny.net.entity.UserInfo;
+import com.dsunny.util.Util;
 
 import java.io.File;
 
@@ -34,7 +34,7 @@ public class AppUserManager {
      * @param userInfo 用户信息
      */
     public void saveUserInfo(final UserInfo userInfo) {
-        Utils.SaveObject(AppConstants.USER_CACHE_PATH, userInfo);
+        Util.SaveObject(AppConstants.USER_CACHE_PATH, userInfo);
     }
 
     /**
@@ -43,7 +43,7 @@ public class AppUserManager {
      * @return 用户信息
      */
     public UserInfo restoreUserInfo() {
-        Object object = Utils.RestoreObject(AppConstants.USER_CACHE_PATH);
+        Object object = Util.RestoreObject(AppConstants.USER_CACHE_PATH);
         return object == null ? null : (UserInfo) object;
     }
 

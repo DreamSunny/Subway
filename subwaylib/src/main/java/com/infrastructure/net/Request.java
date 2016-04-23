@@ -2,8 +2,8 @@ package com.infrastructure.net;
 
 import android.os.Handler;
 
-import com.infrastructure.utils.BaseUtils;
-import com.infrastructure.utils.UtilsLog;
+import com.infrastructure.util.BaseUtil;
+import com.infrastructure.util.LogUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -59,7 +59,7 @@ public abstract class Request implements Runnable {
         } else {
             throw new IllegalArgumentException("NetType is " + mNetType);
         }
-        UtilsLog.d(UtilsLog.TAG_URL, mUrl);
+        LogUtil.d(LogUtil.TAG_URL, mUrl);
     }
 
     /**
@@ -88,12 +88,12 @@ public abstract class Request implements Runnable {
             if (param.length() == 0) {
                 param.append(p.getName());
                 param.append(NAME_VALUE_SEPARATOR);
-                param.append(BaseUtils.UrlEncodeUnicode(p.getValue()));
+                param.append(BaseUtil.UrlEncodeUnicode(p.getValue()));
             } else {
                 param.append(FIELD_SEPARATOR);
                 param.append(p.getName());
                 param.append(NAME_VALUE_SEPARATOR);
-                param.append(BaseUtils.UrlEncodeUnicode(p.getValue()));
+                param.append(BaseUtil.UrlEncodeUnicode(p.getValue()));
             }
         }
         return param.toString();
@@ -108,7 +108,7 @@ public abstract class Request implements Runnable {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                UtilsLog.d(UtilsLog.TAG_URL, "onSuccess{" + content + "}");
+                LogUtil.d(LogUtil.TAG_URL, "onSuccess{" + content + "}");
                 mCallback.onSuccess(content);
             }
         });
@@ -123,7 +123,7 @@ public abstract class Request implements Runnable {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                UtilsLog.d(UtilsLog.TAG_URL, "onFail{" + msg + "}");
+                LogUtil.d(LogUtil.TAG_URL, "onFail{" + msg + "}");
                 mCallback.onFail(msg);
             }
         });
@@ -136,7 +136,7 @@ public abstract class Request implements Runnable {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                UtilsLog.d(UtilsLog.TAG_URL, "onCookieExpired{}");
+                LogUtil.d(LogUtil.TAG_URL, "onCookieExpired{}");
                 mCallback.onCookieExpired();
             }
         });
@@ -149,7 +149,7 @@ public abstract class Request implements Runnable {
      */
     protected void updateDeltaBetweenServerAndClientTime(String serverDate) {
         try {
-            if (!BaseUtils.IsStringEmpty(serverDate)) {
+            if (!BaseUtil.IsStringEmpty(serverDate)) {
                 final SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.ENGLISH);
                 TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));
                 Date serverDateUAT = sdf.parse(serverDate);

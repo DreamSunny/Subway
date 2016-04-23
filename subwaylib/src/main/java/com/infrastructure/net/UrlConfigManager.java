@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.res.XmlResourceParser;
 
 import com.dsunny.subwaylib.R;
-import com.infrastructure.utils.UtilsLog;
+import com.infrastructure.util.LogUtil;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -80,7 +80,7 @@ public class UrlConfigManager {
 
         for (URLData data : urlList) {
             if (findKey.equals(data.getKey())) {
-                UtilsLog.d(UtilsLog.TAG_URL, data);
+                LogUtil.d(LogUtil.TAG_URL, data);
                 return data;
             }
         }

@@ -16,13 +16,13 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.dsunny.Bean.TransferDetail;
-import com.dsunny.Bean.TransferRoute;
-import com.dsunny.Bean.TransferSubRoute;
-import com.dsunny.base.AppBaseActivity;
+import com.dsunny.activity.bean.TransferDetail;
+import com.dsunny.activity.bean.TransferRoute;
+import com.dsunny.activity.bean.TransferSubRoute;
+import com.dsunny.activity.base.AppBaseActivity;
 import com.dsunny.engine.AppConstants;
 import com.dsunny.subway.R;
-import com.dsunny.utils.ViewHolder;
+import com.dsunny.common.ViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;

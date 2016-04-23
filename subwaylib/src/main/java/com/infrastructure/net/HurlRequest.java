@@ -3,8 +3,8 @@ package com.infrastructure.net;
 import android.text.TextUtils;
 
 import com.infrastructure.cache.CacheManager;
-import com.infrastructure.utils.BaseConstants;
-import com.infrastructure.utils.BaseUtils;
+import com.infrastructure.commom.BaseConstants;
+import com.infrastructure.util.BaseUtil;
 
 import java.io.DataOutputStream;
 import java.io.InputStream;
@@ -33,14 +33,14 @@ public class HurlRequest extends Request {
 
     @Override
     protected void doGet() {
-        if (!BaseUtils.IsListEmpty(mParameters)) {
+        if (!BaseUtil.IsListEmpty(mParameters)) {
             mUrl = mUrl + HOST_PARAMS_SEPARATOR + formatRequestParams();
         }
         String cacheContent = null;
         if (mExpires > 0) {
             cacheContent = CacheManager.getInstance().getFileCache(mUrl);
         }
-        if (!BaseUtils.IsStringEmpty(cacheContent)) {
+        if (!BaseUtil.IsStringEmpty(cacheContent)) {
             handleSuccess(cacheContent);
         } else {
             InputStream is = null;
@@ -61,7 +61,7 @@ public class HurlRequest extends Request {
                     storeCookie();
                     // 获取返回的数据
                     is = urlConn.getInputStream();
-                    String response = BaseUtils.InputStream2String(is);
+                    String response = BaseUtil.InputStream2String(is);
                     is.close();
                     // 把成功获取到的数据记录到缓存
                     if (mExpires > 0) {
@@ -75,7 +75,7 @@ public class HurlRequest extends Request {
             } catch (Exception e) {
                 handleFail("网络异常");
             } finally {
-                BaseUtils.closeStream(is);
+                BaseUtil.closeStream(is);
                 if (urlConn != null) {
                     urlConn.disconnect();
                 }
@@ -99,7 +99,7 @@ public class HurlRequest extends Request {
             // 开始连接
             urlConn.connect();
             // 发送请求参数
-            if (!BaseUtils.IsListEmpty(mParameters)) {
+            if (!BaseUtil.IsListEmpty(mParameters)) {
                 dos = new DataOutputStream(urlConn.getOutputStream());
                 byte[] postData = URLEncoder.encode(formatRequestParams(), "UTF-8").getBytes();
                 dos.write(postData);
@@ -112,7 +112,7 @@ public class HurlRequest extends Request {
                 storeCookie();
                 // 获取返回的数据
                 is = urlConn.getInputStream();
-                String response = BaseUtils.InputStream2String(is);
+                String response = BaseUtil.InputStream2String(is);
                 is.close();
                 // 处理返回信息
                 doResponse(response);
@@ -122,8 +122,8 @@ public class HurlRequest extends Request {
         } catch (Exception e) {
             handleFail("网络异常");
         } finally {
-            BaseUtils.closeStream(dos);
-            BaseUtils.closeStream(is);
+            BaseUtil.closeStream(dos);
+            BaseUtil.closeStream(is);
             if (urlConn != null) {
                 urlConn.disconnect();
             }
@@ -186,7 +186,7 @@ public class HurlRequest extends Request {
      */
     private void addCoocie() {
         String strCookie = restoreCoocie();
-        if (!BaseUtils.IsStringEmpty(strCookie)) {
+        if (!BaseUtil.IsStringEmpty(strCookie)) {
             urlConn.setRequestProperty(COOKIE, strCookie);
         }
     }
@@ -206,9 +206,9 @@ public class HurlRequest extends Request {
             }
         }
         if (cookieManager.getCookieStore().getCookies().size() > 0) {
-            BaseUtils.SaveObject(BaseConstants.COOKIE_CACHE_PATH, TextUtils.join(";", cookieManager.getCookieStore().getCookies()));
+            BaseUtil.SaveObject(BaseConstants.COOKIE_CACHE_PATH, TextUtils.join(";", cookieManager.getCookieStore().getCookies()));
         } else {
-            BaseUtils.SaveObject(BaseConstants.COOKIE_CACHE_PATH, "");
+            BaseUtil.SaveObject(BaseConstants.COOKIE_CACHE_PATH, "");
         }
     }
 
@@ -216,7 +216,7 @@ public class HurlRequest extends Request {
      * 从本地获取cookie列表
      */
     private String restoreCoocie() {
-        Object object = BaseUtils.RestoreObject(BaseConstants.COOKIE_CACHE_PATH);
+        Object object = BaseUtil.RestoreObject(BaseConstants.COOKIE_CACHE_PATH);
         return object == null ? null : (String) object;
     }
 }

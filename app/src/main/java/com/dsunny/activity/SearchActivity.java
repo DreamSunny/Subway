@@ -21,20 +21,21 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
-import com.dsunny.Bean.Station;
-import com.dsunny.Bean.TransferDetail;
-import com.dsunny.base.AppBaseActivity;
+import com.dsunny.activity.base.AppBaseActivity;
+import com.dsunny.activity.bean.TransferDetail;
 import com.dsunny.db.StationDao;
+import com.dsunny.db.bean.Station;
 import com.dsunny.engine.AppConstants;
 import com.dsunny.engine.AppHttpRequest;
-import com.dsunny.engine.SubwayData;
-import com.dsunny.engine.SubwayMap;
-import com.dsunny.entity.Sentence;
+import com.dsunny.engine.MultiSubwayMap;
+import com.dsunny.engine.interfaces.ISubwayMap;
+import com.dsunny.common.SubwayData;
+import com.dsunny.common.ViewHolder;
+import com.dsunny.net.entity.Sentence;
 import com.dsunny.subway.R;
-import com.dsunny.utils.Utils;
-import com.dsunny.utils.ViewHolder;
+import com.dsunny.util.Util;
 import com.infrastructure.image.ImageLoader;
-import com.infrastructure.utils.UtilsLog;
+import com.infrastructure.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,8 +47,8 @@ import java.util.List;
  */
 public class SearchActivity extends AppBaseActivity implements View.OnClickListener, TextView.OnEditorActionListener {
 
-    private static final String KEY_FROM_STATION = "from";
-    private static final String KEY_TO_STATION = "to";
+    private static final String KEY_FROM_STATION = "from_station";
+    private static final String KEY_TO_STATION = "to_station";
 
     private static final String MSG_FROM_STATION_EMPTY = "请您输入起点站";
     private static final String MSG_TO_STATION_EMPTY = "请您输入终点站";
@@ -63,7 +64,7 @@ public class SearchActivity extends AppBaseActivity implements View.OnClickListe
     private List<String> mLstStationNamesAndAbbrs;
 
     private StationDao mStationDao;
-    private SubwayMap mSubwayMap;
+    private ISubwayMap mMultiSubwayMap;
 
     private Button mBtnSelectFromStation, mBtnSelectToStation, mBtnSearch;
     private EditText mEtFromStation, mEtToStation;
@@ -74,7 +75,7 @@ public class SearchActivity extends AppBaseActivity implements View.OnClickListe
     @Override
     protected void initVariables() {
         mStationDao = new StationDao();
-        mSubwayMap = new SubwayMap();
+        mMultiSubwayMap = new MultiSubwayMap();
 
         mLstLineNames = new ArrayList<>();
         mLstStationNames = new ArrayList<>();
@@ -135,7 +136,7 @@ public class SearchActivity extends AppBaseActivity implements View.OnClickListe
                     ImageLoader.getInstance().displayImage(sentence.getPicture(), ivPicture);
                     tvContent.setText(sentence.getContent());
                     tvNote.setText(sentence.getNote());
-                    UtilsLog.d(sentence);
+                    LogUtil.d(sentence);
                 }
             }
         };
@@ -144,7 +145,7 @@ public class SearchActivity extends AppBaseActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        Utils.closeInputMethod(this);
+        Util.closeInputMethod(this);
 
         switch (view.getId()) {
             case R.id.btn_select_from_station:
@@ -187,7 +188,7 @@ public class SearchActivity extends AppBaseActivity implements View.OnClickListe
         final String fromStationName = mEtFromStation.getText().toString().trim();
         final String toStationName = mEtToStation.getText().toString().trim();
         if (verifyFromToStation(fromStationName, toStationName)) {
-            TransferDetail transferDetail = mSubwayMap.search(fromStationName, toStationName);
+            TransferDetail transferDetail = mMultiSubwayMap.search(fromStationName, toStationName);
             Intent intent = new Intent();
             intent.putExtra(AppConstants.KEY_TRANSFER_DETAIL, transferDetail);
             startAppActivity(AppConstants.ACTIVITY_TRANSFER_DETAIL, intent);
@@ -202,20 +203,20 @@ public class SearchActivity extends AppBaseActivity implements View.OnClickListe
      * @return true，合法；false，不合法
      */
     private boolean verifyFromToStation(final String fromStationName, final String toStationName) {
-        if (Utils.IsStringEmpty(fromStationName)) {
-            Utils.toast(mContext, MSG_FROM_STATION_EMPTY);
+        if (Util.IsStringEmpty(fromStationName)) {
+            Util.toast(mContext, MSG_FROM_STATION_EMPTY);
             return false;
-        } else if (Utils.IsStringEmpty(toStationName)) {
-            Utils.toast(mContext, MSG_TO_STATION_EMPTY);
+        } else if (Util.IsStringEmpty(toStationName)) {
+            Util.toast(mContext, MSG_TO_STATION_EMPTY);
             return false;
         } else if (fromStationName.equals(toStationName)) {
-            Utils.toast(mContext, MSG_FROM_TO_STATION_IS_SAME);
+            Util.toast(mContext, MSG_FROM_TO_STATION_IS_SAME);
             return false;
-        } else if (!Utils.isAlphanumeric(fromStationName) || !mStationDao.isStationExists(fromStationName)) {
-            Utils.toast(mContext, MSG_FROM_STATION_NOT_EXIST);
+        } else if (!Util.isAlphanumeric(fromStationName) || !mStationDao.isStationExists(fromStationName)) {
+            Util.toast(mContext, MSG_FROM_STATION_NOT_EXIST);
             return false;
-        } else if (!Utils.isAlphanumeric(toStationName) || !mStationDao.isStationExists(toStationName)) {
-            Utils.toast(mContext, MSG_TO_STATION_NOT_EXIST);
+        } else if (!Util.isAlphanumeric(toStationName) || !mStationDao.isStationExists(toStationName)) {
+            Util.toast(mContext, MSG_TO_STATION_NOT_EXIST);
             return false;
         }
         return true;
@@ -289,7 +290,7 @@ public class SearchActivity extends AppBaseActivity implements View.OnClickListe
             });
 
             final int popwinHeight = 8 * 40 + 4;// 每个item高40dp
-            mPopWin = new PopupWindow(popwin, Utils.GetScreenWidth(), Utils.dp2px(popwinHeight));
+            mPopWin = new PopupWindow(popwin, Util.GetScreenWidth(), Util.dp2px(popwinHeight));
             mPopWin.setBackgroundDrawable(new PaintDrawable());
             mPopWin.setFocusable(true);
             mPopWin.setOutsideTouchable(true);
@@ -301,7 +302,7 @@ public class SearchActivity extends AppBaseActivity implements View.OnClickListe
     /**
      * 线路Adapter
      */
-    private static class LineAdapter extends BaseAdapter {
+    static class LineAdapter extends BaseAdapter {
 
         private Context mContext;
         private List<String> mLineNames;
@@ -359,7 +360,7 @@ public class SearchActivity extends AppBaseActivity implements View.OnClickListe
     /**
      * 车站Adapter
      */
-    private static class StationAdapter extends BaseAdapter {
+    static class StationAdapter extends BaseAdapter {
 
         private Context mContext;
         private List<String> mStationNames;

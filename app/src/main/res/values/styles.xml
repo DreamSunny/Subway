@@ -23,8 +23,8 @@
 
     <!-- 搜索页选择车站按钮 -->
     <style name="search_btn_select">
-        <item name="android:layout_width">80dp</item>
-        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_width">96dp</item>
+        <item name="android:layout_height">48dp</item>
         <item name="android:background">@drawable/search_bg_btn_select</item>
         <item name="android:gravity">center</item>
         <item name="android:textSize">16sp</item>
@@ -34,7 +34,7 @@
     <!-- 搜索页输入框 -->
     <style name="search_et_input">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_height">48dp</item>
         <item name="android:background">@drawable/search_sel_et_input</item>
         <item name="android:inputType">text</item>
         <item name="android:maxLength">10</item>
@@ -48,7 +48,7 @@
     <!-- 搜索页搜索按钮 -->
     <style name="search_btn_search">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_height">48dp</item>
         <item name="android:background">@drawable/search_sel_btn_search</item>
         <item name="android:gravity">center</item>
         <item name="android:textSize">16sp</item>

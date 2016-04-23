@@ -3,7 +3,7 @@ package com.infrastructure.image;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 
-import com.infrastructure.utils.UtilsLog;
+import com.infrastructure.util.LogUtil;
 
 
 /**
@@ -36,7 +36,7 @@ public class ImageLoader {
      * @param imageView 显示图片的ImageView
      */
     public void displayImage(final String imageUrl, final ImageView imageView) {
-        UtilsLog.d(UtilsLog.TAG_IMAGE, imageUrl);
+        LogUtil.d(LogUtil.TAG_IMAGE, imageUrl);
         displayImage(imageUrl, new ImageViewWrapper(imageView), new SimpleListener());
     }
 
@@ -53,7 +53,7 @@ public class ImageLoader {
             if (bitmap != null) {
                 imageViewWrapper.setImageBitmap(bitmap);
 
-                UtilsLog.d(UtilsLog.TAG_IMAGE, "From MemCache");
+                LogUtil.d(LogUtil.TAG_IMAGE, "From MemCache");
                 return;
             }
             // 从硬盘中获取Bitmap
@@ -62,7 +62,7 @@ public class ImageLoader {
                 mImageCache.addBitmapToMemCache(imageUrl, bitmap);
                 imageViewWrapper.setImageBitmap(bitmap);
 
-                UtilsLog.d(UtilsLog.TAG_IMAGE, "From DiskCache");
+                LogUtil.d(LogUtil.TAG_IMAGE, "From DiskCache");
                 return;
             }
         }

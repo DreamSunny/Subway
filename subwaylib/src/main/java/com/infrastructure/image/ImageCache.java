@@ -4,9 +4,9 @@ import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
 
 import com.infrastructure.cache.CacheManager;
-import com.infrastructure.utils.BaseConstants;
-import com.infrastructure.utils.BaseUtils;
-import com.infrastructure.utils.UtilsLog;
+import com.infrastructure.commom.BaseConstants;
+import com.infrastructure.util.BaseUtil;
+import com.infrastructure.util.LogUtil;
 
 import java.io.File;
 import java.io.FileDescriptor;
@@ -53,8 +53,8 @@ public class ImageCache {
      * 初始化硬盘缓存
      */
     private void InitDiskCache() {
-        if (BaseUtils.IsSdcardMounted()) {
-            if (BaseUtils.GetAvailableSdcardSize() < DEFAULT_DISK_CACHE_SIZE) {
+        if (BaseUtil.IsSdcardMounted()) {
+            if (BaseUtil.GetAvailableSdcardSize() < DEFAULT_DISK_CACHE_SIZE) {
                 CacheManager.getInstance().clearImageData();
             }
             File file = new File(BaseConstants.APP_IMAGE_CACHE_PATH);
@@ -76,11 +76,11 @@ public class ImageCache {
      * @param bitmap   图片Bitmap
      */
     public void addBitmapToMemCache(final String imageUrl, final Bitmap bitmap) {
-        final String md5Key = BaseUtils.GetMd5(imageUrl);
+        final String md5Key = BaseUtil.GetMd5(imageUrl);
         if (mMemoryCache != null) {
             mMemoryCache.put(md5Key, bitmap);
         }
-        UtilsLog.d(UtilsLog.TAG_IMAGE, "Add Bitmap To MemCache");
+        LogUtil.d(LogUtil.TAG_IMAGE, "Add Bitmap To MemCache");
     }
 
     /**
@@ -91,7 +91,7 @@ public class ImageCache {
      */
     public void addBitmapToDiskCache(final String imageUrl, final Bitmap bitmap) {
         if (mDiskLruCache != null) {
-            final String md5Key = BaseUtils.GetMd5(imageUrl);
+            final String md5Key = BaseUtil.GetMd5(imageUrl);
             OutputStream out = null;
             try {
                 DiskLruCache.Snapshot snapshot = mDiskLruCache.get(md5Key);
@@ -110,10 +110,10 @@ public class ImageCache {
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                BaseUtils.closeStream(out);
+                BaseUtil.closeStream(out);
             }
         }
-        UtilsLog.d(UtilsLog.TAG_IMAGE, "Add Bitmap To DiskCache");
+        LogUtil.d(LogUtil.TAG_IMAGE, "Add Bitmap To DiskCache");
     }
 
     /**
@@ -124,7 +124,7 @@ public class ImageCache {
      */
     public Bitmap getBitmapFromMemCache(final String imageUrl) {
         if (mMemoryCache != null) {
-            final String md5Key = BaseUtils.GetMd5(imageUrl);
+            final String md5Key = BaseUtil.GetMd5(imageUrl);
             return mMemoryCache.get(md5Key);
         }
         return null;
@@ -137,7 +137,7 @@ public class ImageCache {
      * @return 图片Bitmap
      */
     public Bitmap getBitmapFromDiskCache(final String imageUrl) {
-        final String md5Key = BaseUtils.GetMd5(imageUrl);
+        final String md5Key = BaseUtil.GetMd5(imageUrl);
         Bitmap bitmap = null;
 
         if (mDiskLruCache != null) {
@@ -154,7 +154,7 @@ public class ImageCache {
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                BaseUtils.closeStream(inputStream);
+                BaseUtil.closeStream(inputStream);
             }
         }
         return bitmap;

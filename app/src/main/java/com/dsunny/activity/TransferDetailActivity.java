@@ -11,14 +11,14 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.dsunny.Bean.TransferDetail;
-import com.dsunny.Bean.TransferRoute;
-import com.dsunny.Bean.TransferSubRoute;
-import com.dsunny.base.AppBaseActivity;
+import com.dsunny.activity.bean.TransferDetail;
+import com.dsunny.activity.bean.TransferRoute;
+import com.dsunny.activity.bean.TransferSubRoute;
+import com.dsunny.activity.base.AppBaseActivity;
 import com.dsunny.engine.AppConstants;
 import com.dsunny.subway.R;
-import com.dsunny.utils.Utils;
-import com.dsunny.utils.ViewHolder;
+import com.dsunny.util.Util;
+import com.dsunny.common.ViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,8 +70,8 @@ public class TransferDetailActivity extends AppBaseActivity {
                         case VIEW_TYPE_TRANSFER_ROUTE:
                             Intent intent = new Intent();
                             intent.putExtra(AppConstants.KEY_TRANSFER_DETAIL, mTransferDetail);
-                            final String transferRouteNumber = Utils.getFirstNumberInString(mItems.get(position).content);
-                            intent.putExtra(AppConstants.KEY_TRANSFER_ROUTE_NUMBER, Utils.string2Int(transferRouteNumber));
+                            final String transferRouteNumber = Util.getFirstNumberInString(mItems.get(position).content);
+                            intent.putExtra(AppConstants.KEY_TRANSFER_ROUTE_NUMBER, Util.string2Int(transferRouteNumber));
                             startAppActivity(AppConstants.ACTIVITY_TRANSFER_ROUTE, intent);
                             break;
                         default:
