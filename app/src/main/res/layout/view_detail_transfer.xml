@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:background="#FFFFFF">
+
+    <FrameLayout
+        android:id="@+id/fl_transfer"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp">
+
+        <ImageView
+            android:id="@+id/iv_expand"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/detail_expand_normal"
+            android:visibility="visible"/>
+
+        <ImageView
+            android:id="@+id/iv_collapse"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/detail_expand_press"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/tv_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="2站"
+            android:textColor="#000000"
+            android:textSize="8sp" />
+
+    </FrameLayout>
+
+    <View
+        android:id="@+id/vertical_line"
+        style="@style/detail_vertical_line"
+        android:layout_marginLeft="26dp"
+        android:layout_marginStart="26dp"
+        android:layout_toRightOf="@id/fl_transfer"
+        android:layout_toEndOf="@id/fl_transfer" />
+
+    <TextView
+        android:id="@+id/tv_tansfer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/vertical_line"
+        android:layout_toEndOf="@id/vertical_line"
+        android:text="京王线准特急・镰仓方向"
+        android:textSize="16sp"
+        android:textColor="#000000"/>
+
+</RelativeLayout>

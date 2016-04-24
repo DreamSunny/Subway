@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="24dp"
+    android:background="#FFFFFF">
+
+    <RelativeLayout
+        android:id="@+id/rv_station"
+        android:layout_width="24dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="64dp"
+        android:layout_marginStart="64dp"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@id/tv_timeline"
+        android:layout_toRightOf="@id/tv_timeline">
+
+        <View
+            style="@style/detail_vertical_line"
+            android:layout_centerHorizontal="true" />
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/detail_station"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_station"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_toRightOf="@id/rv_station"
+        android:layout_toEndOf="@id/rv_station"
+        android:layout_centerVertical="true"
+        android:text="神田"
+        android:textSize="12sp"
+        android:textColor="#000000"/>
+
+</RelativeLayout>

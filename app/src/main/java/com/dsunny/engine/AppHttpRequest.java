@@ -19,7 +19,6 @@ import java.util.List;
  * 本地请求管理
  */
 public class AppHttpRequest {
-    private static AppHttpRequest instance = null;
 
     private AppHttpRequest() {
     }
@@ -29,11 +28,15 @@ public class AppHttpRequest {
      *
      * @return 请求管理实例
      */
-    public static synchronized AppHttpRequest getInstance() {
-        if (instance == null) {
-            instance = new AppHttpRequest();
-        }
-        return instance;
+    public static AppHttpRequest getInstance() {
+        return AppHttpRequestHolder.INSTANCE;
+    }
+
+    /**
+     * 内部类实现单例
+     */
+    private static class AppHttpRequestHolder {
+        private static final AppHttpRequest INSTANCE = new AppHttpRequest();
     }
 
     /**

@@ -10,7 +10,6 @@ import com.infrastructure.util.LogUtil;
  * 网络图片加载
  */
 public class ImageLoader {
-    private static ImageLoader instance;
 
     private ImageCache mImageCache;
 
@@ -19,14 +18,14 @@ public class ImageLoader {
     }
 
     public static ImageLoader getInstance() {
-        if (instance == null) {
-            synchronized (ImageLoader.class) {
-                if (instance == null) {
-                    instance = new ImageLoader();
-                }
-            }
-        }
-        return instance;
+        return ImageLoaderHolder.INSTANCE;
+    }
+
+    /**
+     * 内部类实现单例
+     */
+    private static class ImageLoaderHolder {
+        private static final ImageLoader INSTANCE = new ImageLoader();
     }
 
     /**

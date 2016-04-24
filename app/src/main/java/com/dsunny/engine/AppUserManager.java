@@ -9,9 +9,6 @@ import java.io.File;
  * 本地用户信息管理类
  */
 public class AppUserManager {
-    private static final long serialVersionUID = 1L;
-
-    private static AppUserManager instance;
 
     private AppUserManager() {
     }
@@ -22,10 +19,14 @@ public class AppUserManager {
      * @return 本地用户信息管理类的实例
      */
     public static AppUserManager getInstance() {
-        if (instance == null) {
-            instance = new AppUserManager();
-        }
-        return instance;
+        return AppUserManagerHolder.INSTANCE;
+    }
+
+    /**
+     * 内部类实现单例
+     */
+    private static class AppUserManagerHolder {
+        private static final AppUserManager INSTANCE = new AppUserManager();
     }
 
     /**

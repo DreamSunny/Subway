@@ -12,8 +12,6 @@ public class CacheManager {
     // sdcard最小空间，如果小于10M，不会再向sdcard里面写入任何数据
     public static final long SDCARD_MIN_SPACE = 1024 * 1024 * 10;
 
-    public static CacheManager instance;
-
     private CacheManager() {
     }
 
@@ -22,11 +20,15 @@ public class CacheManager {
      *
      * @return CacheManager的实例
      */
-    public static synchronized CacheManager getInstance() {
-        if (instance == null) {
-            instance = new CacheManager();
-        }
-        return instance;
+    public static CacheManager getInstance() {
+        return CacheManagerHolder.INSTANCE;
+    }
+
+    /**
+     * 内部类实现单例
+     */
+    private static class CacheManagerHolder {
+        private static final CacheManager INSTANCE = new CacheManager();
     }
 
     /**

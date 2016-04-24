@@ -7,7 +7,6 @@ import java.util.concurrent.Executors;
  * 下载图片线程池
  */
 public class ImageThreadPool {
-    private static ImageThreadPool instance;
 
     private ExecutorService mExecutorService;
 
@@ -16,14 +15,14 @@ public class ImageThreadPool {
     }
 
     public static ImageThreadPool getInstance() {
-        if (instance == null) {
-            synchronized (ImageThreadPool.class) {
-                if (instance == null) {
-                    instance = new ImageThreadPool();
-                }
-            }
-        }
-        return instance;
+        return ImageThreadPoolHolder.INSTANCE;
+    }
+
+    /**
+     * 内部类实现单例
+     */
+    private static class ImageThreadPoolHolder {
+        private static final ImageThreadPool INSTANCE = new ImageThreadPool();
     }
 
     /**

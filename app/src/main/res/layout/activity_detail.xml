@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_padding"
+    tools:context="com.dsunny.activity.DetailActivity">
+
+    <include layout="@layout/view_detail_head" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="#FFFFFF"/>
+
+    <include layout="@layout/view_detail_start" />
+
+    <include layout="@layout/view_detail_transfer"/>
+
+    <include layout="@layout/view_detail_station"/>
+    <include layout="@layout/view_detail_station"/>
+    <include layout="@layout/view_detail_station"/>
+
+    <include layout="@layout/view_detail_middle"/>
+
+    <include layout="@layout/view_detail_transfer"/>
+
+    <include layout="@layout/view_detail_end"/>
+
+
+</LinearLayout>

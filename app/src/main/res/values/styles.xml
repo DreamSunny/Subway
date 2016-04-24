@@ -58,6 +58,19 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
+    <!-- 分割线 -->
+    <style name="detail_horizontal_line">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">4dp</item>
+        <item name="android:background">#46A667</item>
+    </style>
+    <style name="detail_vertical_line">
+        <item name="android:layout_width">4dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">#666666</item>
+    </style>
+
     <style name="SubwayTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="SubwayTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 

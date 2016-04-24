@@ -31,10 +31,14 @@ public class RequestThreadPool {
      * @return 请求线程池的实例
      */
     public static synchronized RequestThreadPool getInstance() {
-        if (instance == null) {
-            instance = new RequestThreadPool();
-        }
-        return instance;
+        return RequestThreadPoolHolder.INSTANCE;
+    }
+
+    /**
+     * 内部类实现单例
+     */
+    private static class RequestThreadPoolHolder {
+        private static final RequestThreadPool INSTANCE = new RequestThreadPool();
     }
 
     /**
