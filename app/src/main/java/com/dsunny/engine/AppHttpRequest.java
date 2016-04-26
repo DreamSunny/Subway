@@ -1,16 +1,16 @@
 package com.dsunny.engine;
 
 import com.alibaba.fastjson.JSON;
-import com.dsunny.net.mockdata.MockBaseInfo;
-import com.dsunny.util.Util;
+import com.dsunny.network.mockdata.MockBaseInfo;
+import com.dsunny.util.AppUtil;
 import com.infrastructure.activity.BaseActivity;
-import com.infrastructure.net.Request;
-import com.infrastructure.net.RequestCallback;
-import com.infrastructure.net.RequestParameter;
-import com.infrastructure.net.RequestThreadPool;
-import com.infrastructure.net.Response;
-import com.infrastructure.net.URLData;
-import com.infrastructure.net.UrlConfigManager;
+import com.infrastructure.request.Request;
+import com.infrastructure.request.RequestCallback;
+import com.infrastructure.request.RequestParameter;
+import com.infrastructure.request.RequestThreadPool;
+import com.infrastructure.request.Response;
+import com.infrastructure.request.URLData;
+import com.infrastructure.request.UrlConfigManager;
 import com.infrastructure.util.LogUtil;
 
 import java.util.List;
@@ -66,7 +66,7 @@ public class AppHttpRequest {
             if (forceUpdate) {
                 urlData.setExpires(0);
             }
-            if (!Util.IsStringEmpty(urlData.getMockClass())) {
+            if (!AppUtil.IsStringEmpty(urlData.getMockClass())) {
                 try {
                     MockBaseInfo mockInfo = (MockBaseInfo) Class.forName(urlData.getMockClass()).newInstance();
                     String strResponse = mockInfo.getJsonData();

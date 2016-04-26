@@ -12,7 +12,6 @@ public class TransferDetail implements Serializable {
 
     public String fromStationName;// 查询起始站
     public String toStationName;// 查询终点站
-    public int ticketPrice;// 票价(元)
     public List<TransferRoute> lstTransferRoute;// 换乘线路
 
     @Override
@@ -20,7 +19,6 @@ public class TransferDetail implements Serializable {
         return "TransferDetail{" +
                 "fromStationName='" + fromStationName + '\'' +
                 ", toStationName='" + toStationName + '\'' +
-                ", ticketPrice=" + ticketPrice +
                 ", lstTransferRoute=" + lstTransferRoute +
                 '}';
     }

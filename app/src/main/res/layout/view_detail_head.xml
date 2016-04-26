@@ -11,7 +11,7 @@
         android:layout_marginBottom="8dp" />
 
     <TextView
-        android:id="@+id/tv_route"
+        android:id="@+id/tv_route_index"
         android:layout_width="60dp"
         android:layout_height="24dp"
         android:layout_alignParentLeft="true"
@@ -21,7 +21,6 @@
         android:layout_marginStart="8dp"
         android:background="#46A667"
         android:gravity="center"
-        android:text="线路1"
         android:textColor="#FFFFFF"
         android:textSize="16sp" />
 
@@ -32,15 +31,14 @@
         android:layout_below="@id/head_line"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
-        android:layout_toEndOf="@id/tv_route"
-        android:layout_toRightOf="@id/tv_route"
+        android:layout_toEndOf="@id/tv_route_index"
+        android:layout_toRightOf="@id/tv_route_index"
         android:gravity="center"
-        android:text="21:39发→22:21到"
         android:textColor="#000000"
         android:textSize="16sp" />
 
     <TextView
-        android:id="@+id/tv_elapsed_time"
+        android:id="@+id/tv_minute"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@id/tv_timeframe"
@@ -49,7 +47,6 @@
         android:layout_marginStart="8dp"
         android:layout_toEndOf="@id/tv_timeframe"
         android:layout_toRightOf="@id/tv_timeframe"
-        android:text="42分（乘车39分）"
         android:textColor="#000000"
         android:textSize="12sp" />
 
@@ -57,13 +54,12 @@
         android:id="@+id/tv_transfer_times"
         android:layout_width="wrap_content"
         android:layout_height="24dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_below="@id/head_line"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:gravity="center"
-        android:text="换乘：1次"
         android:textColor="#000000"
         android:textSize="16sp" />
 
@@ -71,12 +67,11 @@
         android:id="@+id/tv_price"
         android:layout_width="wrap_content"
         android:layout_height="24dp"
-        android:layout_marginTop="4dp"
         android:layout_alignLeft="@id/tv_timeframe"
         android:layout_alignStart="@id/tv_timeframe"
         android:layout_below="@id/tv_timeframe"
+        android:layout_marginTop="4dp"
         android:gravity="center"
-        android:text="票价：6元"
         android:textColor="#000000"
         android:textSize="16sp" />
 
@@ -84,14 +79,13 @@
         android:id="@+id/tv_distance"
         android:layout_width="wrap_content"
         android:layout_height="24dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_below="@id/tv_transfer_times"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="4dp"
         android:gravity="center"
-        android:text="32.2km"
         android:textColor="#000000"
         android:textSize="16sp" />
 

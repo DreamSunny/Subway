@@ -14,7 +14,6 @@
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:gravity="center"
-        android:text="23:39"
         android:textColor="#000000"
         android:textSize="16sp" />
 
@@ -22,9 +21,9 @@
         android:id="@+id/rv_end"
         android:layout_width="24dp"
         android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
-        android:layout_alignParentTop="true"
         android:layout_toEndOf="@id/tv_timeline"
         android:layout_toRightOf="@id/tv_timeline">
 
@@ -56,7 +55,6 @@
         android:layout_toEndOf="@id/rv_end"
         android:layout_toRightOf="@id/rv_end"
         android:gravity="center"
-        android:text="府中"
         android:textColor="#000000"
         android:textSize="16sp" />
 

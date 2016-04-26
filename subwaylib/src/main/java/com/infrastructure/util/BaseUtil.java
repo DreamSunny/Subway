@@ -4,7 +4,7 @@ import android.content.res.Resources;
 import android.os.Environment;
 import android.os.StatFs;
 
-import com.infrastructure.net.Request;
+import com.infrastructure.request.Request;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;

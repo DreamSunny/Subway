@@ -8,5 +8,14 @@
 
     <string name="title_activity_about_me">关于我</string>
     <string name="title_activity_transfer_detail">换乘详情</string>
-    <string name="title_activity_transfer_route">换乘路线</string>
+
+    <string name="detail_title">%1$s - %2$s</string>
+    <string name="detail_route_index">线路%1$d</string>
+    <string name="detail_timeframe">%1$s发→%2$s到</string>
+    <string name="detail_minute">%1$d分</string>
+    <string name="detail_transfer_times">换乘：%1$d次</string>
+    <string name="detail_price">票价：%1$d元</string>
+    <string name="detail_distance">%1$skm</string>
+    <string name="detail_station_count">%1$d站</string>
+    <string name="detail_tansfer">%1$s・%2$s方向</string>
 </resources>

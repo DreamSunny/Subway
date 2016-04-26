@@ -14,7 +14,6 @@
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:gravity="center"
-        android:text="21:39"
         android:textColor="#000000"
         android:textSize="16sp" />
 
@@ -56,7 +55,6 @@
         android:layout_toEndOf="@id/rv_start"
         android:layout_toRightOf="@id/rv_start"
         android:gravity="center"
-        android:text="东京"
         android:textColor="#000000"
         android:textSize="16sp" />
 

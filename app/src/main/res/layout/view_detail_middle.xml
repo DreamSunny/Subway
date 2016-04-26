@@ -14,7 +14,6 @@
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:gravity="center"
-        android:text="22:39"
         android:textColor="#000000"
         android:textSize="16sp" />
 
@@ -22,9 +21,9 @@
         android:id="@+id/rv_middle"
         android:layout_width="24dp"
         android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
-        android:layout_alignParentTop="true"
         android:layout_toEndOf="@id/tv_timeline"
         android:layout_toRightOf="@id/tv_timeline">
 
@@ -36,7 +35,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_centerInParent="true"
-            android:src="@drawable/detail_station"/>
+            android:src="@drawable/detail_station" />
 
     </RelativeLayout>
 
@@ -50,7 +49,6 @@
         android:layout_toEndOf="@id/rv_middle"
         android:layout_toRightOf="@id/rv_middle"
         android:gravity="center"
-        android:text="新宿"
         android:textColor="#000000"
         android:textSize="16sp" />
 

@@ -12,8 +12,9 @@ public class TransferRoute implements Serializable {
 
     public String fromStationName;// 查询起始站
     public String toStationName;// 查询终点站
-    public int ticketPrice;// 票价(元)
-    public int elapsedTime;// 运行时间(分钟)
+    public int airportLineDistance;// 机场线距离
+    public int otherLineDistance;// 其余线路总距离
+    public int elapsedTime;// 用时
     public List<TransferSubRoute> lstTransferSubRoute;// 换乘子线路
 
     @Override
@@ -21,7 +22,8 @@ public class TransferRoute implements Serializable {
         return "TransferRoute{" +
                 "fromStationName='" + fromStationName + '\'' +
                 ", toStationName='" + toStationName + '\'' +
-                ", ticketPrice=" + ticketPrice +
+                ", airportLineDistance=" + airportLineDistance +
+                ", otherLineDistance=" + otherLineDistance +
                 ", elapsedTime=" + elapsedTime +
                 ", lstTransferSubRoute=" + lstTransferSubRoute +
                 '}';
@@ -34,7 +36,8 @@ public class TransferRoute implements Serializable {
 
         TransferRoute that = (TransferRoute) o;
 
-        if (ticketPrice != that.ticketPrice) return false;
+        if (airportLineDistance != that.airportLineDistance) return false;
+        if (otherLineDistance != that.otherLineDistance) return false;
         if (elapsedTime != that.elapsedTime) return false;
         if (fromStationName != null ? !fromStationName.equals(that.fromStationName) : that.fromStationName != null)
             return false;
@@ -48,7 +51,8 @@ public class TransferRoute implements Serializable {
     public int hashCode() {
         int result = fromStationName != null ? fromStationName.hashCode() : 0;
         result = 31 * result + (toStationName != null ? toStationName.hashCode() : 0);
-        result = 31 * result + ticketPrice;
+        result = 31 * result + airportLineDistance;
+        result = 31 * result + otherLineDistance;
         result = 31 * result + elapsedTime;
         result = 31 * result + (lstTransferSubRoute != null ? lstTransferSubRoute.hashCode() : 0);
         return result;

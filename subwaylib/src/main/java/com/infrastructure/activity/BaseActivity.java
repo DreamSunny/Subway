@@ -6,7 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.infrastructure.net.RequestManager;
+import com.infrastructure.request.RequestManager;
 
 /**
  * 封装业务无关的公用逻辑

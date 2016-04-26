@@ -3,30 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical"
     android:padding="@dimen/activity_padding"
     tools:context="com.dsunny.activity.DetailActivity">
 
-    <include layout="@layout/view_detail_head" />
-
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="8dp"
-        android:background="#FFFFFF"/>
+        android:layout_height="match_parent">
 
-    <include layout="@layout/view_detail_start" />
+        <LinearLayout
+            android:id="@+id/ll_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <include layout="@layout/view_detail_transfer"/>
+        </LinearLayout>
 
-    <include layout="@layout/view_detail_station"/>
-    <include layout="@layout/view_detail_station"/>
-    <include layout="@layout/view_detail_station"/>
-
-    <include layout="@layout/view_detail_middle"/>
-
-    <include layout="@layout/view_detail_transfer"/>
-
-    <include layout="@layout/view_detail_end"/>
-
+    </ScrollView>
 
 </LinearLayout>

@@ -1,9 +1,10 @@
 package com.dsunny.engine;
 
 import com.dsunny.common.SubwayData;
-import com.dsunny.db.bean.Transfer;
+import com.dsunny.database.bean.Transfer;
 import com.dsunny.engine.base.BaseSubwayMap;
-import com.dsunny.util.Util;
+import com.dsunny.util.AppUtil;
+import com.dsunny.util.SubwayUtil;
 import com.infrastructure.util.LogUtil;
 
 import java.util.ArrayList;
@@ -33,8 +34,8 @@ public class MultiSubwayMap extends BaseSubwayMap {
                 final String lineId = lstFromToLineIds.get(0)[0];
                 lstTransferRouteLineIds.add(new String[]{lineId});
                 // 线路存在环路时特殊，考虑添加横穿线路减少乘车时间
-                if (mLineDao.isLineExistLoop(lineId)) {
-                    for (String lid : mLineDao.getCrossLineIds(lineId)) {
+                if (SubwayUtil.isLineExistLoop(lineId)) {
+                    for (String lid : SubwayUtil.getCrossLineIds(lineId)) {
                         lstTransferRouteLineIds.add(new String[]{lineId, lid});
                     }
                 }
@@ -90,7 +91,7 @@ public class MultiSubwayMap extends BaseSubwayMap {
     @Override
     protected void createSubwayMap(final String[] transferRouteLineIds, final String fromStationId, final String toStationId) {
         // 清空临接表的数据
-        if (!Util.IsListEmpty(mLstHeads)) {
+        if (!AppUtil.IsListEmpty(mLstHeads)) {
             mLstHeads.clear();
         }
         // 起点终点是否是普通车站及所在线路ID

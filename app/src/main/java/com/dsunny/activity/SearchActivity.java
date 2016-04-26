@@ -23,17 +23,19 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.dsunny.activity.base.AppBaseActivity;
 import com.dsunny.activity.bean.TransferDetail;
-import com.dsunny.db.StationDao;
-import com.dsunny.db.bean.Station;
-import com.dsunny.engine.AppConstants;
+import com.dsunny.common.SubwayData;
+import com.dsunny.common.ViewHolder;
+import com.dsunny.database.StationDao;
+import com.dsunny.database.bean.Station;
+import com.dsunny.common.AppConstants;
 import com.dsunny.engine.AppHttpRequest;
 import com.dsunny.engine.MultiSubwayMap;
 import com.dsunny.engine.interfaces.ISubwayMap;
-import com.dsunny.common.SubwayData;
-import com.dsunny.common.ViewHolder;
-import com.dsunny.net.entity.Sentence;
+import com.dsunny.network.entity.Sentence;
 import com.dsunny.subway.R;
-import com.dsunny.util.Util;
+import com.dsunny.util.AppUtil;
+import com.dsunny.util.StringUtil;
+import com.dsunny.util.ToastUtil;
 import com.infrastructure.image.ImageLoader;
 import com.infrastructure.util.LogUtil;
 
@@ -145,7 +147,7 @@ public class SearchActivity extends AppBaseActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        Util.closeInputMethod(this);
+        AppUtil.closeInputMethod(this);
 
         switch (view.getId()) {
             case R.id.btn_select_from_station:
@@ -191,7 +193,7 @@ public class SearchActivity extends AppBaseActivity implements View.OnClickListe
             TransferDetail transferDetail = mMultiSubwayMap.search(fromStationName, toStationName);
             Intent intent = new Intent();
             intent.putExtra(AppConstants.KEY_TRANSFER_DETAIL, transferDetail);
-            startAppActivity(AppConstants.ACTIVITY_TRANSFER_DETAIL, intent);
+            startAppActivity(AppConstants.ACTIVITY_DETAIL, intent);
         }
     }
 
@@ -203,20 +205,20 @@ public class SearchActivity extends AppBaseActivity implements View.OnClickListe
      * @return true，合法；false，不合法
      */
     private boolean verifyFromToStation(final String fromStationName, final String toStationName) {
-        if (Util.IsStringEmpty(fromStationName)) {
-            Util.toast(mContext, MSG_FROM_STATION_EMPTY);
+        if (AppUtil.IsStringEmpty(fromStationName)) {
+            ToastUtil.toast(MSG_FROM_STATION_EMPTY);
             return false;
-        } else if (Util.IsStringEmpty(toStationName)) {
-            Util.toast(mContext, MSG_TO_STATION_EMPTY);
+        } else if (AppUtil.IsStringEmpty(toStationName)) {
+            ToastUtil.toast(MSG_TO_STATION_EMPTY);
             return false;
         } else if (fromStationName.equals(toStationName)) {
-            Util.toast(mContext, MSG_FROM_TO_STATION_IS_SAME);
+            ToastUtil.toast(MSG_FROM_TO_STATION_IS_SAME);
             return false;
-        } else if (!Util.isAlphanumeric(fromStationName) || !mStationDao.isStationExists(fromStationName)) {
-            Util.toast(mContext, MSG_FROM_STATION_NOT_EXIST);
+        } else if (!StringUtil.isAlphanumeric(fromStationName) || !mStationDao.isStationExists(fromStationName)) {
+            ToastUtil.toast(MSG_FROM_STATION_NOT_EXIST);
             return false;
-        } else if (!Util.isAlphanumeric(toStationName) || !mStationDao.isStationExists(toStationName)) {
-            Util.toast(mContext, MSG_TO_STATION_NOT_EXIST);
+        } else if (!StringUtil.isAlphanumeric(toStationName) || !mStationDao.isStationExists(toStationName)) {
+            ToastUtil.toast(MSG_TO_STATION_NOT_EXIST);
             return false;
         }
         return true;
@@ -290,7 +292,7 @@ public class SearchActivity extends AppBaseActivity implements View.OnClickListe
             });
 
             final int popwinHeight = 8 * 40 + 4;// 每个item高40dp
-            mPopWin = new PopupWindow(popwin, Util.GetScreenWidth(), Util.dp2px(popwinHeight));
+            mPopWin = new PopupWindow(popwin, AppUtil.GetScreenWidth(), AppUtil.dp2px(popwinHeight));
             mPopWin.setBackgroundDrawable(new PaintDrawable());
             mPopWin.setFocusable(true);
             mPopWin.setOutsideTouchable(true);

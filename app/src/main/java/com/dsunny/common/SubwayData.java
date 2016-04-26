@@ -95,4 +95,11 @@ public class SubwayData {
             {2, 3, 2, 3, 2, 2, 3, 1, 2, 3, 2, 3, 4, 3, 4, 3, 3, 0, 3},
             {2, 1, 2, 2, 2, 3, 2, 2, 1, 1, 2, 2, 2, 3, 2, 2, 3, 3, 0}
     };
+
+    // 机场线平均速度
+    public static final int AIRPORT_LINE_SPEED = 1024;
+    // 其余线路平均速度
+    public static final int OTHER_LINE_SPEED = 512;
+    // 换乘站换乘时间
+    public static final int TRANSFER_MINUTE = 6;
 }

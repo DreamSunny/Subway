@@ -4,11 +4,12 @@ import com.dsunny.activity.bean.TransferDetail;
 import com.dsunny.activity.bean.TransferRoute;
 import com.dsunny.activity.bean.TransferSubRoute;
 import com.dsunny.common.SubwayData;
-import com.dsunny.db.LineDao;
-import com.dsunny.db.StationDao;
-import com.dsunny.db.TransferDao;
+import com.dsunny.database.LineDao;
+import com.dsunny.database.StationDao;
+import com.dsunny.database.TransferDao;
 import com.dsunny.engine.interfaces.ISubwayMap;
-import com.dsunny.util.Util;
+import com.dsunny.util.AppUtil;
+import com.dsunny.util.SubwayUtil;
 import com.infrastructure.util.LogUtil;
 
 import java.util.ArrayList;
@@ -114,12 +115,12 @@ public abstract class BaseSubwayMap implements ISubwayMap {
          *
          * @param fromToLineIds 起点终点线路
          */
-        public void searchTransferRouteLineIds(String[] fromToLineIds){
+        public void searchTransferRouteLineIds(String[] fromToLineIds) {
             int from = getIndexOfLinesTransferEdges(fromToLineIds[0]);
             int to = getIndexOfLinesTransferEdges(fromToLineIds[1]);
             DFS(from, to);
             LogUtil.d("mMinTransferTimes = " + mMinTransferTimes);
-            LogUtil.d("mLstTransferRouteLineIds = " + Util.ListArrayAsString(mLstTransferRouteLineIds));
+            LogUtil.d("mLstTransferRouteLineIds = " + AppUtil.ListArrayAsString(mLstTransferRouteLineIds));
         }
 
         /**
@@ -186,13 +187,13 @@ public abstract class BaseSubwayMap implements ISubwayMap {
         // 起点终点线路集合
         List<String[]> lstFromToLineIds = getFromToLineIds(lstFromStationIds, lstToStationIds);
         if (LogUtil.DEBUG) {
-            LogUtil.d("lstFromToLineIds = " + Util.ListArrayAsString(lstFromToLineIds));
+            LogUtil.d("lstFromToLineIds = " + AppUtil.ListArrayAsString(lstFromToLineIds));
         }
 
         // 起点到终点换乘路线详细信息
         List<String[]> lstTransferRouteLineIds = getFromToTransferRouteLineIds(lstFromToLineIds);
         if (LogUtil.DEBUG) {
-            LogUtil.d("lstTransferRouteLineIds = " + Util.ListArrayAsString(lstTransferRouteLineIds));
+            LogUtil.d("lstTransferRouteLineIds = " + AppUtil.ListArrayAsString(lstTransferRouteLineIds));
         }
 
         // 遍历所有起点到终点换乘路线详细信息，搜索换乘信息
@@ -212,7 +213,6 @@ public abstract class BaseSubwayMap implements ISubwayMap {
             LogUtil.d(transferDetail);
         }
 
-        transferDetail.ticketPrice = transferDetail.lstTransferRoute.get(0).ticketPrice;
         LogUtil.d("result = " + transferDetail);
         return transferDetail;
     }
@@ -589,7 +589,7 @@ public abstract class BaseSubwayMap implements ISubwayMap {
             if (fromToLineId.equals(curLineId)) {
                 TransferSubRoute curSubRoute = lstTransferSubRoute.get(lstTransferSubRoute.size() - 1);
                 curSubRoute.toStationName = toStationId;
-                curSubRoute.totalDistance += fromToDistance;
+                curSubRoute.distance += fromToDistance;
                 // 机场线为单向换乘，记录所有换乘路径
                 if (fromToLineId.equals(SubwayData.LINE_99)) {
                     curSubRoute.lstStationNames.add(fromStationId);
@@ -599,7 +599,7 @@ public abstract class BaseSubwayMap implements ISubwayMap {
                 subRoute.fromStationName = fromStationId;
                 subRoute.toStationName = toStationId;
                 subRoute.lineName = fromToLineId;
-                subRoute.totalDistance = fromToDistance;
+                subRoute.distance = fromToDistance;
                 // 机场线为单向换乘，记录所有换乘路径
                 if (fromToLineId.equals(SubwayData.LINE_99)) {
                     subRoute.lstStationNames = new ArrayList<>();
@@ -615,20 +615,20 @@ public abstract class BaseSubwayMap implements ISubwayMap {
         TransferRoute transferRoute = new TransferRoute();
         transferRoute.fromStationName = mFromStationName;
         transferRoute.toStationName = mToStationName;
+        transferRoute.airportLineDistance = 0;
+        transferRoute.otherLineDistance = 0;
+        transferRoute.elapsedTime = 0;
         transferRoute.lstTransferSubRoute = lstTransferSubRoute;
 
         // 机场线速度与价格与普通线不一致
-        int airportLineDistance = 0;
-        int otherLinesDistance = 0;
         for (TransferSubRoute subRoute : lstTransferSubRoute) {
             if (subRoute.lineName.equals(SubwayData.LINE_JICHANGXIAN)) {
-                airportLineDistance += subRoute.totalDistance;
+                transferRoute.airportLineDistance += subRoute.distance;
             } else {
-                otherLinesDistance += subRoute.totalDistance;
+                transferRoute.otherLineDistance += subRoute.distance;
             }
         }
-        transferRoute.ticketPrice = mTransferDao.getTransferPrice(airportLineDistance, otherLinesDistance);
-        transferRoute.elapsedTime = mTransferDao.getTransferElapsedTime(airportLineDistance, otherLinesDistance, lstTransferSubRoute.size() - 1);
+        transferRoute.elapsedTime = SubwayUtil.getTransferElapsedTime(transferRoute.airportLineDistance, transferRoute.otherLineDistance, transferRoute.lstTransferSubRoute.size() - 1);
 
         return transferRoute;
     }
@@ -644,7 +644,7 @@ public abstract class BaseSubwayMap implements ISubwayMap {
             final String fromLineStationId = mStationDao.getLineStationId(lineId, subRoute.fromStationName);
             final String toLineStationId = mStationDao.getLineStationId(lineId, subRoute.toStationName);
             // 途径车站
-            if (mLineDao.isCircularLine(lineId)) {
+            if (SubwayUtil.isCircularLine(lineId)) {
                 List<String> lstStationNames1 = mStationDao.getIntervalStationNames(fromLineStationId, toLineStationId);
                 List<String> lstStationNames2 = mStationDao.getIntervalStationNamesInCircularLine(fromLineStationId, toLineStationId);
                 if (lstStationNames1.size() < lstStationNames2.size()) {
@@ -663,29 +663,29 @@ public abstract class BaseSubwayMap implements ISubwayMap {
                 subRoute.lstStationNames = mStationDao.getIntervalStationNames(fromLineStationId, toLineStationId);
             }
             // 换乘方向
-            if (mLineDao.isCircularLine(lineId)) {
-                subRoute.transferDirection = subRoute.lstStationNames.size() > 0 ?
+            if (SubwayUtil.isCircularLine(lineId)) {
+                subRoute.direction = subRoute.lstStationNames.size() > 0 ?
                         subRoute.lstStationNames.get(0) : mStationDao.getStationName(toLineStationId);
             } else if (subRoute.lineName.equals(SubwayData.LINE_14)) {
                 if (fromLineStationId.compareTo(toLineStationId) < 0
                         && toLineStationId.compareTo(SubwayData.LINE_14A_IDS[1]) <= 0) {
                     // 西局方向
-                    subRoute.transferDirection = SubwayData.STATION_XIJU;
+                    subRoute.direction = SubwayData.STATION_XIJU;
                 } else if (fromLineStationId.compareTo(toLineStationId) > 0
                         && toLineStationId.compareTo(SubwayData.LINE_14B_IDS[0]) >= 0) {
                     // 北京南站方向
-                    subRoute.transferDirection = SubwayData.STATION_BEIJINGNANZHAN;
+                    subRoute.direction = SubwayData.STATION_BEIJINGNANZHAN;
                 } else {
-                    subRoute.transferDirection = fromLineStationId.compareTo(toLineStationId) < 0 ?
+                    subRoute.direction = fromLineStationId.compareTo(toLineStationId) < 0 ?
                             mLineDao.getLineLastStationName(lineId) : mLineDao.getLineFirstStationName(lineId);
                 }
             } else {
                 // 起点车站<终点车站，取线路车站ID最大值的车站名，反之，取线路车站ID最小的车站名
-                subRoute.transferDirection = fromLineStationId.compareTo(toLineStationId) < 0 ?
+                subRoute.direction = fromLineStationId.compareTo(toLineStationId) < 0 ?
                         mLineDao.getLineLastStationName(lineId) : mLineDao.getLineFirstStationName(lineId);
             }
             // 线路名
-            subRoute.lineName = mLineDao.getLineName(lineId);
+            subRoute.lineName = SubwayUtil.getLineName(lineId);
             // 子路线起点站
             subRoute.fromStationName = mStationDao.getStationName(fromLineStationId);
             // 子路线终点站
@@ -714,6 +714,9 @@ public abstract class BaseSubwayMap implements ISubwayMap {
         }
         if (!hasSameRoute) {
             transferDetail.lstTransferRoute.add(insertIndex, transferRoute);
+        }
+        if (transferDetail.lstTransferRoute.size() > 3) {
+            transferDetail.lstTransferRoute.remove(transferDetail.lstTransferRoute.size() - 1);
         }
     }
 }

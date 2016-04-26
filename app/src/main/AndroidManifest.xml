@@ -31,26 +31,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.dsunny.activity.DetailActivity"
+            android:label="@string/title_activity_transfer_detail"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
         <activity
             android:name="com.dsunny.activity.AboutMeActivity"
             android:label="@string/title_activity_about_me"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" >
-        </activity>
-        <activity
-            android:name="com.dsunny.activity.TransferDetailActivity"
-            android:label="@string/title_activity_transfer_detail"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" >
-        </activity>
-        <activity
-            android:name="com.dsunny.activity.TransferRouteActivity"
-            android:label="@string/title_activity_transfer_route"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" >
-        </activity>
-        <activity android:name="com.dsunny.activity.DetailActivity"
-            android:label="@string/title_activity_transfer_detail"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" >
         </activity>

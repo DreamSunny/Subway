@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import com.dsunny.subway.R;
 import com.infrastructure.activity.BaseActivity;
 import com.infrastructure.cache.CacheManager;
-import com.infrastructure.net.RequestCallback;
+import com.infrastructure.request.RequestCallback;
 import com.umeng.analytics.MobclickAgent;
 
 /**
