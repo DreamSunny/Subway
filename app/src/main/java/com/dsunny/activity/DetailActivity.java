@@ -121,9 +121,8 @@ public class DetailActivity extends AppBaseActivity implements View.OnClickListe
         TextView tvDistance = findAppViewById(view, R.id.tv_distance);
 
         tvRouteIndex.setText(getString(R.string.detail_route_index, index));
-        final int minute = SubwayUtil.getTransferElapsedTime(tr.airportLineDistance, tr.otherLineDistance, tr.lstTransferSubRoute.size() - 1);
-        tvTimeframe.setText(getString(R.string.detail_timeframe, TimeUtil.getDateTime(NOW), TimeUtil.getDateTime(TimeUtil.addMinute(NOW, minute))));
-        tvElapsedTime.setText(getString(R.string.detail_minute, minute));
+        tvTimeframe.setText(getString(R.string.detail_timeframe, TimeUtil.getDateTime(NOW), TimeUtil.getDateTime(TimeUtil.addMinute(NOW, tr.elapsedTime))));
+        tvElapsedTime.setText(getString(R.string.detail_minute, tr.elapsedTime));
         tvTransferTimes.setText(getString(R.string.detail_transfer_times, tr.lstTransferSubRoute.size() - 1));
         tvPrice.setText(getString(R.string.detail_price, mTicketPrice));
         tvDistance.setText(getString(R.string.detail_distance, FormatUtil.double1(1.0 * (tr.airportLineDistance + tr.otherLineDistance) / 1000)));
@@ -172,8 +171,7 @@ public class DetailActivity extends AppBaseActivity implements View.OnClickListe
         TextView tvTimeline = findAppViewById(view, R.id.tv_timeline);
         TextView tvStation = findAppViewById(view, R.id.tv_station);
 
-        final int minute = SubwayUtil.getTransferElapsedTime(tr.airportLineDistance, tr.otherLineDistance, tr.lstTransferSubRoute.size() - 1);
-        tvTimeline.setText(TimeUtil.getDateTime(TimeUtil.addMinute(NOW, minute)));
+        tvTimeline.setText(TimeUtil.getDateTime(TimeUtil.addMinute(NOW, tr.elapsedTime)));
         tvStation.setText(stationName);
 
         return view;
@@ -212,19 +210,19 @@ public class DetailActivity extends AppBaseActivity implements View.OnClickListe
      * @return station视图
      */
     private View createStationView(List<String> lstStationNames) {
-        LinearLayout parent = new LinearLayout(this);
-        parent.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        parent.setOrientation(LinearLayout.VERTICAL);
-        parent.setVisibility(View.GONE);
+        LinearLayout stationView = new LinearLayout(this);
+        stationView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        stationView.setOrientation(LinearLayout.VERTICAL);
+        stationView.setVisibility(View.GONE);
 
         for (String stationName : lstStationNames) {
             View view = LayoutInflater.from(this).inflate(R.layout.view_detail_station, llDetail, false);
             TextView rvStation = findAppViewById(view, R.id.tv_station);
             rvStation.setText(stationName);
-            parent.addView(view);
+            stationView.addView(view);
         }
 
-        return parent;
+        return stationView;
     }
 
     /**

@@ -104,7 +104,7 @@ public class SubwayUtil {
      * @return 乘车时间
      */
     public static int getAirportLineElapsedTime(int airportLineDistance) {
-        return airportLineDistance / SubwayData.AIRPORT_LINE_SPEED;
+        return airportLineDistance / SubwayData.AIRPORT_LINE_SPEED + 1;
     }
 
     /**
@@ -114,7 +114,7 @@ public class SubwayUtil {
      * @return 乘车时间
      */
     public static int getLineElapsedTime(int otherLineDistance) {
-        return otherLineDistance / SubwayData.OTHER_LINE_SPEED;
+        return otherLineDistance / SubwayData.OTHER_LINE_SPEED + 1;
     }
 
     /**

@@ -28,35 +28,4 @@ public class TransferSubRoute implements Serializable {
                 ", lstStationNames=" + lstStationNames +
                 '}';
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        TransferSubRoute that = (TransferSubRoute) o;
-
-        if (distance != that.distance) return false;
-        if (fromStationName != null ? !fromStationName.equals(that.fromStationName) : that.fromStationName != null)
-            return false;
-        if (toStationName != null ? !toStationName.equals(that.toStationName) : that.toStationName != null)
-            return false;
-        if (lineName != null ? !lineName.equals(that.lineName) : that.lineName != null)
-            return false;
-        if (direction != null ? !direction.equals(that.direction) : that.direction != null)
-            return false;
-        return !(lstStationNames != null ? !lstStationNames.equals(that.lstStationNames) : that.lstStationNames != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = fromStationName != null ? fromStationName.hashCode() : 0;
-        result = 31 * result + (toStationName != null ? toStationName.hashCode() : 0);
-        result = 31 * result + distance;
-        result = 31 * result + (lineName != null ? lineName.hashCode() : 0);
-        result = 31 * result + (direction != null ? direction.hashCode() : 0);
-        result = 31 * result + (lstStationNames != null ? lstStationNames.hashCode() : 0);
-        return result;
-    }
 }

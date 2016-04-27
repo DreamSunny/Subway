@@ -113,19 +113,6 @@ public abstract class BaseSubwayMap implements ISubwayMap {
         /**
          * 搜索换乘路线详细信息
          *
-         * @param fromToLineIds 起点终点线路
-         */
-        public void searchTransferRouteLineIds(String[] fromToLineIds) {
-            int from = getIndexOfLinesTransferEdges(fromToLineIds[0]);
-            int to = getIndexOfLinesTransferEdges(fromToLineIds[1]);
-            DFS(from, to);
-            LogUtil.d("mMinTransferTimes = " + mMinTransferTimes);
-            LogUtil.d("mLstTransferRouteLineIds = " + AppUtil.ListArrayAsString(mLstTransferRouteLineIds));
-        }
-
-        /**
-         * 搜索换乘路线详细信息
-         *
          * @param lstFromToLineIds 起点终点线路集合
          */
         public void searchTransferRouteLineIds(final List<String[]> lstFromToLineIds) {
@@ -156,7 +143,10 @@ public abstract class BaseSubwayMap implements ISubwayMap {
                 mStack.push(from);
                 isVisited[from] = true;
                 for (int i = 0; i < SubwayData.LINE_EDGES.length; i++) {
-                    if (!isVisited[i] && SubwayData.LINE_TRANSFERS[from][i] == 1 && mStack.size() < mMinTransferTimes) {
+                    if (!isVisited[i]
+                            && (i != SubwayData.LINE_EDGES.length - 1)
+                            && SubwayData.LINE_TRANSFERS[from][i] == 1
+                            && mStack.size() < mMinTransferTimes) {
                         DFS(i, to);
                     }
                 }
@@ -703,7 +693,8 @@ public abstract class BaseSubwayMap implements ISubwayMap {
         int insertIndex = 0;
         boolean hasSameRoute = false;
         for (TransferRoute route : transferDetail.lstTransferRoute) {
-            if (route.equals(transferRoute)) {
+            if (route.airportLineDistance == transferRoute.airportLineDistance
+                    && route.otherLineDistance == transferRoute.otherLineDistance) {
                 hasSameRoute = true;
                 break;
             } else if (route.elapsedTime < transferRoute.elapsedTime) {
