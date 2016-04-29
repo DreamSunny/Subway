@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * 时间工具类
  */
-public class TimeUtil {
+public class DateUtil {
 
     /**
      * @param date   日期
@@ -26,7 +26,7 @@ public class TimeUtil {
      * @return 时分
      */
     public static String getDateTime(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("kk:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
         return sdf.format(date);
     }
 }
