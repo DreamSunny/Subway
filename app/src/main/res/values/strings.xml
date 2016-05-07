@@ -8,6 +8,7 @@
 
     <string name="title_activity_about_me">关于我</string>
     <string name="title_activity_transfer_detail">换乘详情</string>
+    <string name="title_activity_subway_map">地铁图</string>
 
     <string name="detail_title">%1$s - %2$s</string>
     <string name="detail_route_index">线路%1$d</string>
@@ -18,4 +19,5 @@
     <string name="detail_distance">%1$skm</string>
     <string name="detail_station_count">%1$d站</string>
     <string name="detail_tansfer">%1$s・%2$s方向</string>
+
 </resources>

@@ -31,7 +31,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.dsunny.activity.DetailActivity"
+        <activity
+            android:name="com.dsunny.activity.DetailActivity"
             android:label="@string/title_activity_transfer_detail"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" >

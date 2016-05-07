@@ -85,12 +85,22 @@ public class AppUtil extends BaseUtil {
      * 是否有网络
      *
      * @param context 当前Activity
-     * @return 文本内容
+     * @return 是否联网
      */
     public static boolean isNetWorkAvilable(final Context context) {
-        final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        final NetworkInfo activeNetInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetInfo == null || !activeNetInfo.isAvailable();
+        final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        return networkInfo == null || !networkInfo.isAvailable();
+    }
+
+    /**
+     * @param context 当前Activity
+     * @return 是否使用WiFi联网
+     */
+    public static boolean isWifiConnected(final Context context) {
+        final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected() && networkInfo.getTypeName().equalsIgnoreCase("WIFI");
     }
 
     /**

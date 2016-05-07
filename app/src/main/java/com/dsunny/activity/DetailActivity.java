@@ -30,8 +30,8 @@ import java.util.List;
 public class DetailActivity extends AppBaseActivity implements View.OnClickListener {
 
     private static final int BLANK_VIEW_HEIGHT_DP = 8;
-    private static final Date NOW = new Date();
 
+    private Date mNow;
     private int mTicketPrice;
     private TransferDetail mTransferDetail;
 
@@ -39,6 +39,7 @@ public class DetailActivity extends AppBaseActivity implements View.OnClickListe
 
     @Override
     protected void initVariables() {
+        mNow = new Date();
         mTransferDetail = (TransferDetail) getIntent().getSerializableExtra(AppConstants.KEY_TRANSFER_DETAIL);
         final TransferRoute tr = mTransferDetail.lstTransferRoute.get(0);
         mTicketPrice = SubwayUtil.getTransferPrice(tr.airportLineDistance, tr.otherLineDistance);
@@ -83,7 +84,7 @@ public class DetailActivity extends AppBaseActivity implements View.OnClickListe
             llDetail.addView(createHeadView(routeIndex++, tr));
             llDetail.addView(createBlankView());
             int subRouteIndex = 0;
-            Date date = NOW;
+            Date date = mNow;
             for (TransferSubRoute tsr : tr.lstTransferSubRoute) {
                 if (subRouteIndex == 0) {
                     llDetail.addView(createStartView(tsr.fromStationName));
@@ -121,7 +122,7 @@ public class DetailActivity extends AppBaseActivity implements View.OnClickListe
         TextView tvDistance = findAppViewById(view, R.id.tv_distance);
 
         tvRouteIndex.setText(getString(R.string.detail_route_index, index));
-        tvTimeframe.setText(getString(R.string.detail_timeframe, DateUtil.getDateTime(NOW), DateUtil.getDateTime(DateUtil.addMinute(NOW, tr.elapsedTime))));
+        tvTimeframe.setText(getString(R.string.detail_timeframe, DateUtil.getDateTime(mNow), DateUtil.getDateTime(DateUtil.addMinute(mNow, tr.elapsedTime))));
         tvElapsedTime.setText(getString(R.string.detail_minute, tr.elapsedTime));
         tvTransferTimes.setText(getString(R.string.detail_transfer_times, tr.lstTransferSubRoute.size() - 1));
         tvPrice.setText(getString(R.string.detail_price, mTicketPrice));
@@ -139,7 +140,7 @@ public class DetailActivity extends AppBaseActivity implements View.OnClickListe
         TextView tvTimeline = findAppViewById(view, R.id.tv_timeline);
         TextView tvStation = findAppViewById(view, R.id.tv_station);
 
-        tvTimeline.setText(DateUtil.getDateTime(NOW));
+        tvTimeline.setText(DateUtil.getDateTime(mNow));
         tvStation.setText(stationName);
 
         return view;
@@ -171,7 +172,7 @@ public class DetailActivity extends AppBaseActivity implements View.OnClickListe
         TextView tvTimeline = findAppViewById(view, R.id.tv_timeline);
         TextView tvStation = findAppViewById(view, R.id.tv_station);
 
-        tvTimeline.setText(DateUtil.getDateTime(DateUtil.addMinute(NOW, tr.elapsedTime)));
+        tvTimeline.setText(DateUtil.getDateTime(DateUtil.addMinute(mNow, tr.elapsedTime)));
         tvStation.setText(stationName);
 
         return view;

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.dsunny.common.AppConstants;
 import com.dsunny.subway.R;
 import com.infrastructure.activity.BaseActivity;
 import com.infrastructure.cache.CacheManager;
@@ -133,6 +134,9 @@ public abstract class AppBaseActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
+            case R.id.action_about_me:
+                startAppActivity(AppConstants.ACTIVITY_ABOUT_ME);
+                break;
             case R.id.action_clear_cache:
                 CacheManager.getInstance().clearAllData();
                 break;

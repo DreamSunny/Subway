@@ -52,11 +52,11 @@ public class SearchActivity extends AppBaseActivity implements View.OnClickListe
     private static final String KEY_FROM_STATION = "from_station";
     private static final String KEY_TO_STATION = "to_station";
 
-    private static final String MSG_FROM_STATION_EMPTY = "请您输入起点站";
-    private static final String MSG_TO_STATION_EMPTY = "请您输入终点站";
-    private static final String MSG_FROM_TO_STATION_IS_SAME = "您输入的起点站与终点站相同";
-    private static final String MSG_FROM_STATION_NOT_EXIST = "您输入的起点站不可乘坐";
-    private static final String MSG_TO_STATION_NOT_EXIST = "您输入的终点站不可乘坐";
+    private static final String MSG_FROM_STATION_EMPTY = "请输入起点站";
+    private static final String MSG_TO_STATION_EMPTY = "请输入终点站";
+    private static final String MSG_FROM_TO_STATION_IS_SAME = "起点站与终点站相同";
+    private static final String MSG_FROM_STATION_NOT_EXIST = "起点站不可乘坐";
+    private static final String MSG_TO_STATION_NOT_EXIST = "终点站不可乘坐";
 
     private PopupWindow mPopWin;
     private LineAdapter mLineAdapter;
@@ -73,6 +73,8 @@ public class SearchActivity extends AppBaseActivity implements View.OnClickListe
 
     private ImageView ivPicture;
     private TextView tvContent, tvNote;
+
+    private boolean isWifiConnected;
 
     @Override
     protected void initVariables() {
@@ -100,6 +102,8 @@ public class SearchActivity extends AppBaseActivity implements View.OnClickListe
             mLstStationNamesAndAbbrs.add(station.Name);
         }
         mLstStationNames.addAll(mLstStationNamesAndAbbrs);
+
+        isWifiConnected = AppUtil.isWifiConnected(this);
     }
 
     @Override
@@ -135,7 +139,7 @@ public class SearchActivity extends AppBaseActivity implements View.OnClickListe
             public void onSuccess(String content) {
                 Sentence sentence = JSON.parseObject(content, Sentence.class);
                 if (sentence != null) {
-                    ImageLoader.getInstance().displayImage(sentence.getPicture(), ivPicture);
+                    ImageLoader.getInstance().displayImage(isWifiConnected ? sentence.getPicture2() : sentence.getPicture(), ivPicture);
                     tvContent.setText(sentence.getContent());
                     tvNote.setText(sentence.getNote());
                     LogUtil.d(sentence);
