@@ -157,9 +157,9 @@ public abstract class BaseSubwayMap implements ISubwayMap {
     }
 
     /**
-     * @param fromStationName
-     * @param toStationName
-     * @return
+     * @param fromStationName 起点站
+     * @param toStationName   终点站
+     * @return 换乘结果
      */
     @Override
     public TransferDetail search(String fromStationName, String toStationName) {

@@ -65,7 +65,7 @@ public class SubwayUtil {
         } else if (SubwayData.LINE_13.equals(lid)) {
             return SubwayData.CROSS_LINE_13_IDS;
         }
-        return null;
+        return new String[]{};
     }
 
     /**

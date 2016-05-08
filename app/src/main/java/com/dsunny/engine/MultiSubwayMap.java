@@ -75,6 +75,7 @@ public class MultiSubwayMap extends BaseSubwayMap {
         } else {
             // 起点终点不在同一线路
             LineMap lineMap = new LineMap();
+            mMinTransferTimes += 1;
             lineMap.searchTransferRouteLineIds(lstFromToLineIds);
             lstTransferRouteLineIds = new ArrayList<>(lineMap.getTransferRouteLineIds());
         }
