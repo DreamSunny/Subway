@@ -5,6 +5,7 @@ import android.app.Application;
 import com.dsunny.util.AppUtil;
 import com.dsunny.util.SharedPreferencesUtil;
 import com.infrastructure.cache.CacheManager;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.File;
 
@@ -29,6 +30,8 @@ public class SubwayApplication extends Application {
         initDataBase();
         // 初始化缓存目录
         CacheManager.getInstance().initCacheDir();
+        // Bugly初始化
+        CrashReport.initCrashReport(getApplicationContext(), "900032862", false);
     }
 
     /**
